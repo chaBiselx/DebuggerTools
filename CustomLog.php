@@ -203,7 +203,7 @@ class CustomLog
 		//check instance for more data
 		$returnAppendLog = self::getContentSpecialClass($obj);
 		if ($returnAppendLog) {
-			$appendLog = arra_merge($appendLog, $returnAppendLog);
+			$appendLog = array_merge($appendLog, $returnAppendLog);
 		}
 
 
@@ -226,7 +226,7 @@ class CustomLog
 		$toAppendToLog = [];
 		if (class_exists('Doctrine\\ORM\\QueryBuilder')) {
 			if ($obj instanceof \Doctrine\ORM\QueryBuilder) {
-				$appendLog[] = $obj->getQuery()->getSql();
+				$toAppendToLog[] = $obj->getQuery()->getSql();
 			}
 		}
 		return $toAppendToLog;
