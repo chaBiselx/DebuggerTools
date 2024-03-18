@@ -1,11 +1,9 @@
 <?php
 
-namespace DebuggerTools;
+namespace DebuggerTools\AbstractCustomLog;
 
-class CustomLog
+abstract class AbstractCustomLog
 {
-
-	//PSR -> class abstrait 
 
 	/**
 	 * logger
