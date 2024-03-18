@@ -1,6 +1,6 @@
 <?php
 
-namespace DebuggerTools\AbstractCustomLog;
+namespace Debuggertools\Abstract;
 
 abstract class AbstractCustomLog
 {

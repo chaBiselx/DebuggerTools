@@ -2,9 +2,12 @@
     "name": "chabiselx/debuggertools",
     "description": "Create a log for understand algorithm",
     "type": "library",
+    "require": {
+        "php": "^7.4 || ^8.0"
+    },
     "autoload": {
         "psr-4": {
-            "Chabiselx\\Debuggertools\\": "src/"
+            "Debuggertools\\": "src/Debuggertools/"
         }
     },
     "authors": [
@@ -12,7 +15,5 @@
             "name": "BISELX Charles",
             "email": "cha.biselx@gmail.com"
         }
-    ],
-    "minimum-stability": "dev",
-    "require": {}
+    ]
 }
