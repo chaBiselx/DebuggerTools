@@ -2,91 +2,51 @@
 
 namespace Debuggertools\Abstract;
 
+use Debuggertools\Config\PathLog;
+use Debuggertools\Config\Configurations;
+use Debuggertools\Traits\FileSystem;
+
 abstract class AbstractCustomLog
 {
+	use FileSystem;
+	protected string $fileName = 'log';
+	protected string $fileExtension = 'log';
+	protected bool $expendObject = false;
+	protected bool $showPrefix = true;
+	protected array $config = [];
 
-	/**
-	 * logger
-	 *
-	 * @param bool|int|float|double|string|array|object|Doctrine\\ORM\\QueryBuilder $data
-	 * @param array $Option
-	 * 
-	 * list param for Options
-	 * @var bool hideDate Hide the date at the beginning of the string
-	 * @var bool purgeFileBefore purge the file before write
-	 * @var bool expendObject expend for best visibility in log file
-	 * @var string fileName write in the file with the same name default: log
-	 * 
-	 * @return void
-	 */
-	public static function logger($data, $Option = [])
+	protected ?string $pathFile = NULL;
+
+	public function __construct()
 	{
-		$texts = [];
-		$path = dirname(__DIR__) . "/dev/log";
+		$path = (new PathLog())->getLogFolderPath();
+		$this->setDefaultWithConfig();
+		$this->createDirIfNotExist($path); // FileSystem
+		$this->pathFile = $path . "\\" . $this->fileName . "." . $this->fileExtension;
+	}
 
-		self::createDirIfNotExist($path);
+	private function setDefaultWithConfig()
+	{
+		$this->config = (new Configurations)->getConfig();
+		//file
+		$this->fileName = $this->config['fileLog']['defaultName'] ?? 'log';
+		$this->fileExtension = $this->config['fileLog']['defaultExtension'] ?? 'log';
+		//bool
+		$this->showPrefix = $this->config['prefixLog']['defaultShowPrefix'] ?? true;
+	}
 
-		$fileName = "log";
-		if (isset($Option['fileName']) && $Option['fileName']) {
-			$fileName = $Option['fileName'];
-		}
-		$pathFile = $path . "/$fileName.log";
-		if (isset($Option['purgeFileBefore']) && $Option['purgeFileBefore']) { //reset file
-			file_put_contents($pathFile, '');
-		}
-
-		$expendObject = false;
-		if (isset($Option['expendObject']) && $Option['expendObject']) { // expend object / array
-			$expendObject = true;
-		}
-
-		//check type and get contennt
-		$type = gettype($data);
-		switch ($type) {
-			case 'object':
-				if (is_object($data)) { // class 
-					$dataDecode = self::decodeObjet($data);
-					$texts[0] = $type . " '" . $dataDecode['class'] . "' : " . self::createExpendedJson($dataDecode['content'], $expendObject);
-					if (isset($dataDecode['appendLog']) && $dataDecode['appendLog']) {
-						$texts = array_merge($texts, $dataDecode['appendLog']);
-					}
-				} else { // simple object 
-					$texts[0] = $type . " : " . self::createExpendedJson($data, $expendObject);
-				}
-				break;
-			case 'array':
-				if (count($data) > 0) {
-					if (isset($data[0]) && gettype($data[0]) == "object") {
-						$fakeData = self::decodeListObjet($data);
-						$texts[0] = $type . " : " . self::createExpendedJson($fakeData, $expendObject);
-					} else {
-						$texts[0] = $type . " : " . self::createExpendedJson($data, $expendObject);
-					}
-				} else {
-					$texts[0] = $type . " : " . self::createExpendedJson($data, $expendObject);
-				}
-				break;
-			case 'integer':
-			case 'float':
-			case 'double':
-			case 'string':
-				$texts[0] = $data;
-				break;
-			case 'boolean':
-				$texts[0] = $type . ' : ' . ($data == true ? 'TRUE' : 'FALSE');
-				break;
-			default:
-				$texts[0] = $type;
-				break;
-		}
-
-		// write log
-		$prefixText = date('Y/m/d.H:i:s') . ' : ';
+	//write in file 
+	protected  function writeInLog(array $texts)
+	{
+		if (!$this->pathFile) throw new \Error("Unknown file");
+		$dateFormat = $this->config['prefixLog']['date']['format'];
+		$separator = $this->config['prefixLog']['date']['separator'];
+		$prefixText = date($dateFormat) . $separator;
 		foreach ($texts as $text) {
-			if (!isset($Option['hideDate']) || !$Option['hideDate']) { // hide prefix
+			if ($this->showPrefix) {
 				$text = $prefixText . $text;
 			}
-			file_put_contents($pathFile, $text . "\n", FILE_APPEND);
+			file_put_contents($this->pathFile, $text . "\n", FILE_APPEND);
 		}
 	}
 
@@ -98,7 +58,7 @@ abstract class AbstractCustomLog
 	 * @param integer $nbSpace
 	 * @return string
 	 */
-	public static function createExpendedJson($data, bool $expendObject = false, $nbSpace = 0): string
+	protected  function createExpendedJson($data, bool $expendObject = false, $nbSpace = 0): string
 	{
 		$stringResponse = '';
 		$type = gettype($data);
@@ -113,7 +73,7 @@ abstract class AbstractCustomLog
 				$stringResponse .= $indent . "\n";
 				if (
 					$type == 'object' ||
-					self::has_string_keys($data)
+					$this->has_string_keys($data)
 				) {
 					$srtCroche = '{';
 					$endCroche = '}';
@@ -124,7 +84,7 @@ abstract class AbstractCustomLog
 
 				$stringResponse .= $indent . $srtCroche . "\n";
 				foreach ($data as $key => $subData) {
-					$stringResponse .= $indent . "  " . $key . " : " . self::createExpendedJson($subData, $expendObject, $nbSpace + 2) . "\n";
+					$stringResponse .= $indent . "  " . $key . " : " . $this->createExpendedJson($subData, $expendObject, $nbSpace + 2) . "\n";
 				}
 				$stringResponse .= $indent . $endCroche;
 			} else {
@@ -143,22 +103,9 @@ abstract class AbstractCustomLog
 	 * @param array $array
 	 * @return boolean
 	 */
-	public static function has_string_keys(array $array): bool
+	protected  function has_string_keys(array $array): bool
 	{
 		return count(array_filter(array_keys($array), 'is_string')) > 0;
-	}
-
-	/**
-	 * Create a dir if not exist
-	 *
-	 * @param string $path
-	 * @return void
-	 */
-	public static function createDirIfNotExist(string $path): void
-	{
-		if (!file_exists($path)) {
-			mkdir($path, 0777, true);
-		}
 	}
 
 	/**
@@ -167,7 +114,7 @@ abstract class AbstractCustomLog
 	 * @param mixed $obj
 	 * @return array
 	 */
-	public static function decodeObjet($obj): array
+	protected  function decodeObjet($obj): array
 	{
 		$dataToReturn = [
 			'class' => NULL,
@@ -199,7 +146,7 @@ abstract class AbstractCustomLog
 		}
 
 		//check instance for more data
-		$returnAppendLog = self::getContentSpecialClass($obj);
+		$returnAppendLog = $this->getContentSpecialClass($obj);
 		if ($returnAppendLog) {
 			$appendLog = array_merge($appendLog, $returnAppendLog);
 		}
@@ -219,7 +166,7 @@ abstract class AbstractCustomLog
 	 * @param object $obj
 	 * @return array
 	 */
-	private static function getContentSpecialClass($obj): array
+	protected  function getContentSpecialClass($obj): array
 	{
 		$toAppendToLog = [];
 		if (class_exists('Doctrine\\ORM\\QueryBuilder')) {
@@ -236,12 +183,12 @@ abstract class AbstractCustomLog
 	 * @param mixed $arrayofObject
 	 * @return array
 	 */
-	public static function decodeListObjet($arrayofObject): array
+	protected  function decodeListObjet($arrayofObject): array
 	{
 		$fakeData = [];
 
 		foreach ($arrayofObject as $object) {
-			$objectDecode = self::decodeObjet($object);
+			$objectDecode = $this->decodeObjet($object);
 			$fakeData[] = ['class' => $objectDecode['class'], 'content' => $objectDecode['content']];
 		}
 

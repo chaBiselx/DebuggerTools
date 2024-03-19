@@ -1,4 +1,11 @@
 
 
 create a log :
-CustomLog::logger($dateToLog, ArrayOfOption);
+POO
+$CustomLog = new CustomLog($ArrayOfOption);
+$CustomLog->logger($dateToLog);
+
+static
+```
+CustomLog::SLogger($dateToLog, ArrayOfOption)
+```
