@@ -6,6 +6,12 @@ use Debuggertools\Abstract\AbstractCustomLog;
 
 class CustomLog extends AbstractCustomLog
 {
+	/**
+	 * Stored data for time measurement
+	 *
+	 * @var array
+	 */
+	private array $timeLogger = [];
 
 	/**
 	 * list param for Options
@@ -103,5 +109,15 @@ class CustomLog extends AbstractCustomLog
 	public static function SLogger($data, array $Option = []): void
 	{
 		(new CustomLog($Option))->logger($data);
+	}
+
+	public function time($label = 'time')
+	{
+		if (!isset($this->timeLogger[$label])) {
+			$this->timeLogger[$label] = microtime(true);
+		} else {
+			$time = round(microtime(true) - $this->timeLogger[$label], 4);
+			$this->logger("$label => $time Sec");
+		}
 	}
 }
