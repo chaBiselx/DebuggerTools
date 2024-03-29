@@ -36,8 +36,8 @@ class PathLog
 
 	public function __construct()
 	{
-		$this->regexVendorFolder = addslashes(DIRECTORY_SEPARATOR) . 'vendor' . addslashes(DIRECTORY_SEPARATOR);
-		$this->regexDebuggertools = addslashes(DIRECTORY_SEPARATOR) . 'Debuggertools' . addslashes(DIRECTORY_SEPARATOR);
+		$this->regexVendorFolder = '\\' . (DIRECTORY_SEPARATOR) . 'vendor' . '\\' . (DIRECTORY_SEPARATOR);
+		$this->regexDebuggertools = '\\' . (DIRECTORY_SEPARATOR) . 'Debuggertools' . '\\' . (DIRECTORY_SEPARATOR);
 
 		$this->Configurations = new Configurations();
 	}
@@ -53,7 +53,7 @@ class PathLog
 		if ($Config && $Config['fileLog']) {
 			$pathConfig = $Config['fileLog']['folder']['path'] ?? null;
 			if ($pathConfig) {
-				if (preg_match('/^' . DIRECTORY_SEPARATOR . '/', $pathConfig)) {
+				if (preg_match('/^\\' . DIRECTORY_SEPARATOR . '/', $pathConfig)) {
 					$postPath =  $pathConfig . DIRECTORY_SEPARATOR;
 				} else {
 					return $this->rootPath = $pathConfig . DIRECTORY_SEPARATOR;
