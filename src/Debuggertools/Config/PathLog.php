@@ -73,6 +73,6 @@ class PathLog
 
 	public function getLogFolderPath()
 	{
-		return $this->getRootPath() . '\\log';
+		return realpath($this->getRootPath() . '\\log');
 	}
 }

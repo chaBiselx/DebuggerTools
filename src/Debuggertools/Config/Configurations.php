@@ -54,7 +54,7 @@ class Configurations
 	{
 		$Path = __DIR__ . $this->pathRelativeJson;
 		$this->createDirIfNotExist($Path); // FileSystem
-		$this->pathFile = $Path . '\\' . $this->nameJson;
+		$this->pathFile = realpath($Path . '\\' . $this->nameJson);
 	}
 
 

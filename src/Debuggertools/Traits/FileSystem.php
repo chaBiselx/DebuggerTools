@@ -12,6 +12,7 @@ trait FileSystem
 	 */
 	protected function createDirIfNotExist(string $path): void
 	{
+		$path = realpath($path);
 		$path = preg_replace('/\//', '\\', $path);
 		if (!file_exists($path)) {
 			mkdir($path, 0777, true);
