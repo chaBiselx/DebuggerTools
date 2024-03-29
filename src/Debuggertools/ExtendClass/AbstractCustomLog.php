@@ -9,13 +9,48 @@ use Debuggertools\Traits\FileSystem;
 abstract class AbstractCustomLog
 {
 	use FileSystem;
+
+	/**
+	 * fileName
+	 *
+	 * @var string
+	 */
 	protected string $fileName = 'log';
+
+	/**
+	 * fileExtension
+	 *
+	 * @var string
+	 */
 	protected string $fileExtension = 'log';
+
+	/**
+	 * expendObject
+	 *
+	 * @var boolean
+	 */
 	protected bool $expendObject = false;
+
+	/**
+	 * showPrefix
+	 *
+	 * @var boolean
+	 */
 	protected bool $showPrefix = true;
+
+	/**
+	 * config
+	 *
+	 * @var array
+	 */
 	protected array $config = [];
 
-	protected ?string $pathFile = NULL;
+	/**
+	 * pathFile
+	 *
+	 * @var string|null
+	 */
+	protected  $pathFile = NULL;
 
 	public function __construct()
 	{

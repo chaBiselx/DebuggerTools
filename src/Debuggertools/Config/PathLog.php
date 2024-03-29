@@ -6,10 +6,33 @@ use Debuggertools\Config\Configurations;
 
 class PathLog
 {
-	private string $regexVendorFolder = '\\\\vendor\\\\';
-	private string $regexDebuggertools = '\\\\Debuggertools\\\\';
-	protected ?string $rootPath = NULL;
-	private ?Configurations $Configurations = NULL;
+	/**
+	 * regexVendorFolder
+	 *
+	 * @var string
+	 */
+	private $regexVendorFolder = '\\\\vendor\\\\';
+
+	/**
+	 * regexDebuggertools
+	 *
+	 * @var string
+	 */
+	private $regexDebuggertools = '\\\\Debuggertools\\\\';
+
+	/**
+	 * rootPath
+	 *
+	 * @var string|null
+	 */
+	protected  $rootPath = NULL;
+
+	/**
+	 * Configurations
+	 *
+	 * @var Configurations|null
+	 */
+	private $Configurations = NULL;
 
 	public function __construct()
 	{

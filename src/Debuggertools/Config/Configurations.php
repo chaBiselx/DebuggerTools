@@ -7,9 +7,31 @@ use Debuggertools\Traits\FileSystem;
 class Configurations
 {
 	use FileSystem;
-	private string $pathRelativeJson = '\\json';
-	private string $nameJson = 'config.local.json';
-	private string $pathFile = 'config.local.json';
+	/**
+	 * pathRelativeJson folder
+	 *
+	 * @var string
+	 */
+	private $pathRelativeJson = '\\json';
+
+	/**
+	 * nameJson name of the file
+	 *
+	 * @var string
+	 */
+	private $nameJson = 'config.local.json';
+
+	/**
+	 * Path file 
+	 *
+	 * @var string
+	 */
+	private $pathFile = '';
+	/**
+	 * default Json
+	 *
+	 * @var array
+	 */
 	private $defaultJson =
 	[
 		"fileLog" => [
