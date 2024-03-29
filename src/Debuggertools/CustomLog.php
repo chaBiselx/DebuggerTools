@@ -11,7 +11,8 @@ class CustomLog extends AbstractCustomLog
 	 *
 	 * @var array
 	 */
-	private array $timeLogger = [];
+	// private array $timeLogger = []; >= php7.4
+	private $timeLogger = [];
 
 	/**
 	 * list param for Options

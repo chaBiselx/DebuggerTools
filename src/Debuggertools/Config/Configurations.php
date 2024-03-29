@@ -10,7 +10,7 @@ class Configurations
 	private string $pathRelativeJson = '\\json';
 	private string $nameJson = 'config.local.json';
 	private string $pathFile = 'config.local.json';
-	private array $defaultJson =
+	private $defaultJson =
 	[
 		"fileLog" => [
 			"folder" => [
