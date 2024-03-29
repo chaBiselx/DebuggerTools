@@ -1,6 +1,6 @@
 <?php
 
-namespace Debuggertools\Abstract;
+namespace Debuggertools\ExtendClass;
 
 use Debuggertools\Config\PathLog;
 use Debuggertools\Config\Configurations;

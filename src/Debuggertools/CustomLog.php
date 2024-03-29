@@ -2,7 +2,7 @@
 
 namespace Debuggertools;
 
-use Debuggertools\Abstract\AbstractCustomLog;
+use Debuggertools\ExtendClass\AbstractCustomLog;
 
 class CustomLog extends AbstractCustomLog
 {
