@@ -171,7 +171,7 @@ abstract class AbstractCustomLog
 		$toAppendToLog = [];
 		if (class_exists('Doctrine\\ORM\\QueryBuilder')) {
 			if ($obj instanceof \Doctrine\ORM\QueryBuilder) {
-				$toAppendToLog[] = $obj->getQuery()->getSql();
+				$toAppendToLog = array_merge($toAppendToLog, AnalyseQueryBuilder::returnForLog($obj));
 			}
 		}
 		return $toAppendToLog;
