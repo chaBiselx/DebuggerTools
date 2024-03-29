@@ -27,7 +27,7 @@ class CustomLog extends AbstractCustomLog
 		parent::__construct(); // default value 
 		//Option
 		if (isset($Option['fileName']) && $Option['fileName']) {
-			$this->fileName = $Option['fileName'];
+			$this->fileName = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $Option['fileName']);
 		}
 		if (isset($Option['expendObject']) && $Option['expendObject']) { // expend object / array
 			$this->expendObject = true;

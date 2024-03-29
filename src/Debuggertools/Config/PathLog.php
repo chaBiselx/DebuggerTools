@@ -11,14 +11,14 @@ class PathLog
 	 *
 	 * @var string
 	 */
-	private $regexVendorFolder = '\\\\vendor\\\\';
+	private $regexVendorFolder = "";
 
 	/**
 	 * regexDebuggertools
 	 *
 	 * @var string
 	 */
-	private $regexDebuggertools = '\\\\Debuggertools\\\\';
+	private $regexDebuggertools = "";
 
 	/**
 	 * rootPath
@@ -36,6 +36,9 @@ class PathLog
 
 	public function __construct()
 	{
+		$this->regexVendorFolder = addslashes(DIRECTORY_SEPARATOR) . 'vendor' . addslashes(DIRECTORY_SEPARATOR);
+		$this->regexDebuggertools = addslashes(DIRECTORY_SEPARATOR) . 'Debuggertools' . addslashes(DIRECTORY_SEPARATOR);
+
 		$this->Configurations = new Configurations();
 	}
 
@@ -50,10 +53,10 @@ class PathLog
 		if ($Config && $Config['fileLog']) {
 			$pathConfig = $Config['fileLog']['folder']['path'] ?? null;
 			if ($pathConfig) {
-				if (preg_match('/^\\\\/', $pathConfig)) {
-					$postPath =  $pathConfig . '\\';
+				if (preg_match('/^' . DIRECTORY_SEPARATOR . '/', $pathConfig)) {
+					$postPath =  $pathConfig . DIRECTORY_SEPARATOR;
 				} else {
-					return $this->rootPath = $pathConfig . '\\';
+					return $this->rootPath = $pathConfig . DIRECTORY_SEPARATOR;
 				}
 			}
 		}
@@ -73,6 +76,6 @@ class PathLog
 
 	public function getLogFolderPath()
 	{
-		return realpath($this->getRootPath() . '\\log');
+		return realpath($this->getRootPath() . DIRECTORY_SEPARATOR . 'log');
 	}
 }

@@ -12,7 +12,7 @@ class Configurations
 	 *
 	 * @var string
 	 */
-	private $pathRelativeJson = '\\json';
+	private $pathRelativeJson = DIRECTORY_SEPARATOR . 'json';
 
 	/**
 	 * nameJson name of the file
@@ -52,9 +52,9 @@ class Configurations
 
 	public function __construct()
 	{
-		$Path = __DIR__ . $this->pathRelativeJson;
+		$Path = realpath(__DIR__ . $this->pathRelativeJson);
 		$this->createDirIfNotExist($Path); // FileSystem
-		$this->pathFile = realpath($Path . '\\' . $this->nameJson);
+		$this->pathFile = realpath($Path . DIRECTORY_SEPARATOR . $this->nameJson);
 	}
 
 

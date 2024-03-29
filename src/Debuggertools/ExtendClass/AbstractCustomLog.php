@@ -57,7 +57,7 @@ abstract class AbstractCustomLog
 		$path = (new PathLog())->getLogFolderPath();
 		$this->setDefaultWithConfig();
 		$this->createDirIfNotExist($path); // FileSystem
-		$this->pathFile = $path . "\\" . $this->fileName . "." . $this->fileExtension;
+		$this->pathFile = $path . DIRECTORY_SEPARATOR . $this->fileName . "." . $this->fileExtension;
 	}
 
 	private function setDefaultWithConfig()
