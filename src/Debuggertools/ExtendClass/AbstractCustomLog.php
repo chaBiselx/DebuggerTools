@@ -15,35 +15,35 @@ abstract class AbstractCustomLog
 	 *
 	 * @var string
 	 */
-	protected string $fileName = 'log';
+	protected $fileName = 'log';
 
 	/**
 	 * fileExtension
 	 *
 	 * @var string
 	 */
-	protected string $fileExtension = 'log';
+	protected $fileExtension = 'log';
 
 	/**
 	 * expendObject
 	 *
 	 * @var boolean
 	 */
-	protected bool $expendObject = false;
+	protected $expendObject = false;
 
 	/**
 	 * showPrefix
 	 *
 	 * @var boolean
 	 */
-	protected bool $showPrefix = true;
+	protected $showPrefix = true;
 
 	/**
 	 * config
 	 *
 	 * @var array
 	 */
-	protected array $config = [];
+	protected $config = [];
 
 	/**
 	 * pathFile
