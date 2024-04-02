@@ -103,6 +103,7 @@ class Configurations
 	 */
 	private function writeFile(string $text)
 	{
+		if (!file_exists($this->pathFile)) touch($this->pathFile);
 		file_put_contents($this->pathFile, $text);
 	}
 }
