@@ -74,6 +74,7 @@ abstract class AbstractCustomLog
 	protected  function writeInLog(array $texts)
 	{
 		if (!$this->pathFile) throw new \Error("Unknown file");
+		if (!file_exists($this->pathFile)) touch($this->pathFile);
 		$dateFormat = $this->config['prefixLog']['date']['format'];
 		$separator = $this->config['prefixLog']['date']['separator'];
 		$prefixText = date($dateFormat) . $separator;
