@@ -10,11 +10,10 @@ trait FileSystem
 	 * @param string $path
 	 * @return void
 	 */
-	protected function createDirIfNotExist(string $path): void
+	protected function createDirIfNotExist(string $path, int $Permission = 0666): void
 	{
-		$path = realpath($path);
 		if (!file_exists($path)) {
-			mkdir($path, 0777, true);
+			mkdir($path, $Permission, true);
 		}
 	}
 }

@@ -76,6 +76,6 @@ class PathLog
 
 	public function getLogFolderPath()
 	{
-		return realpath($this->getRootPath() . DIRECTORY_SEPARATOR . 'log');
+		return $this->getRootPath() . DIRECTORY_SEPARATOR . 'log';
 	}
 }

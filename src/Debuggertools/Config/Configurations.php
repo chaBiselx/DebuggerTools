@@ -52,9 +52,9 @@ class Configurations
 
 	public function __construct()
 	{
-		$Path = realpath(__DIR__ . $this->pathRelativeJson);
+		$Path = __DIR__ . $this->pathRelativeJson;
 		$this->createDirIfNotExist($Path); // FileSystem
-		$this->pathFile = realpath($Path . DIRECTORY_SEPARATOR . $this->nameJson);
+		$this->pathFile = $Path . DIRECTORY_SEPARATOR . $this->nameJson;
 	}
 
 
