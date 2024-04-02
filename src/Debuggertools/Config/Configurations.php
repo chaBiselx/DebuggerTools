@@ -92,7 +92,13 @@ class Configurations
 	 */
 	private function actualizeConfig(): void
 	{
-		$this->writeFile(json_encode(json_decode(file_get_contents($this->pathFile), true) + $this->defaultJson));
+		$t = json_decode(file_get_contents($this->pathFile), true);
+		if ($t === NULL) {
+			$json  = $this->defaultJson;
+		} else {
+			$json  = $t + $this->defaultJson;
+		}
+		$this->writeFile(json_encode($json));
 	}
 
 	/**
