@@ -36,7 +36,7 @@ class Configurations
 	[
 		"fileLog" => [
 			"folder" => [
-				"path" => null,
+				"path" => 'Dev',
 			],
 			"defaultName" => "log",
 			"defaultExtension" => "log",
