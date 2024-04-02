@@ -4,7 +4,7 @@ namespace Debuggertools\Objects;
 
 
 
-class AnalyseQueryBuilder
+class SymfonyQueryBuilder
 {
 	public static function returnForLog(\Doctrine\ORM\QueryBuilder $obj): array
 	{

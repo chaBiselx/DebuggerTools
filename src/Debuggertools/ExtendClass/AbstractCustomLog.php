@@ -3,8 +3,9 @@
 namespace Debuggertools\ExtendClass;
 
 use Debuggertools\Config\PathLog;
-use Debuggertools\Config\Configurations;
 use Debuggertools\Traits\FileSystem;
+use Debuggertools\Config\Configurations;
+use Debuggertools\Objects\SymfonyQueryBuilder;
 
 abstract class AbstractCustomLog
 {
@@ -207,7 +208,7 @@ abstract class AbstractCustomLog
 		$toAppendToLog = [];
 		if (class_exists('Doctrine\\ORM\\QueryBuilder')) {
 			if ($obj instanceof \Doctrine\ORM\QueryBuilder) {
-				$toAppendToLog = array_merge($toAppendToLog, AnalyseQueryBuilder::returnForLog($obj));
+				$toAppendToLog = array_merge($toAppendToLog, SymfonyQueryBuilder::returnForLog($obj));
 			}
 		}
 		return $toAppendToLog;
