@@ -54,7 +54,7 @@ class PathLog
 			$pathConfig = $Config['fileLog']['folder']['path'] ?? null;
 			if ($pathConfig) {
 				if (preg_match('/^\\' . DIRECTORY_SEPARATOR . '/', $pathConfig)) {
-					$postPath =  $pathConfig . DIRECTORY_SEPARATOR;
+					$postPath =  DIRECTORY_SEPARATOR . $pathConfig . DIRECTORY_SEPARATOR;
 				} else {
 					return $this->rootPath = $pathConfig . DIRECTORY_SEPARATOR;
 				}
@@ -66,9 +66,9 @@ class PathLog
 			return $this->rootPath = preg_replace('/' . $this->regexVendorFolder . '.*$/', '',  $path) . $postPath;
 		}
 
-		//
+		//local test
 		if (preg_match('/' . $this->regexDebuggertools . '/', $path)) {
-			return $this->rootPath = preg_replace('/' . $this->regexDebuggertools . '.*$/', '\\..',  $path) . $postPath;
+			return $this->rootPath = preg_replace('/' . $this->regexDebuggertools . '.*$/', DIRECTORY_SEPARATOR . '..',  $path) . $postPath;
 		}
 
 		return $this->rootPath = dirname(__DIR__) . $postPath;

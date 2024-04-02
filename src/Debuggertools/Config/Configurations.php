@@ -36,7 +36,7 @@ class Configurations
 	[
 		"fileLog" => [
 			"folder" => [
-				"path" => 'Dev',
+				"path" => 'dev' . DIRECTORY_SEPARATOR,
 			],
 			"defaultName" => "log",
 			"defaultExtension" => "log",
