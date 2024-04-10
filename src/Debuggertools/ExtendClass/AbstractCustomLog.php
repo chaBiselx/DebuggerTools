@@ -129,7 +129,7 @@ abstract class AbstractCustomLog
                 $stringResponse = $indent . json_encode($data);
             }
         } else {
-            if ($data === null) $data = "NULL";
+            if ($data === null) $data = "null";
             $stringResponse = (string) $data;
         }
         return $stringResponse;
