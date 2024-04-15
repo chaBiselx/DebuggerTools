@@ -191,7 +191,7 @@ abstract class AbstractCustomLog
             }
         } else {
             $class = gettype($obj);
-            $fakeData = $class;
+            $fakeData = $obj;
         }
 
 
