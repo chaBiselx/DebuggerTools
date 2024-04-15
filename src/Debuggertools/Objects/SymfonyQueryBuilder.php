@@ -45,7 +45,7 @@ class SymfonyQueryBuilder
                 }
                 break;
             default:
-                $d = self::decodeObjet($parameter);
+                $d = self::decodeObjetParameter($parameter);
                 $value .= " : " . $d['class'] . " => " . json_encode($d['content']);
                 break;
         }
