@@ -160,33 +160,38 @@ abstract class AbstractCustomLog
             'appendLog' => []
         ];
 
-        $class = get_class($obj); // get classname
-        $fakeData = json_decode(json_encode($obj), true); // clone the public data
-        $appendLog = [];
-        // get private var with getter
-        foreach (get_class_methods($obj) as $function) {
+        if (gettype($obj) == 'object') {
+            $class = get_class($obj); // get classname
+            $fakeData = json_decode(json_encode($obj), true); // clone the public data
+            $appendLog = [];
+            // get private var with getter
+            foreach (get_class_methods($obj) as $function) {
 
-            if (preg_match('/^get/', $function)) {
-                $method = new \ReflectionMethod($class, $function);
-                try {
-                    if (empty($method->getParameters())) { // not parameters
-                        $res =  $obj->$function();
-                        if (gettype($res) != 'object') {
-                            $fakeData["->$function"] = $obj->$function();
-                        } else {
-                            $fakeData["->$function"] = [get_class($res) => $obj];
+                if (preg_match('/^get/', $function)) {
+                    $method = new \ReflectionMethod($class, $function);
+                    try {
+                        if (empty($method->getParameters())) { // not parameters
+                            $res =  $obj->$function();
+                            if (gettype($res) != 'object') {
+                                $fakeData["->$function"] = $obj->$function();
+                            } else {
+                                $fakeData["->$function"] = [get_class($res) => $obj];
+                            }
                         }
+                    } catch (\Error $e) {
+                        $fakeData["->$function"] = ["CUSTOMLOG" => "ERROR LOGGER", "MESSAGE" => $e->getMessage()];
                     }
-                } catch (\Error $e) {
-                    $fakeData["->$function"] = ["CUSTOMLOG" => "ERROR LOGGER", "MESSAGE" => $e->getMessage()];
                 }
             }
-        }
 
-        //check instance for more data
-        $returnAppendLog = $this->getContentSpecialClass($obj);
-        if ($returnAppendLog) {
-            $appendLog = array_merge($appendLog, $returnAppendLog);
+            //check instance for more data
+            $returnAppendLog = $this->getContentSpecialClass($obj);
+            if ($returnAppendLog) {
+                $appendLog = array_merge($appendLog, $returnAppendLog);
+            }
+        } else {
+            $class = gettype($obj);
+            $fakeData = $class;
         }
 
 
