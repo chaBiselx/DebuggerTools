@@ -32,11 +32,8 @@ class SymfonyQueryBuilder
                 break;
             case '2': // string
             case 'string':
-                try {
-                    $value = "'" . $parameter->getValue() . "'";
-                } catch (\Error $e) {
-                    $value = "ERROR : '" . $parameter->getType() . "'";
-                }
+                $value = self::decodeString($parameter);
+
 
                 break;
             case 'integer': // string
@@ -74,5 +71,19 @@ class SymfonyQueryBuilder
         $decoded .= json_decode(json_encode($parameter->getValue()), true);
 
         return $decoded;
+    }
+
+    private function decodeString($parameter): string
+    {
+        $value = null;
+        if (
+            class_exists('Doctrine\\ORM\\PersistentCollection') &&
+            $parameter instanceof \Doctrine\ORM\PersistentCollection
+        ) {
+            $value = "{Object: PersistentCollection}";
+        } else {
+            $value = "'" . $parameter->getValue() . "'";
+        }
+        return $value;
     }
 }
