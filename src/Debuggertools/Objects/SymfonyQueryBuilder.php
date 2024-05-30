@@ -2,6 +2,8 @@
 
 namespace Debuggertools\Objects;
 
+use Debuggertools\Objects\SqlDecoder;
+
 
 
 class SymfonyQueryBuilder
@@ -17,7 +19,7 @@ class SymfonyQueryBuilder
             $parameter = $listValues[$key];
             $listParam[$key] = self::decodeListObjetSpecialClassQueryBuilder($parameter);
         }
-        $retLog[] = $sql;
+        $retLog[] = SqlDecoder::decodeSql($sql);
         $retLog[] = json_encode($listParam);
 
         return $retLog;
