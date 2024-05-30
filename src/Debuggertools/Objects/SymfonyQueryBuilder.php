@@ -79,20 +79,24 @@ class SymfonyQueryBuilder
 
     private function decodeString($parameter): string
     {
-        $value = null;
-        if (
-            class_exists('Doctrine\\ORM\\PersistentCollection') &&
-            $parameter instanceof \Doctrine\ORM\PersistentCollection
-        ) {
-            $value = "{Object: PersistentCollection}";
-        } else {
-            try {
-                $value = "'" . gettype($parameter) . "'";
-                $value .= "'" . get_class($parameter) . "'";
-            } catch (\Error $e) {
-                $value = $e->getMessage();
+        $stringReturn = null;
+
+        try {
+            $value = $parameter->getValue();
+            switch (gettype($value)) {
+                case 'integer':
+                case 'float':
+                case 'boolean':
+                case 'string':
+                    $stringReturn = "'" . $value . "'";
+                    break;
+                default:
+                    $stringReturn = "{object:" . gettype($value) . "}";
+                    break;
             }
+        } catch (\Error $e) {
+            $stringReturn = $e->getMessage();
         }
-        return $value;
+        return $stringReturn;
     }
 }
