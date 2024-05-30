@@ -30,6 +30,7 @@ class SymfonyQueryBuilder
             case 'datetime':
                 $value = "'" . $parameter->getValue()->format('Y-m-d H:i:s') . "'";
                 break;
+            case 'boolean':
             case '1': // boolean
                 $value = " " . ($parameter->getValue() ? 1 : 0) . " ";
                 break;
