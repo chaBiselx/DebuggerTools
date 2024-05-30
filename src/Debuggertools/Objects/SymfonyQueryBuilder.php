@@ -30,6 +30,9 @@ class SymfonyQueryBuilder
             case 'datetime':
                 $value = "'" . $parameter->getValue()->format('Y-m-d H:i:s') . "'";
                 break;
+            case '1': // boolean
+                $value = " " . ($parameter->getValue() ? 1 : 0) . " ";
+                break;
             case '2': // string
             case 'string':
                 $value = self::decodeString($parameter);
@@ -83,7 +86,8 @@ class SymfonyQueryBuilder
             $value = "{Object: PersistentCollection}";
         } else {
             try {
-                $value = "'" . get_class($parameter) . "'";
+                $value = "'" . gettype($parameter) . "'";
+                $value .= "'" . get_class($parameter) . "'";
             } catch (\Error $e) {
                 $value = $e->getMessage();
             }
