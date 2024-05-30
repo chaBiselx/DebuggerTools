@@ -45,7 +45,11 @@ class SymfonyQueryBuilder
                 }
                 break;
             default:
-                $d = self::decodeObjetParameter($parameter);
+                try {
+                    $d = self::decodeObjetParameter($parameter);
+                } catch (\Error $e) {
+                    $d = get_class($parameter);
+                }
                 $value .= " : " . $d;
                 break;
         }
