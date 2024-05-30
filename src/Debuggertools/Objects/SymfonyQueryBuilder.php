@@ -83,8 +83,7 @@ class SymfonyQueryBuilder
             $value = "{Object: PersistentCollection}";
         } else {
             try {
-                $value = "'" . gettype($parameter) . "'";
-                $value .= "'" . get_class($parameter) . "'";
+                $value = "'" . get_class($parameter) . "'";
             } catch (\Error $e) {
                 $value = $e->getMessage();
             }
