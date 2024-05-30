@@ -32,7 +32,12 @@ class SymfonyQueryBuilder
                 break;
             case '2': // string
             case 'string':
-                $value = "'" . $parameter->getValue() . "'";
+                try {
+                    $value = "'" . $parameter->getValue() . "'";
+                } catch (\Error $e) {
+                    $value = "ERROR : '" . $parameter->getType() . "'";
+                }
+
                 break;
             case 'integer': // string
                 $value =  $parameter->getValue();
