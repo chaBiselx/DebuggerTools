@@ -1,0 +1,18 @@
+<?php
+
+require_once 'vendor/autoload.php';
+$CustomLog = new \Debuggertools\CustomLog(['expendObject' => 1, 'purgeFileBefore' => 1]);
+$CustomLog->logger('test');
+$CustomLog->logger(['test' => 'oto']);
+
+\Debuggertools\CustomLog::SLogger(['static' => 'yes'], ['expendObject' => 1]);
+echo 'yes';
+
+$CustomLog->time('total');
+$CustomLog->time('time');
+sleep(3);
+$CustomLog->time('time');
+$CustomLog->time('2');
+sleep(2);
+$CustomLog->time('2');
+$CustomLog->time('total');
