@@ -3,6 +3,7 @@
 namespace Debuggertools\Objects;
 
 use Debuggertools\Objects\SqlDecoder;
+use Debuggertools\Objects\ObjectDecoder;
 
 
 
@@ -91,6 +92,12 @@ class SymfonyQueryBuilder
                 case 'boolean':
                 case 'string':
                     $stringReturn = "'" . $value . "'";
+                    break;
+                case 'array':
+                    $stringReturn = ObjectDecoder::decodeObject($value);
+                    break;
+                case 'object':
+                    $stringReturn = ObjectDecoder::decodeObject($value);
                     break;
                 default:
                     $stringReturn = "{object:" . gettype($value) . "}";

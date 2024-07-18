@@ -6,17 +6,41 @@ namespace Debuggertools\Objects;
 
 class SqlDecoder
 {
+    private static $instructionClassique = [
+        ['instruction' => 'SELECT', 'nbGroupSpace' => 0],
+        ['instruction' => 'FROM', 'nbGroupSpace' => 1],
+        ['instruction' => 'CASE', 'nbGroupSpace' => 1],
+        ['instruction' => 'WHEN', 'nbGroupSpace' => 2],
+        ['instruction' => 'ELSE', 'nbGroupSpace' => 2],
+        ['instruction' => 'END', 'nbGroupSpace' => 1],
+        ['instruction' => 'INNER', 'nbGroupSpace' => 1],
+        ['instruction' => 'LEFT', 'nbGroupSpace' => 1],
+        ['instruction' => 'RIGHT', 'nbGroupSpace' => 1],
+        ['instruction' => 'OUTER', 'nbGroupSpace' => 1],
+        ['instruction' => 'ORDER', 'nbGroupSpace' => 1],
+        ['instruction' => 'LIMIT', 'nbGroupSpace' => 1],
+        ['instruction' => 'WHERE', 'nbGroupSpace' => 1],
+    ];
+
     public static function decodeSql($sql): string
     {
         $newSql = $sql;
-        $newSql = str_replace(' FROM ', " \n    FROM ", $newSql);
-        $newSql = str_replace(' CASE ', " \n    CASE ", $newSql);
-        $newSql = str_replace(' WHEN ', " \n         WHEN ", $newSql);
-        $newSql = str_replace(' ELSE ', " \n         ELSE ", $newSql);
-        $newSql = str_replace(' END ', " \n     END ", $newSql);
-        $newSql = str_replace(' INNER ', " \n    INNER ", $newSql);
-        $newSql = str_replace(' ORDER ', " \n    ORDER ", $newSql);
-        $newSql = str_replace(' LIMIT ', " \n    LIMIT ", $newSql);
+        $newSql = self::decodeString($newSql, self::$instructionClassique);
+        return $newSql;
+    }
+
+    public static function decodeString(string $sql, array $listElement = [])
+    {
+        $newSql = $sql;
+        foreach ($listElement as $element) {
+            $space = '';
+            for ($i = 0; $i <  $element['nbGroupSpace']; $i++) {
+                $space .= '    ';
+            }
+            $newSql = str_replace(' ' . $element['instruction'] . ' ', " \n" . $space . $element['instruction'] . " ", $newSql);
+
+            # code...
+        }
         return $newSql;
     }
 }
