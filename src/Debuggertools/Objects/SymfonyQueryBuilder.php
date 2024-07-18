@@ -94,10 +94,10 @@ class SymfonyQueryBuilder
                     $stringReturn = "'" . $value . "'";
                     break;
                 case 'array':
-                    $stringReturn = ObjectDecoder::decodeObject($value);
+                    $stringReturn = json_encode($value);
                     break;
                 case 'object':
-                    $stringReturn = ObjectDecoder::decodeObject($value);
+                    $stringReturn = json_encode(ObjectDecoder::decodeObject($value));
                     break;
                 default:
                     $stringReturn = "{object:" . gettype($value) . "}";

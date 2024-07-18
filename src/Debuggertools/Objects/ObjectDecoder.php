@@ -8,7 +8,7 @@ class ObjectDecoder
 {
 
 
-    public static function decodeObject($obj): array
+    public static function decodeObject($obj): ?array
     {
         $class = get_class($obj); // get classname
         $fakeData = json_decode(json_encode($obj), true); // clone the public data
