@@ -5,6 +5,7 @@ namespace Debuggertools\ExtendClass;
 use Debuggertools\Config\PathLog;
 use Debuggertools\Traits\FileSystem;
 use Debuggertools\Config\Configurations;
+use Debuggertools\Objects\ObjectDecoder;
 use Debuggertools\Objects\SymfonyQueryBuilder;
 
 abstract class AbstractCustomLog
