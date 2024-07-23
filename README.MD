@@ -1,14 +1,21 @@
 
+Install 
+composer require --dev chabiselx/debuggerTools
+
 
 create a log :
 POO
 $CustomLog = new CustomLog($ArrayOfOption);
-$CustomLog->logger($dateToLog);
+$CustomLog->logger($dataToLog);
 
-static
+Singleton
 ```
-CustomLog::SLogger($dateToLog, ArrayOfOption)
+CustomLog::SLogger($dataToLog, ArrayOfOption)
 ```
+
+list of element : 
+- any basic type
+- \Doctrine\ORM\QueryBuilder from symfony
 
 
 create a time logger 
@@ -18,3 +25,4 @@ $CustomLog->time("label");
 sleep(5);
 $CustomLog->time("label");
 ```
+

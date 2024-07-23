@@ -60,6 +60,9 @@ abstract class AbstractCustomLog
         $this->setDefaultWithConfig();
         $this->createDirIfNotExist($path); // FileSystem
         $this->pathFile = $path . DIRECTORY_SEPARATOR . $this->fileName . "." . $this->fileExtension;
+
+        $this->ObjectDecoder = new ObjectDecoder();
+        $this->SymfonyQueryBuilder = new SymfonyQueryBuilder();
     }
 
     private function setDefaultWithConfig()
@@ -72,7 +75,12 @@ abstract class AbstractCustomLog
         $this->showPrefix = $this->config['prefixLog']['defaultShowPrefix'] ?? true;
     }
 
-    //write in file
+    /**
+     * Write in logs file
+     *
+     * @param array $texts
+     * @return void
+     */
     protected  function writeInLog(array $texts)
     {
         if (!$this->pathFile) throw new \Error("Unknown file");
@@ -101,10 +109,7 @@ abstract class AbstractCustomLog
         $stringResponse = '';
         $type = gettype($data);
         //base indent
-        $indent = "";
-        for ($i = 0; $i < $nbSpace; $i++) {
-            $indent .= " ";
-        }
+        $indent = self::createIndent($nbSpace);
 
         if (in_array($type, ['object', 'array'])) {
             if ($expendObject) {
@@ -137,6 +142,21 @@ abstract class AbstractCustomLog
     }
 
     /**
+     * Create base to indentation
+     *
+     * @param integer $nbSpace
+     * @return string
+     */
+    protected static function createIndent(int $nbSpace): string
+    {
+        $indent = "";
+        for ($i = 0; $i < $nbSpace; $i++) {
+            $indent .= " ";
+        }
+        return $indent;
+    }
+
+    /**
      * check if the array associative or not
      *
      * @param array $array
@@ -164,7 +184,7 @@ abstract class AbstractCustomLog
         if (gettype($obj) == 'object') {
             $class = get_class($obj); // get classname
             $appendLog = [];
-            $fakeData = ObjectDecoder::decodeObject($obj);
+            $fakeData = $this->ObjectDecoder->decodeObject($obj);
 
             //check instance for more data
             $returnAppendLog = $this->getContentSpecialClass($obj);
@@ -198,7 +218,7 @@ abstract class AbstractCustomLog
             class_exists('Doctrine\\ORM\\QueryBuilder') &&
             $obj instanceof \Doctrine\ORM\QueryBuilder
         ) {
-            $toAppendToLog = array_merge($toAppendToLog, SymfonyQueryBuilder::returnForLog($obj));
+            $toAppendToLog = array_merge($toAppendToLog, $this->SymfonyQueryBuilder->returnForLog($obj));
         }
         return $toAppendToLog;
     }

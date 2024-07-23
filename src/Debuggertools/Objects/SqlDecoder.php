@@ -2,11 +2,11 @@
 
 namespace Debuggertools\Objects;
 
+use Debuggertools\Interfaces\SqlDecoderInterface;
 
-
-class SqlDecoder
+class SqlDecoder implements SqlDecoderInterface
 {
-    private static $instructionClassique = [
+    private $instructionClassique = [
         ['instruction' => 'SELECT', 'nbGroupSpace' => 0],
         ['instruction' => 'FROM', 'nbGroupSpace' => 1],
         ['instruction' => 'CASE', 'nbGroupSpace' => 1],
@@ -22,25 +22,29 @@ class SqlDecoder
         ['instruction' => 'WHERE', 'nbGroupSpace' => 1],
     ];
 
-    public static function decodeSql($sql): string
+    public function decodeSql(string $sql): string
     {
         $newSql = $sql;
-        $newSql = self::decodeString($newSql, self::$instructionClassique);
+        $newSql = $this->decodeString($newSql);
         return $newSql;
     }
 
-    public static function decodeString(string $sql, array $listElement = [])
+    public function decodeString(string $sql)
     {
         $newSql = $sql;
-        foreach ($listElement as $element) {
-            $space = '';
-            for ($i = 0; $i <  $element['nbGroupSpace']; $i++) {
-                $space .= '    ';
-            }
-            $newSql = str_replace(' ' . $element['instruction'] . ' ', " \n" . $space . $element['instruction'] . " ", $newSql);
-
-            # code...
+        foreach ($this->instructionClassique as $element) {
+            $indent = $this->ident($element['nbGroupSpace']);
+            $newSql = str_replace(' ' . $element['instruction'] . ' ', " \n" . $indent . $element['instruction'] . " ", $newSql);
         }
         return $newSql;
+    }
+
+    protected function ident(int $nbIndent): string
+    {
+        $indent = '';
+        for ($i = 0; $i <  $nbIndent; $i++) {
+            $indent .= '    ';
+        }
+        return $indent;
     }
 }

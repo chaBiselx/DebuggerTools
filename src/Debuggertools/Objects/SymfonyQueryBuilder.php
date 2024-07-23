@@ -2,31 +2,40 @@
 
 namespace Debuggertools\Objects;
 
+use Debuggertools\Interfaces\QueryBuilderInterface;
 use Debuggertools\Objects\SqlDecoder;
 use Debuggertools\Objects\ObjectDecoder;
 
 
 
-class SymfonyQueryBuilder
+class SymfonyQueryBuilder implements QueryBuilderInterface
 {
-    public static function returnForLog(\Doctrine\ORM\QueryBuilder $obj): array
+
+    public function __construct()
+    {
+        $this->ObjectDecoder = new ObjectDecoder;
+        $this->SqlDecoder = new SqlDecoder;
+    }
+
+    public function returnForLog($obj): array
     {
         $retLog = [];
-        $sql = $obj->getQuery()->getSql();
-        $listKeys = $obj->getQuery()->getParameters()->getKeys();
-        $listValues = $obj->getQuery()->getParameters()->getValues();
-        $listParam = [];
-        foreach ($listKeys as $key) {
-            $parameter = $listValues[$key];
-            $listParam[$key] = self::decodeListObjetSpecialClassQueryBuilder($parameter);
+        if ($obj instanceof \Doctrine\ORM\QueryBuilder) {
+            $sql = $obj->getQuery()->getSql();
+            $listKeys = $obj->getQuery()->getParameters()->getKeys();
+            $listValues = $obj->getQuery()->getParameters()->getValues();
+            $listParam = [];
+            foreach ($listKeys as $key) {
+                $parameter = $listValues[$key];
+                $listParam[$key] = $this->decodeListObjetSpecialClassQueryBuilder($parameter);
+            }
+            $retLog[] = $this->SqlDecoder->decodeSql($sql);
+            $retLog[] = json_encode($listParam);
         }
-        $retLog[] = SqlDecoder::decodeSql($sql);
-        $retLog[] = json_encode($listParam);
-
         return $retLog;
     }
 
-    private static function decodeListObjetSpecialClassQueryBuilder($parameter): string
+    protected function decodeListObjetSpecialClassQueryBuilder($parameter): string
     {
         $value = 'TO_DEFINE';
         switch ($parameter->getType()) {
@@ -97,7 +106,7 @@ class SymfonyQueryBuilder
                     $stringReturn = json_encode($value);
                     break;
                 case 'object':
-                    $stringReturn = json_encode(ObjectDecoder::decodeObject($value));
+                    $stringReturn = json_encode($this->ObjectDecoder->decodeObject($value));
                     break;
                 default:
                     $stringReturn = "{object:" . gettype($value) . "}";

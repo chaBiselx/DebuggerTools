@@ -2,13 +2,12 @@
 
 namespace Debuggertools\Objects;
 
+use DateTimeInterface;
 
-
-class ObjectDecoder
+class ObjectDecoder implements ObjectDecoderInterface
 {
 
-
-    public static function decodeObject($obj): ?array
+    public function decodeObject($obj): ?array
     {
         $class = get_class($obj); // get classname
         $fakeData = json_decode(json_encode($obj), true); // clone the public data
@@ -20,12 +19,7 @@ class ObjectDecoder
                 $method = new \ReflectionMethod($class, $function);
                 try {
                     if (empty($method->getParameters())) { // not parameters
-                        $res =  $obj->$function();
-                        if (gettype($res) != 'object') {
-                            $fakeData["->$function"] = $obj->$function();
-                        } else {
-                            $fakeData["->$function"] = [get_class($res) => $obj];
-                        }
+                        $this->decode($fakeData, $obj, $function);
                     }
                 } catch (\Error $e) {
                     $fakeData["->$function"] = ["CUSTOMLOG" => "ERROR LOGGER", "MESSAGE" => $e->getMessage()];
@@ -33,5 +27,25 @@ class ObjectDecoder
             }
         }
         return $fakeData;
+    }
+
+    /**
+     * Decode object to add fake data
+     *
+     * @param array $fakeData
+     * @param object $obj
+     * @param string $function
+     * @return void
+     */
+    protected function decode(&$fakeData, $obj, $function)
+    {
+        $res =  $obj->$function();
+        if (gettype($res) != 'object') {
+            $fakeData["->$function"] = $res;
+        } elseif ($res instanceof DateTimeInterface) {
+            $fakeData["->$function"] = self::decodeObject($res);
+        } else {
+            $fakeData["->$function"] = [get_class($res) => $obj];
+        }
     }
 }
