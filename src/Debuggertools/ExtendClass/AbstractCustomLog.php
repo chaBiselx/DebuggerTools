@@ -78,10 +78,10 @@ abstract class AbstractCustomLog
     /**
      * Generate an array of text for the logger
      *
-     * @param any $data
+     * @param mixed $data
      * @return array
      */
-    protected function generateTextFormData(any $data): array
+    protected function generateTextFormData(mixed $data): array
     {
         //check type and get contennt
         $type = gettype($data);
