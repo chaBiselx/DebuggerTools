@@ -34,6 +34,8 @@ class Trace
     {
         $traces = debug_backtrace();
         $basePath = $this->detectBasePathFromTraces($traces);
+        $arrayText[] = $basePath;
+
         $arrayText = [];
         foreach ($traces as $trace) {
             if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
