@@ -10,7 +10,7 @@ $CustomLog->logger($dataToLog);
 
 Singleton
 ```
-CustomLog::SLogger($dataToLog, ArrayOfOption)
+CustomLog::loggerStatic($dataToLog, ArrayOfOption)
 ```
 
 list of element : 

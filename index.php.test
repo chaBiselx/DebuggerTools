@@ -5,7 +5,7 @@ $CustomLog = new \Debuggertools\CustomLog(['expendObject' => 1, 'purgeFileBefore
 $CustomLog->logger('test');
 $CustomLog->logger(['test' => 'oto']);
 
-\Debuggertools\CustomLog::SLogger(['static' => 'yes'], ['expendObject' => 1]);
+\Debuggertools\CustomLog::loggerStatic(['static' => 'yes'], ['expendObject' => 1]);
 echo 'yes';
 
 $CustomLog->time('total');

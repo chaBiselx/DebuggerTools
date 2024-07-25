@@ -70,7 +70,7 @@ class CustomLog extends AbstractCustomLog
      *
      * @return void
      */
-    public static function SLogger($data, array $Option = []): void
+    public static function loggerStatic($data, array $Option = []): void
     {
         (new CustomLog($Option))->logger($data);
     }
