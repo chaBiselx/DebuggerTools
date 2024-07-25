@@ -4,23 +4,10 @@ namespace Debuggertools\Objects;
 
 use Debuggertools\Interfaces\SqlDecoderInterface;
 
+
 class SqlDecoder implements SqlDecoderInterface
 {
-    private $instructionClassique = [
-        ['instruction' => 'SELECT', 'nbGroupSpace' => 0],
-        ['instruction' => 'FROM', 'nbGroupSpace' => 1],
-        ['instruction' => 'CASE', 'nbGroupSpace' => 1],
-        ['instruction' => 'WHEN', 'nbGroupSpace' => 2],
-        ['instruction' => 'ELSE', 'nbGroupSpace' => 2],
-        ['instruction' => 'END', 'nbGroupSpace' => 1],
-        ['instruction' => 'INNER', 'nbGroupSpace' => 1],
-        ['instruction' => 'LEFT', 'nbGroupSpace' => 1],
-        ['instruction' => 'RIGHT', 'nbGroupSpace' => 1],
-        ['instruction' => 'OUTER', 'nbGroupSpace' => 1],
-        ['instruction' => 'ORDER', 'nbGroupSpace' => 1],
-        ['instruction' => 'LIMIT', 'nbGroupSpace' => 1],
-        ['instruction' => 'WHERE', 'nbGroupSpace' => 1],
-    ];
+    private $indent = "    ";
 
     public function decodeSql(string $sql): string
     {
@@ -29,22 +16,38 @@ class SqlDecoder implements SqlDecoderInterface
         return $newSql;
     }
 
-    public function decodeString(string $sql)
+    /**
+     * Format a SQL query to make it more readable, including subqueries.
+     *
+     * @param string $sql The SQL query to format.
+     * @param int $level The indentation level for nested subqueries.
+     * @return string The formatted SQL query.
+     */
+    protected function decodeString(string $sql, int $level = 0)
     {
-        $newSql = $sql;
-        foreach ($this->instructionClassique as $element) {
-            $indent = $this->ident($element['nbGroupSpace']);
-            $newSql = str_replace(' ' . $element['instruction'] . ' ', " \n" . $indent . $element['instruction'] . " ", $newSql);
-        }
-        return $newSql;
-    }
+        // Normalize and remove extra spaces for next traitement
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
 
-    protected function ident(int $nbIndent): string
-    {
-        $indent = '';
-        for ($i = 0; $i <  $nbIndent; $i++) {
-            $indent .= '    ';
+        // Add new lines and indentation for main SQL components
+        $sql = preg_replace('/\b(SELECT|FROM|WHERE|GROUP BY|HAVING|ORDER BY|LIMIT|OFFSET|INSERT INTO|VALUES|UPDATE|SET|DELETE FROM|INNER JOIN|LEFT JOIN|RIGHT JOIN|OUTER JOIN)\b/i', "\n$1", $sql);
+        $sql = preg_replace('/\b(AND|OR)\b/i', "\n" . str_repeat($this->indent, ($level + 1)) . "$1", $sql);
+
+        // Further indentation for select fields
+        $sql = preg_replace('/\bSELECT\b/i', "SELECT\n" . $this->indent, $sql);
+        $sql = preg_replace('/,/', ",\n" . str_repeat($this->indent, ($level + 1)) . "", $sql);
+
+        // Handle subqueries by increasing the indentation level
+        $sql = preg_replace_callback('/\((SELECT.*?)\)/i', function ($matches) use ($level) {
+            return "(\n" . $this->decodeString($matches[1], $level + 1) . "\n" . str_repeat($this->ident, $level) . ")";
+        }, $sql);
+
+        // Trim leading and trailing whitespace from each line and add indentation for the current level
+        $lines = explode("\n", $sql);
+        $formattedSql = '';
+        foreach ($lines as $line) {
+            $formattedSql .= str_repeat($this->indent, $level) . $line . "\n";
         }
-        return $indent;
+
+        return $formattedSql;
     }
 }
