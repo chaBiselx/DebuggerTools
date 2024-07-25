@@ -10,6 +10,7 @@ class Trace
     {
         $Option['hidePrefix'] = true;
         $this->CustomLog = new CustomLog($Option);
+        $this->TraceDecoder = new TraceDecoder();
     }
 
     /**
@@ -20,7 +21,7 @@ class Trace
     public function getTrace(): void
     {
         try {
-            $texts = $this->generateTrace();
+            $texts = $this->TraceDecoder->decode();
             // write log
             foreach ($texts as $text) {
                 $this->CustomLog->logger($text);
@@ -29,106 +30,6 @@ class Trace
             $this->CustomLog->logger(["CUSTOMLOG : an unexpected error has occurred", $th->getMessage(), $th->getTraceAsString()]);
         }
     }
-
-    protected function generateTrace(): array
-    {
-        $traces = debug_backtrace();
-        $basePath = $this->detectBasePathFromTraces($traces);
-        $arrayText[] = $basePath;
-
-        $arrayText = [];
-        foreach ($traces as $trace) {
-            if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
-            if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Trace') continue;
-            $messageFile = "";
-            if (isset($trace['file'])) {
-                $class = '';
-                if (isset($trace['class'])) {
-                    $class = " '" . $trace['class'] . "' ";
-                }
-                $trace['file'] = preg_replace('/^' . addcslashes($basePath, DIRECTORY_SEPARATOR) . '/', "", $trace['file']); // remove base path
-                $messageFile = $trace['file'] . ' (line : ' . $trace['line'] . ') ' . $class;
-            }
-
-            if ($messageFile) $arrayText[] = $messageFile;
-
-            $messageFunction = "";
-            $messageFunction = "          " . $trace['type'] . ' ' .  $trace['function'];
-            $messageFunction .= "(";
-            if ($trace['args'] && !empty($trace['args'])) {
-                foreach ($trace['args'] as $k => $arg) {
-                    if ($k != 0) $messageFunction .= ', ';
-                    $messageFunction .= $this->convertArgToString($arg);
-                }
-            }
-            $messageFunction .= ")";
-            $arrayText[] = $messageFunction;
-        }
-        return $arrayText;
-    }
-
-    protected function detectBasePathFromTraces($traces)
-    {
-        $paths = [];
-        foreach ($traces as $trace) {
-            if (isset($trace['file'])) {
-                $paths[] = preg_replace('/^[a-zA-Z]*:\/\//', '', $trace['file']);
-            }
-        }
-        if (empty($paths)) {
-            return '';
-        }
-
-        // Split each path into an array of directories
-        $splitPaths = array_map(function ($path) {
-            return explode(DIRECTORY_SEPARATOR, $path);
-        }, $paths);
-
-        // Find the minimum length among the split paths
-        $minLength = min(array_map('count', $splitPaths));
-        $commonPathParts = [];
-        for ($i = 0; $i < $minLength; $i++) {
-            $currentPart = $splitPaths[0][$i];
-
-            $add = true;
-            foreach ($splitPaths as $splitPath) {
-                if ($currentPart != $splitPath[$i]) {
-                    $add = false;
-                }
-            }
-            if ($add) {
-                $commonPathParts[] = $currentPart;
-            }
-        }
-        return implode(DIRECTORY_SEPARATOR, $commonPathParts);
-    }
-
-    protected function convertArgToString($arg): string
-    {
-        $text = "";
-        //check type
-        $type = gettype($arg);
-        switch ($type) {
-            case 'integer':
-            case 'float':
-            case 'double':
-            case 'string':
-                $text = $arg;
-                break;
-            case 'boolean':
-                $text = $type . ' : ' . ($arg ? 'TRUE' : 'FALSE');
-                break;
-            case 'object':
-                $text = "'" . get_class($arg) . "'";
-                break;
-            case 'array':
-            default:
-                $text = $type;
-                break;
-        }
-        return $text;
-    }
-
 
     /**
      * static getTrace
