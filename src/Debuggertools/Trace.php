@@ -39,21 +39,28 @@ class Trace
         $arrayText = [];
         foreach ($traces as $trace) {
             if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
+            $messageFile = "";
             if (isset($trace['file'])) {
-                $trace['file'] = preg_replace('/^' . addslashes($basePath) . '/', "", $trace['file']); // remove base path
-                $messageFile = $trace['file'] . ' (line : ' . $trace['line'] . ')';
+                $class = '';
+                if (isset($trace['class'])) {
+                    $class = " '" . $trace['class'] . "' ";
+                }
+                $trace['file'] = preg_replace('/^' . addcslashes($basePath, DIRECTORY_SEPARATOR) . '/', "", $trace['file']); // remove base path
+                $messageFile = $trace['file'] . ' (line : ' . $trace['line'] . ') ' . $class;
             }
-            $messageFunction = "       -> " .  $trace['function'];
+
+            if ($messageFile) $arrayText[] = $messageFile;
+
+            $messageFunction = "";
+            $messageFunction = "          " . $trace['type'] . ' ' .  $trace['function'];
             $messageFunction .= "(";
             if ($trace['args'] && !empty($trace['args'])) {
                 foreach ($trace['args'] as $k => $arg) {
-                    if ($k != 0) $messageFunction .= ' ,';
+                    if ($k != 0) $messageFunction .= ', ';
                     $messageFunction .= $this->convertArgToString($arg);
                 }
             }
             $messageFunction .= ")";
-
-            $arrayText[] = $messageFile;
             $arrayText[] = $messageFunction;
         }
         return $arrayText;
@@ -111,6 +118,8 @@ class Trace
                 $text = $type . ' : ' . ($arg ? 'TRUE' : 'FALSE');
                 break;
             case 'object':
+                $text = "'" . get_class($arg) . "'";
+                break;
             case 'array':
             default:
                 $text = $type;
