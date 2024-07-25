@@ -6,7 +6,7 @@ namespace Debuggertools;
 class Trace
 {
 
-    public function __construct($Option = [])
+    public function __construct(array $Option = [])
     {
         $Option['hidePrefix'] = true;
         $this->CustomLog = new CustomLog($Option);
@@ -33,7 +33,7 @@ class Trace
         $traces = debug_backtrace();
         $arrayText = [];
         foreach ($traces as $trace) {
-            if (preg_match('/chabiselx\/debuggertools/', $trace)) break;
+            if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) break;
             $messageFile = $trace['file'] . ' (line : ' . $trace['line'] . ')';
             $messageFunction = "       -> " .  $trace['function'];
             $messageFunction .= "(";
