@@ -53,43 +53,13 @@ class CustomLog extends AbstractCustomLog
      */
     public function logger($data): void
     {
-        $texts = [];
-
-        //check type and get contennt
-        $type = gettype($data);
-        switch ($type) {
-            case 'object':
-                if (is_object($data)) { // class
-                    $dataDecode = $this->decodeObjet($data);
-                    $text = $type . " '" . $dataDecode['class'] . "' : ";
-                    $text .= $this->createExpendedJson($dataDecode['content'], $this->expendObject);
-                    $texts[0] = $text;
-                    if (isset($dataDecode['appendLog']) && $dataDecode['appendLog']) {
-                        $texts = array_merge($texts, $dataDecode['appendLog']);
-                    }
-                } else { // simple object
-                    $texts[0] = $type . " : " . $this->createExpendedJson($data, $this->expendObject);
-                }
-                break;
-            case 'array':
-                $texts[0] = $type . " : " . $this->decodeArrayForLog($data);
-                break;
-            case 'integer':
-            case 'float':
-            case 'double':
-            case 'string':
-                $texts[0] = $data;
-                break;
-            case 'boolean':
-                $texts[0] = $type . ' : ' . ($data ? 'TRUE' : 'FALSE');
-                break;
-            default:
-                $texts[0] = $type;
-                break;
+        try {
+            $texts = $this->generateTextFormData($data);
+            // write log
+            $this->writeInLog($texts);
+        } catch (\Throwable $th) {
+            $this->writeInLog(["CUSTOMLOG : an unexpected error has occurred"]);
         }
-
-        // write log
-        $this->writeInLog($texts);
     }
 
     /**

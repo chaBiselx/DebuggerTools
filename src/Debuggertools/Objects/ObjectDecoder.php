@@ -3,6 +3,7 @@
 namespace Debuggertools\Objects;
 
 use DateTimeInterface;
+use Debuggertools\Interfaces\ObjectDecoderInterface;
 
 class ObjectDecoder implements ObjectDecoderInterface
 {

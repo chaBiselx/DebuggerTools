@@ -76,25 +76,71 @@ abstract class AbstractCustomLog
     }
 
     /**
+     * Generate an array of text for the logger
+     *
+     * @param any $data
+     * @return array
+     */
+    protected function generateTextFormData(any $data): array
+    {
+        //check type and get contennt
+        $type = gettype($data);
+        switch ($type) {
+            case 'object':
+                if (is_object($data)) { // class or complexe object
+                    $dataDecode = $this->decodeObjet($data);
+                    $text = $type . " '" . $dataDecode['class'] . "' : "; //write type
+                    $text .= $this->createExpendedJson($dataDecode['content'], $this->expendObject); //Write content of the object
+                    $texts[0] = $text;
+                    if (isset($dataDecode['appendLog']) && $dataDecode['appendLog']) {
+                        $texts = array_merge($texts, $dataDecode['appendLog']); // write more informations
+                    }
+                } else { // simple object
+                    $texts[0] = $type . " : " . $this->createExpendedJson($data, $this->expendObject);
+                }
+                break;
+            case 'array':
+                $texts[0] = $type . " : " . $this->decodeArrayForLog($data);
+                break;
+            case 'integer':
+            case 'float':
+            case 'double':
+            case 'string':
+                $texts[0] = $data;
+                break;
+            case 'boolean':
+                $texts[0] = $type . ' : ' . ($data ? 'TRUE' : 'FALSE');
+                break;
+            default:
+                $texts[0] = $type;
+                break;
+        }
+        return $texts;
+    }
+
+    /**
      * Write in logs file
      *
-     * @param array $texts
+     * @param array $ArrayOfText
      * @return void
      */
-    protected  function writeInLog(array $texts)
+    protected  function writeInLog(array $ArrayOfText)
     {
         if (!$this->pathFile) throw new \Error("Unknown file");
         if (!file_exists($this->pathFile)) touch($this->pathFile);
         $dateFormat = $this->config['prefixLog']['date']['format'];
         $separator = $this->config['prefixLog']['date']['separator'];
+
         $prefixText = date($dateFormat) . $separator;
-        foreach ($texts as $text) {
+        foreach ($ArrayOfText as $text) {
             if ($this->showPrefix) {
                 $text = $prefixText . $text;
             }
-            file_put_contents($this->pathFile, $text . "\n", FILE_APPEND);
+            $this->appendToFile($this->pathFile, $text);
         }
     }
+
+
 
     /**
      * Create a json if necessery
