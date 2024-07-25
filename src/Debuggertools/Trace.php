@@ -2,6 +2,8 @@
 
 namespace Debuggertools;
 
+use Debuggertools\CustomLog;
+use Debuggertools\Objects\TraceDecoder;
 
 class Trace
 {
