@@ -33,7 +33,7 @@ class Trace
         $traces = debug_backtrace();
         $arrayText = [];
         foreach ($traces as $trace) {
-            if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) break;
+            if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
             $messageFile = $trace['file'] . ' (line : ' . $trace['line'] . ')';
             $messageFunction = "       -> " .  $trace['function'];
             $messageFunction .= "(";
