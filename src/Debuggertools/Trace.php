@@ -66,13 +66,10 @@ class Trace
             return '';
         }
 
-        // Normalize all paths
-        $normalizedPaths = array_map('realpath', $paths);
-
         // Split each path into an array of directories
         $splitPaths = array_map(function ($path) {
             return explode(DIRECTORY_SEPARATOR, $path);
-        }, $normalizedPaths);
+        }, $paths);
 
         // Find the minimum length among the split paths
         $minLength = min(array_map('count', $splitPaths));
