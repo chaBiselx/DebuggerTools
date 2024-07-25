@@ -40,7 +40,7 @@ class Trace
         foreach ($traces as $trace) {
             if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
             if (isset($trace['file'])) {
-                $trace['file'] = str_replace($basePath, "", $trace['file']); // remove base path
+                $trace['file'] = preg_replace('/^' . $basePath . '/', "", $trace['file']); // remove base path
                 $messageFile = $trace['file'] . ' (line : ' . $trace['line'] . ')';
             }
             $messageFunction = "       -> " .  $trace['function'];
