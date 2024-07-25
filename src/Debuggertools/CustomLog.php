@@ -58,7 +58,7 @@ class CustomLog extends AbstractCustomLog
             // write log
             $this->writeInLog($texts);
         } catch (\Throwable $th) {
-            $this->writeInLog(["CUSTOMLOG : an unexpected error has occurred"]);
+            $this->writeInLog(["CUSTOMLOG : an unexpected error has occurred", $th->getMessage(), $th->getTraceAsString()]);
         }
     }
 
