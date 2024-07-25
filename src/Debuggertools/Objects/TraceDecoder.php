@@ -47,7 +47,7 @@ class TraceDecoder implements TraceDecoderInterface
      * @param [type] $trace
      * @return string
      */
-    protected function getFileMessageFromTrace($trace): string
+    protected function getFileMessage($trace): string
     {
         $messageFile = "";
         if (isset($trace['file'])) {
