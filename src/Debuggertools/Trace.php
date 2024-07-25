@@ -22,7 +22,9 @@ class Trace
         try {
             $texts = $this->generateTrace();
             // write log
-            $this->CustomLog->logger($texts);
+            foreach ($texts as $text) {
+                $this->CustomLog->logger($text);
+            }
         } catch (\Throwable $th) {
             $this->CustomLog->logger(["CUSTOMLOG : an unexpected error has occurred", $th->getMessage(), $th->getTraceAsString()]);
         }
