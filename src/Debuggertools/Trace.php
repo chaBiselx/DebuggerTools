@@ -59,9 +59,14 @@ class Trace
         return $arrayText;
     }
 
-    protected function detectBasePathFromTraces($paths)
+    protected function detectBasePathFromTraces($traces)
     {
-
+        $paths = [];
+        foreach ($traces as $trace) {
+            if (isset($trace['file'])) {
+                $paths[] = preg_replace('/^[a-zA-Z]*:\/\//', '', $trace['file']);
+            }
+        }
         if (empty($paths)) {
             return '';
         }
@@ -73,18 +78,20 @@ class Trace
 
         // Find the minimum length among the split paths
         $minLength = min(array_map('count', $splitPaths));
-
         $commonPathParts = [];
         for ($i = 0; $i < $minLength; $i++) {
             $currentPart = $splitPaths[0][$i];
+
+            $add = true;
             foreach ($splitPaths as $splitPath) {
-                if ($splitPath[$i] !== $currentPart) {
-                    return implode(DIRECTORY_SEPARATOR, $commonPathParts);
+                if ($currentPart != $splitPath[$i]) {
+                    $add = false;
                 }
             }
-            $commonPathParts[] = $currentPart;
+            if ($add) {
+                $commonPathParts[] = $currentPart;
+            }
         }
-
         return implode(DIRECTORY_SEPARATOR, $commonPathParts);
     }
 
