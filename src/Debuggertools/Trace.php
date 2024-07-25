@@ -39,6 +39,7 @@ class Trace
         $arrayText = [];
         foreach ($traces as $trace) {
             if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
+            if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Trace') continue;
             $messageFile = "";
             if (isset($trace['file'])) {
                 $class = '';
