@@ -118,11 +118,12 @@ abstract class AbstractCustomLog
             case 'integer':
             case 'float':
             case 'double':
+            case 'real':
             case 'string':
                 $texts[0] = $data;
                 break;
             case 'boolean':
-                $texts[0] = $type . ' : ' . ($data ? 'TRUE' : 'FALSE');
+                $texts[0] = $type . ' : ' . ($data ? 'true' : 'false');
                 break;
             default:
                 $texts[0] = $type;
