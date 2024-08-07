@@ -2,7 +2,7 @@
 
 namespace Debuggertools;
 
-use Debuggertools\CustomLog;
+use Debuggertools\Logger;
 use Debuggertools\Objects\TraceDecoder;
 
 class Trace
@@ -11,7 +11,7 @@ class Trace
     public function __construct(array $Option = [])
     {
         $Option['hidePrefix'] = true;
-        $this->CustomLog = new CustomLog($Option);
+        $this->Logger = new Logger($Option);
         $this->TraceDecoder = new TraceDecoder();
     }
 
@@ -26,10 +26,10 @@ class Trace
             $texts = $this->TraceDecoder->decode();
             // write log
             foreach ($texts as $text) {
-                $this->CustomLog->logger($text);
+                $this->Logger->logger($text);
             }
         } catch (\Throwable $th) {
-            $this->CustomLog->logger(["CUSTOMLOG : an unexpected error has occurred", $th->getMessage(), $th->getTraceAsString()]);
+            $this->Logger->logger(["LOGGER : an unexpected error has occurred", $th->getMessage(), $th->getTraceAsString()]);
         }
     }
 

@@ -1,3 +1,9 @@
-/log
+# Files
+.env.local
+build_logs.txt
+.phpunit.result.cache
 
-/vendor/
+# Folders
+/vendor/*
+/log/*
+/Dev/*

@@ -1,16 +1,55 @@
+# Installation du projet
 
-Install 
+Présentation général du projet : 
+
+Intallation with composer 
+```
 composer require --dev chabiselx/debuggerTools
+```
+
+
+## Récupérer le projet 
+
+```
+git clone 
+```
+
+## Lancer docker
+
+créer le fichier .env.local à la racine du projet
+
+Modifier les port dans le .env.local.env en fonction des autres images docker
+- PHP_EXT_PORT_1
+- PHP_EXT_PORT_2
+- BDD_EXT_PORT
+
+
+lancer Docker pour la première fois : 
+```
+docker compose --env-file .env.local up --build --force-recreate -d
+```
+
+pour debuguer le build 
+```
+docker-compose build --no-cache 2>&1 | tee build_logs.txt
+``` 
+
+rentrer dans le contanier PHP 
+```
+docker exec -it debuggertools-php-1 bash
+```
+
+# Use case 
 
 
 create a log :
 POO
-$CustomLog = new CustomLog($ArrayOfOption);
-$CustomLog->logger($dataToLog);
+$Logger = new Logger($ArrayOfOption);
+$Logger->logger($dataToLog);
 
 Singleton
 ```
-CustomLog::loggerStatic($dataToLog, ArrayOfOption)
+Logger::loggerStatic($dataToLog, ArrayOfOption)
 ```
 
 list of element : 
@@ -20,9 +59,12 @@ list of element :
 
 create a time logger 
 ```
-$CustomLog = new CustomLog($ArrayOfOption);
-$CustomLog->time("label");
+$Logger = new Logger($ArrayOfOption);
+$Logger->time("label");
 sleep(5);
-$CustomLog->time("label");
+$Logger->time("label");
 ```
 
+TODO : 
+Doctrine\ORM\PersistentCollection
+null bytes in string

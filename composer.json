@@ -5,9 +5,17 @@
     "require": {
         "php": "^7 || ^8"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
     "autoload": {
         "psr-4": {
             "Debuggertools\\": "src/Debuggertools/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "tests/"
         }
     },
     "authors": [
@@ -15,5 +23,17 @@
             "name": "BISELX Charles",
             "email": "cha.biselx@gmail.com"
         }
-    ]
+    ],
+    "archive": {
+        "exclude": [
+            "/docker",
+            ".env",
+            ".env.local",
+            "docker-compose.yml",
+            "/tests",
+            "phpunit.xml",
+            "/makeFileFolder",
+            "MakeFile"
+        ]
+    }
 }

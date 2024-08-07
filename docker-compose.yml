@@ -1,0 +1,65 @@
+version: '3.8'
+
+x-function:
+  env_file : &env_file 
+      - path: .env
+        required: true
+      - path: .env.local
+        required: false
+
+networks:
+  default:
+    name: 'testDebuggerTools'
+
+
+
+services:
+  database:
+    env_file: *env_file
+    image: mysql:5.7
+
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+    ports:
+      - "${BDD_EXT_PORT}:${BDD_EXT_PORT}"
+    volumes:
+      - db_data:/var/lib/mysql
+
+
+  php:
+    env_file: *env_file
+    build:
+      context: .
+      dockerfile: docker/php-fpm/Dockerfile
+      args:
+        TIMEZONE: '${TIMEZONE}'
+    restart: unless-stopped
+    depends_on:
+      - database
+    volumes:
+      - './:/var/www'
+      - 'vendor:/var/www/vendor/'
+
+
+  nginx:
+    env_file: *env_file
+    build:
+      context: ./docker/nginx/
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '${PHP_EXT_PORT_1}:${PHP_EXT_PORT_2}'
+    depends_on:
+      - php
+    volumes:
+      - './:/var/www'
+      - 'vendor:/var/www/vendor/'
+
+
+
+volumes:
+  vendor: null
+  db_data: null

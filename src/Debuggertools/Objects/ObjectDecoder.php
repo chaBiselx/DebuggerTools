@@ -23,7 +23,7 @@ class ObjectDecoder implements ObjectDecoderInterface
                         $this->decode($fakeData, $obj, $function);
                     }
                 } catch (\Error $e) {
-                    $fakeData["->$function"] = ["CUSTOMLOG" => "ERROR LOGGER", "MESSAGE" => $e->getMessage()];
+                    $fakeData["->$function"] = ["Logger" => "ERROR LOGGER", "MESSAGE" => $e->getMessage()];
                 }
             }
         }

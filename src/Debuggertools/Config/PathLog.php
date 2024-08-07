@@ -37,7 +37,7 @@ class PathLog
     public function __construct()
     {
         $this->regexVendorFolder = '\\' . (DIRECTORY_SEPARATOR) . 'vendor' . '\\' . (DIRECTORY_SEPARATOR);
-        $this->regexDebuggertools = '\\' . (DIRECTORY_SEPARATOR) . 'Debuggertools' . '\\' . (DIRECTORY_SEPARATOR);
+        $this->regexDebuggertools = '\\' . (DIRECTORY_SEPARATOR) . 'Debuggertools' . '\\' . (DIRECTORY_SEPARATOR) . 'Config';
 
         $this->Configurations = new Configurations();
     }
@@ -54,7 +54,7 @@ class PathLog
             $pathConfig = $Config['fileLog']['folder']['path'] ?? null;
             if ($pathConfig) {
                 if (preg_match('/^\\' . DIRECTORY_SEPARATOR . '/', $pathConfig)) {
-                    $postPath =  DIRECTORY_SEPARATOR . $pathConfig . DIRECTORY_SEPARATOR;
+                    $postPath = $pathConfig;
                 } else {
                     return $this->rootPath = $pathConfig . DIRECTORY_SEPARATOR;
                 }
@@ -66,11 +66,12 @@ class PathLog
             return $this->rootPath = preg_replace('/' . $this->regexVendorFolder . '.*$/', '',  $path) . $postPath;
         }
 
-        //local test
+        //local test for dev with docker
         if (preg_match('/' . $this->regexDebuggertools . '/', $path)) {
             $regex = '/' . $this->regexDebuggertools . '.*$/';
+
             $this->rootPath = preg_replace($regex, DIRECTORY_SEPARATOR . '..',  $path);
-            $this->rootPath = $postPath;
+            if ($postPath) $this->rootPath .= $postPath;
             return $this->rootPath;
         }
 

@@ -17,6 +17,13 @@ abstract class AbstractCustomLog
      *
      * @var string
      */
+    protected $folderPath = '';
+
+    /**
+     * fileName
+     *
+     * @var string
+     */
     protected $fileName = 'log';
 
     /**
@@ -56,10 +63,10 @@ abstract class AbstractCustomLog
 
     public function __construct()
     {
-        $path = (new PathLog())->getLogFolderPath();
+        $this->folderPath = (new PathLog())->getLogFolderPath();
         $this->setDefaultWithConfig();
-        $this->createDirIfNotExist($path); // FileSystem
-        $this->pathFile = $path . DIRECTORY_SEPARATOR . $this->fileName . "." . $this->fileExtension;
+        $this->createDirIfNotExist($this->folderPath); // FileSystem
+
 
         $this->ObjectDecoder = new ObjectDecoder();
         $this->SymfonyQueryBuilder = new SymfonyQueryBuilder();
@@ -73,6 +80,12 @@ abstract class AbstractCustomLog
         $this->fileExtension = $this->config['fileLog']['defaultExtension'] ?? 'log';
         //bool
         $this->showPrefix = $this->config['prefixLog']['defaultShowPrefix'] ?? true;
+        $this->setPathFile();
+    }
+
+    protected function setPathFile()
+    {
+        $this->pathFile = $this->folderPath . DIRECTORY_SEPARATOR . $this->fileName . "." . $this->fileExtension;
     }
 
     /**
@@ -127,6 +140,7 @@ abstract class AbstractCustomLog
     protected  function writeInLog(array $ArrayOfText)
     {
         if (!$this->pathFile) throw new \Error("Unknown file");
+        $this->createMissingDirectories();
         if (!file_exists($this->pathFile)) touch($this->pathFile);
         $dateFormat = $this->config['prefixLog']['date']['format'];
         $separator = $this->config['prefixLog']['date']['separator'];
@@ -140,6 +154,27 @@ abstract class AbstractCustomLog
         }
     }
 
+    /**
+     * Create missing directory
+     *
+     * @return boolean
+     */
+    private function createMissingDirectories(): bool
+    {
+        $permissions = 0755;
+        $path = dirname($this->pathFile);
+        if (is_dir($path)) {
+            return true; // Le dossier existe déjà
+        }
+
+        // Tente de créer le dossier et retourne true en cas de succès
+        if (mkdir($path, $permissions, true)) {
+            return true;
+        }
+
+        // Retourne false en cas d'échec
+        return false;
+    }
 
 
     /**
@@ -182,7 +217,11 @@ abstract class AbstractCustomLog
             }
         } else {
             if ($data === null) $data = "null";
-            $stringResponse = (string) $data;
+            if ($type == 'boolean') {
+                $stringResponse = ($data) ? 'true' : 'false';
+            } else {
+                $stringResponse = (string) $data;
+            }
         }
         return $stringResponse;
     }

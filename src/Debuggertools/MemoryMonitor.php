@@ -1,0 +1,81 @@
+<?php
+
+namespace Debuggertools;
+
+use Debuggertools\Logger;
+
+
+/**
+ * Class to monitor memory usage.
+ */
+class MemoryMonitor
+{
+    private $initialMemory;
+    private $lastMemory = null;
+    private $logger;
+    private $activeConvertion = true;
+    private $totalMemory;
+
+    /**
+     * Constructor
+     *
+     */
+    public function __construct($Option)
+    {
+        $this->initialMemory = memory_get_usage();
+        $this->logger = new Logger($Option);
+        $this->totalMemory = ini_get('memory_limit');
+
+
+        if (isset($Option['activeConvertion']) && $Option['activeConvertion']) {
+            $this->activeConvertion = true;
+        }
+        if (isset($Option['disactiveConvertion']) && $Option['disactiveConvertion']) {
+            $this->activeConvertion = false;
+        }
+    }
+
+    /**
+     * Logs current memory usage.
+     */
+    public function logMemoryUsage(string $label = "")
+    {
+        $currentMemory = memory_get_usage();
+        $usedMemoryPercentage = ($currentMemory / $this->totalMemory) * 100;
+        $prefixLabel = ($label) ? "$label : " : "";
+
+        $messageToLog = $prefixLabel . 'Used memory: ' . $this->convertMemoryUsage($currentMemory) . ' of ' . $this->convertMemoryUsage($this->totalMemory) . ' (' . $usedMemoryPercentage . '%) ';
+        if (!is_null($this->lastMemory)) {
+            $usedMemoryEvol = $currentMemory - $this->lastMemory;
+            $usedMemoryPercentageEvol = ($usedMemoryEvol / $this->totalMemory) * 100;
+            $messageToLog .= ' | From last mesure ' . $this->convertMemoryUsage($usedMemoryEvol) . ' (' . $usedMemoryPercentageEvol . '%)';
+        }
+        if (!is_null($this->initialMemory)) {
+            $usedMemoryStart = $currentMemory - $this->initialMemory;
+            $usedMemoryPercentageStart = ($usedMemoryStart / $this->totalMemory) * 100;
+            $messageToLog .= ' | From start ' . $this->convertMemoryUsage($usedMemoryStart) . ' (' . $usedMemoryPercentageStart . '%)';
+        }
+
+
+        $this->logger->logger($messageToLog);
+        $this->lastMemory = $currentMemory;
+    }
+
+    /**
+     * Converts memory usage to a readable format.
+     *
+     * @param int $memoryInBytes Memory usage in bytes.
+     *
+     * @return string Memory usage in a readable format.
+     */
+    private function convertMemoryUsage($memoryInBytes)
+    {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+        for ($i = 0; $memoryInBytes >= 1024 && $i < count($units) - 1; $i++) {
+            $memoryInBytes /= 1024;
+        }
+
+        return round($memoryInBytes, 2) . ' ' . $units[$i];
+    }
+}

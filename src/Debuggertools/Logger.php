@@ -4,15 +4,9 @@ namespace Debuggertools;
 
 use Debuggertools\ExtendClass\AbstractCustomLog;
 
-class CustomLog extends AbstractCustomLog
+class Logger extends AbstractCustomLog
 {
-    /**
-     * Stored data for time measurement
-     *
-     * @var array
-     */
-    // private array $timeLogger = []; >= php7.4
-    private $timeLogger = [];
+
 
     /**
      * list param for Options
@@ -25,9 +19,11 @@ class CustomLog extends AbstractCustomLog
     public function __construct(array $Option = [])
     {
         parent::__construct(); // default value
+
         //Option
         if (isset($Option['fileName']) && $Option['fileName']) {
             $this->fileName = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $Option['fileName']);
+            $this->setPathFile();
         }
         if (isset($Option['expendObject']) && $Option['expendObject']) { // expend object / array
             $this->expendObject = true;
@@ -44,6 +40,11 @@ class CustomLog extends AbstractCustomLog
         }
     }
 
+    function getFileName()
+    {
+        return $this->pathFile;
+    }
+
     /**
      * logger
      *
@@ -58,7 +59,7 @@ class CustomLog extends AbstractCustomLog
             // write log
             $this->writeInLog($texts);
         } catch (\Throwable $th) {
-            $this->writeInLog(["CUSTOMLOG : an unexpected error has occurred", $th->getMessage(), $th->getTraceAsString()]);
+            $this->writeInLog(["LOGGER : an unexpected error has occurred", $th->getMessage(), $th->getTraceAsString()]);
         }
     }
 
@@ -72,7 +73,7 @@ class CustomLog extends AbstractCustomLog
      */
     public static function loggerStatic($data, array $Option = []): void
     {
-        (new CustomLog($Option))->logger($data);
+        (new Logger($Option))->logger($data);
     }
 
     public function time($label = 'time')
