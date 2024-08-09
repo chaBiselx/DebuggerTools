@@ -45,4 +45,10 @@ class SimpleTypeTest extends BaseTestCase
         $this->Logger->logger(1.1546554);
         $this->assertMatchesRegularExpression('/1.1546554(\s*)$/', $this->getContent());
     }
+
+    public function testNull()
+    {
+        $this->Logger->logger(null);
+        $this->assertMatchesRegularExpression('/NULL$/', $this->getContent());
+    }
 }

@@ -24,7 +24,7 @@ class MemoryMonitor
     {
         $this->initialMemory = memory_get_usage();
         $this->logger = new Logger($Option);
-        $this->totalMemoryLimit = ini_get('memory_limit');
+        $this->totalMemoryLimit = $this->decodeMemoryLimit(ini_get('memory_limit'));
 
 
         if (isset($Option['activeConvertion']) && $Option['activeConvertion']) {
@@ -82,5 +82,37 @@ class MemoryMonitor
         }
 
         return round($memoryInBytes, 2) . ' ' . $units[$i];
+    }
+
+    private function decodeMemoryLimit(string $memoryLimit): float
+    {
+        $val = trim($memoryLimit);
+        $num = (float) preg_replace('/\D*(\s)*$/', '', $val);
+        $last = strtoupper(trim(str_replace($num, '', $val)));
+
+        switch ($last) {
+                // The 'G' modifier is available
+            case 'TB':
+            case 'T':
+                $num = $num * 1024 * 1024 * 1024 * 1024;
+                break;
+            case 'GB':
+            case 'G':
+                $num = $num * 1024 * 1024 * 1024;
+                break;
+            case 'MB':
+            case 'M':
+                $num = $num * 1024 * 1024;
+                break;
+            case 'KB':
+            case 'K':
+                $num *= 1024;
+                break;
+            case 'B':
+            default:
+                #nothing
+        }
+
+        return $num;
     }
 }
