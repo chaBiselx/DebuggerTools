@@ -11,7 +11,17 @@
     "autoload": {
         "psr-4": {
             "Debuggertools\\": "src/Debuggertools/"
-        }
+        },
+        "exclude-from-classmap": [
+            "/docker",
+            ".env",
+            ".env.local",
+            "docker-compose.yml",
+            "/tests",
+            "phpunit.xml",
+            "/makeFileFolder",
+            "MakeFile"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
