@@ -66,5 +66,8 @@ $Logger->time("label");
 ```
 
 TODO : 
-Doctrine\ORM\PersistentCollection
-null bytes in string
+test Doctrine\ORM\PersistentCollection
+refacto for time 
+test for time
+test for trace
+test for controle data memoryMonitor
