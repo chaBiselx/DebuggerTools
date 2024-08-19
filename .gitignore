@@ -6,4 +6,4 @@ build_logs.txt
 # Folders
 /vendor/*
 /log/*
-/Dev/*
+/Dev

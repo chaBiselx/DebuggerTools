@@ -90,6 +90,6 @@ class OptionTest extends BaseTestCase
     {
         $logger = new Logger(['expendObject' => 1]);
         $logger->logger(['expend' => true]);
-        $this->assertMatchesRegularExpression('/{\n\s*expend : true\n}/', $this->getContent());
+        $this->assertMatchesRegularExpression('/{\n\s*expend : true\n}(\s*)/', $this->getContent());
     }
 }

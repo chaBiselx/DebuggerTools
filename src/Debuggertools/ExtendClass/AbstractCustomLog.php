@@ -4,9 +4,12 @@ namespace Debuggertools\ExtendClass;
 
 use Debuggertools\Config\PathLog;
 use Debuggertools\Traits\FileSystem;
-use Debuggertools\Config\Configurations;
 use Debuggertools\Objects\ClassDecoder;
+use Debuggertools\Config\Configurations;
+use Debuggertools\Extractor\ClassExtracter;
+use Debuggertools\Extractor\ResourceExtracter;
 use Debuggertools\Objects\SymfonyQueryBuilder;
+use Debuggertools\Exceptions\FunctionalException;
 
 abstract class AbstractCustomLog
 {
@@ -69,6 +72,8 @@ abstract class AbstractCustomLog
 
 
         $this->ClassDecoder = new ClassDecoder();
+        $this->ResourceExtracter = new ResourceExtracter();
+        $this->ClassExtracter = new ClassExtracter();
         $this->SymfonyQueryBuilder = new SymfonyQueryBuilder();
     }
 
@@ -98,19 +103,12 @@ abstract class AbstractCustomLog
     {
         //check type and get contennt
         $type = gettype($data);
+        $texts = [];
         switch ($type) {
             case 'object':
-                if (is_object($data)) { // class or complexe object
-                    $dataDecode = $this->decodeObjet($data);
-                    $text = $type . " '" . $dataDecode['class'] . "' : "; //write type
-                    $text .= $this->createExpendedJson($dataDecode['content'], $this->expendObject); //Write content of the object
-                    $texts[0] = $text;
-                    if (isset($dataDecode['appendLog']) && $dataDecode['appendLog']) {
-                        $texts = array_merge($texts, $dataDecode['appendLog']); // write more informations
-                    }
-                } else { // simple object
-                    $texts[0] = $type . " : " . $this->createExpendedJson($data, $this->expendObject);
-                }
+                $this->extratDataObject($texts, $data);
+
+
                 break;
             case 'array':
                 $texts[0] = $type . " : " . $this->decodeArrayForLog($data);
@@ -125,11 +123,56 @@ abstract class AbstractCustomLog
             case 'boolean':
                 $texts[0] = $type . ' : ' . ($data ? 'true' : 'false');
                 break;
+            case 'resource':
+                $texts[0] = $type;
+                $this->extratDataResource($texts, $data);
+
+                break;
             default:
                 $texts[0] = $type;
                 break;
         }
         return $texts;
+    }
+
+    protected function extratDataObject(&$texts, $data): void
+    {
+        $type = 'object';
+        if (is_object($data)) { // class or complexe object
+            $texts[0] = $type;
+            try {
+                $this->ClassExtracter->extract($data);
+                $texts[0] = "class '" . $this->ClassExtracter->getClass() . "' : "; //write type
+                $texts[0] .= $this->createExpendedJson($this->ClassExtracter->getContent()); //Write content of the object
+                $appendLog = $this->ClassExtracter->getAppendedLog();
+                if (isset($appendLog) && count($appendLog)) {
+                    $texts = array_merge($texts, $appendLog); // write more informations
+                }
+            } catch (\Throwable $th) {
+                throw new FunctionalException("Error extract data from $type", 1);
+            }
+        } else { // simple object
+            $texts[0] = $type . " : " . $this->createExpendedJson($data);
+        }
+    }
+
+    protected function extratDataResource(&$texts, $data): void
+    {
+        $type = 'resource';
+        try {
+            $this->ResourceExtracter->extract($data);
+            $class = $this->ResourceExtracter->getClass();
+            if ($class) {
+                $texts[0] = $type . " '$class' : "; //write type
+                $texts[0] .= $this->createExpendedJson($this->ResourceExtracter->getContent()); //Write content of the object
+                $appendLog = $this->ResourceExtracter->getAppendedLog();
+                if (isset($appendLog) && count($appendLog)) {
+                    $texts = array_merge($texts, $appendLog); // write more informations
+                }
+            }
+        } catch (\Throwable $th) {
+            throw new FunctionalException("Error extract data from $type", 1);
+        }
     }
 
     /**
@@ -186,7 +229,7 @@ abstract class AbstractCustomLog
      * @param integer $nbSpace
      * @return string
      */
-    protected  function createExpendedJson($data, bool $expendObject = false, $nbSpace = 0): string
+    protected  function createExpendedJson($data, $nbSpace = 0): string
     {
         $stringResponse = '';
         $type = gettype($data);
@@ -194,7 +237,7 @@ abstract class AbstractCustomLog
         $indent = self::createIndent($nbSpace);
 
         if (in_array($type, ['object', 'array'])) {
-            if ($expendObject) {
+            if ($this->expendObject) {
                 $stringResponse .= $indent . "\n";
                 if (
                     $type == 'object' ||
@@ -210,19 +253,25 @@ abstract class AbstractCustomLog
                 $stringResponse .= $indent . $srtCroche . "\n";
                 foreach ($data as $key => $subData) {
                     $stringResponse .= $indent . "  " . $key . " : ";
-                    $stringResponse .= $this->createExpendedJson($subData, $expendObject, $nbSpace + 2) . "\n";
+                    $stringResponse .= $this->createExpendedJson($subData, $nbSpace + 2) . "\n";
                 }
                 $stringResponse .= $indent . $endCroche;
             } else {
                 $stringResponse = $indent . json_encode($data);
             }
         } else {
-            if ($data === null) $data = "null";
-            if ($type == 'boolean') {
-                $stringResponse = ($data) ? 'true' : 'false';
-            } else {
-                $stringResponse = (string) $data;
-            }
+            $stringResponse = $this->convertBasicDataToString($data);
+        }
+        return $stringResponse;
+    }
+
+    private function convertBasicDataToString($data): string
+    {
+        if ($data === null) $data = "null";
+        if (gettype($data) == 'boolean') {
+            $stringResponse = ($data) ? 'true' : 'false';
+        } else {
+            $stringResponse = (string) $data;
         }
         return $stringResponse;
     }
@@ -253,61 +302,6 @@ abstract class AbstractCustomLog
         return count(array_filter(array_keys($array), 'is_string')) > 0;
     }
 
-    /**
-     * Analyse the object to give the classname, the content and if necesary log to append
-     *
-     * @param mixed $obj
-     * @return array
-     */
-    protected  function decodeObjet($obj): array
-    {
-        $dataToReturn = [
-            'class' => null,
-            'content' => null,
-            'appendLog' => []
-        ];
-
-        if (gettype($obj) == 'object') {
-            $class = get_class($obj); // get classname
-            $appendLog = [];
-            $fakeData = $this->ClassDecoder->decodeObject($obj);
-
-            //check instance for more data
-            $returnAppendLog = $this->getContentSpecialClass($obj);
-            if ($returnAppendLog) {
-                $appendLog = array_merge($appendLog, $returnAppendLog);
-            }
-        } else {
-            $class = gettype($obj);
-            $fakeData = $obj;
-        }
-
-
-        if (isset($class)) $dataToReturn['class'] = $class;
-        if (isset($fakeData)) $dataToReturn['content'] = $fakeData;
-        if (isset($appendLog)) $dataToReturn['appendLog'] = $appendLog;
-
-
-        return $dataToReturn;
-    }
-
-    /**
-     * Get more content from spécial class
-     *
-     * @param object $obj
-     * @return array
-     */
-    protected  function getContentSpecialClass($obj): array
-    {
-        $toAppendToLog = [];
-        if (
-            class_exists('Doctrine\\ORM\\QueryBuilder') &&
-            $obj instanceof \Doctrine\ORM\QueryBuilder
-        ) {
-            $toAppendToLog = array_merge($toAppendToLog, $this->SymfonyQueryBuilder->returnForLog($obj));
-        }
-        return $toAppendToLog;
-    }
 
     /**
      * Decode a liste of objects
@@ -320,8 +314,12 @@ abstract class AbstractCustomLog
         $fakeData = [];
 
         foreach ($arrayofObject as $object) {
-            $objectDecode = $this->decodeObjet($object);
-            $fakeData[] = ['class' => $objectDecode['class'], 'content' => $objectDecode['content']];
+            if (gettype($object) == 'object') {
+                $this->ClassExtracter->extract($object);
+                $fakeData[] = ['class' =>  $this->ClassExtracter->getClass(), 'content' =>  $this->ClassExtracter->getContent()];
+            } else {
+                $fakeData[] = ['class' => gettype($object), 'content' =>  $object];
+            }
         }
 
         return $fakeData;
@@ -333,12 +331,12 @@ abstract class AbstractCustomLog
         if (!empty($data)) {
             if (isset($data[0]) && gettype($data[0]) == "object") {
                 $fakeData = $this->decodeListObjet($data);
-                $ret = $this->createExpendedJson($fakeData, $this->expendObject);
+                $ret = $this->createExpendedJson($fakeData);
             } else {
-                $ret = $this->createExpendedJson($data, $this->expendObject);
+                $ret = $this->createExpendedJson($data);
             }
         } else {
-            $ret = $this->createExpendedJson($data, $this->expendObject);
+            $ret = $this->createExpendedJson($data);
         }
         return $ret;
     }
