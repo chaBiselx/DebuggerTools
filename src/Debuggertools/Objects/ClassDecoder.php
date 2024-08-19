@@ -3,9 +3,9 @@
 namespace Debuggertools\Objects;
 
 use DateTimeInterface;
-use Debuggertools\Interfaces\ObjectDecoderInterface;
+use Debuggertools\Interfaces\ClassDecoderInterface;
 
-class ObjectDecoder implements ObjectDecoderInterface
+class ClassDecoder implements ClassDecoderInterface
 {
 
     public function decodeObject($obj): ?array

@@ -5,7 +5,7 @@ namespace Debuggertools\ExtendClass;
 use Debuggertools\Config\PathLog;
 use Debuggertools\Traits\FileSystem;
 use Debuggertools\Config\Configurations;
-use Debuggertools\Objects\ObjectDecoder;
+use Debuggertools\Objects\ClassDecoder;
 use Debuggertools\Objects\SymfonyQueryBuilder;
 
 abstract class AbstractCustomLog
@@ -68,7 +68,7 @@ abstract class AbstractCustomLog
         $this->createDirIfNotExist($this->folderPath); // FileSystem
 
 
-        $this->ObjectDecoder = new ObjectDecoder();
+        $this->ClassDecoder = new ClassDecoder();
         $this->SymfonyQueryBuilder = new SymfonyQueryBuilder();
     }
 
@@ -270,7 +270,7 @@ abstract class AbstractCustomLog
         if (gettype($obj) == 'object') {
             $class = get_class($obj); // get classname
             $appendLog = [];
-            $fakeData = $this->ObjectDecoder->decodeObject($obj);
+            $fakeData = $this->ClassDecoder->decodeObject($obj);
 
             //check instance for more data
             $returnAppendLog = $this->getContentSpecialClass($obj);

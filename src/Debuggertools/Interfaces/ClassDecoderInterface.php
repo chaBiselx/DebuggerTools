@@ -2,7 +2,7 @@
 
 namespace Debuggertools\Interfaces;
 
-interface ObjectDecoderInterface
+interface ClassDecoderInterface
 {
     public function decodeObject($obj): ?array;
 }

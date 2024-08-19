@@ -4,7 +4,7 @@ namespace Debuggertools\Objects;
 
 use Debuggertools\Interfaces\QueryBuilderInterface;
 use Debuggertools\Objects\SqlDecoder;
-use Debuggertools\Objects\ObjectDecoder;
+use Debuggertools\Objects\ClassDecoder;
 
 
 
@@ -13,7 +13,7 @@ class SymfonyQueryBuilder implements QueryBuilderInterface
 
     public function __construct()
     {
-        $this->ObjectDecoder = new ObjectDecoder;
+        $this->ClassDecoder = new ClassDecoder;
         $this->SqlDecoder = new SqlDecoder;
     }
 
@@ -106,7 +106,7 @@ class SymfonyQueryBuilder implements QueryBuilderInterface
                     $stringReturn = json_encode($value);
                     break;
                 case 'object':
-                    $stringReturn = json_encode($this->ObjectDecoder->decodeObject($value));
+                    $stringReturn = json_encode($this->ClassDecoder->decodeObject($value));
                     break;
                 default:
                     $stringReturn = "{object:" . gettype($value) . "}";
