@@ -67,7 +67,7 @@ $Logger->time("label");
 
 TODO : 
 test Doctrine\ORM\PersistentCollection
-refacto for time 
-test for time
 test for trace
 test for controle data memoryMonitor
+middleware for all input/output
+add curl debug 
