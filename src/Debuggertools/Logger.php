@@ -40,11 +40,6 @@ class Logger extends AbstractCustomLog
         }
     }
 
-    function getFileName()
-    {
-        return $this->pathFile;
-    }
-
     /**
      * logger
      *
@@ -74,15 +69,5 @@ class Logger extends AbstractCustomLog
     public static function loggerStatic($data, array $Option = []): void
     {
         (new Logger($Option))->logger($data);
-    }
-
-    public function time($label = 'time')
-    {
-        if (!isset($this->timeLogger[$label])) {
-            $this->timeLogger[$label] = microtime(true);
-        } else {
-            $time = round(microtime(true) - $this->timeLogger[$label], 4);
-            $this->logger("$label => $time Sec");
-        }
     }
 }
