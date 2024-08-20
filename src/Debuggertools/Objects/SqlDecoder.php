@@ -39,7 +39,7 @@ class SqlDecoder implements SqlDecoderInterface
         if ($level === 0) {
             $sql = preg_replace('/\bSELECT\b/i', "SELECT\n" . $this->indent, $sql);
         }
-        $sql = preg_replace('/,/', ",\n" . str_repeat($this->indent, ($level + 1)) . "", $sql);
+        $sql = preg_replace('/,(?![^()]*\))/', ",\n" . str_repeat($this->indent, ($level + 1)) . "", $sql);
 
         // Handle subqueries by increasing the indentation level
         $sql = preg_replace_callback('/\(\n*(SELECT(.|\n)*?)\)/i', function ($matches) use ($level) {
