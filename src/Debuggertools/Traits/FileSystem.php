@@ -18,6 +18,13 @@ trait FileSystem
     }
 
 
+    /**
+     * Append log to file
+     *
+     * @param string $pathLog
+     * @param string $logMessage
+     * @return void
+     */
     protected function appendToFile(string $pathLog, string $logMessage): void
     {
         $logMessage = $this->escapeShellArgs($logMessage);
@@ -27,7 +34,6 @@ trait FileSystem
 
     /**
      * Decomposition to process error messages below
-     * Fatal error: escapeshellarg(): Argument exceeds the allowed length of 2097152 bytes
      *
      * @param string $logMessage
      * @return string
@@ -49,6 +55,12 @@ trait FileSystem
         return $newMessage;
     }
 
+    /**
+     * Clean special char which can break the writing of the log file
+     *
+     * @param string $stringCuted
+     * @return string
+     */
     private function cleanSpecialChar(string $stringCuted): string
     {
         $specialChars = [

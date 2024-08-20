@@ -4,5 +4,5 @@ namespace Debuggertools\Interfaces;
 
 interface SqlDecoderInterface
 {
-    public function decodeSql(string $obj): string;
+    public function serialize(string $obj): string;
 }

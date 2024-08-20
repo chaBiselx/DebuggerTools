@@ -16,7 +16,18 @@ class Time
      */
     private $timeLogger = [];
 
+    /**
+     * Time from constructor
+     *
+     * @var float
+     */
     private $timeFromConstruct;
+
+    /**
+     * Precision for result
+     *
+     * @var integer
+     */
     private $resultTimePrecision = 4;
 
     /**
@@ -36,7 +47,7 @@ class Time
 
 
     /**
-     * Undocumented function
+     * Log time from the laber or from contructor if unknown
      *
      * @param string|null $label
      * @return void
@@ -64,7 +75,7 @@ class Time
     }
 
     /**
-     * Undocumented function
+     * return time
      *
      * @return float
      */

@@ -61,6 +61,12 @@ class TraceDecoder implements TraceDecoderInterface
         return $messageFile;
     }
 
+    /**
+     * Get function name
+     *
+     * @param array $trace
+     * @return string
+     */
     protected function getFunctionMessage($trace): string
     {
         $messageFunction = "";

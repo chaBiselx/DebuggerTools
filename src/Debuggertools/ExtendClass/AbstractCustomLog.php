@@ -8,7 +8,6 @@ use Debuggertools\Objects\ClassDecoder;
 use Debuggertools\Config\Configurations;
 use Debuggertools\Extractor\ClassExtracter;
 use Debuggertools\Extractor\ResourceExtracter;
-use Debuggertools\Objects\SymfonyQueryBuilder;
 use Debuggertools\Exceptions\FunctionalException;
 
 abstract class AbstractCustomLog
@@ -74,7 +73,6 @@ abstract class AbstractCustomLog
         $this->ClassDecoder = new ClassDecoder();
         $this->ResourceExtracter = new ResourceExtracter();
         $this->ClassExtracter = new ClassExtracter();
-        $this->SymfonyQueryBuilder = new SymfonyQueryBuilder();
     }
 
     private function setDefaultWithConfig()

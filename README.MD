@@ -66,8 +66,11 @@ $Logger->time("label");
 ```
 
 TODO : 
+Make a better README
 test Doctrine\ORM\PersistentCollection
 test for trace
 test for controle data memoryMonitor
+get info from curl and generate a command line test
 middleware for all input/output
+eventListener for Symphony
 add curl debug 

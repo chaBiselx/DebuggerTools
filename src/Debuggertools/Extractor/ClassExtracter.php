@@ -42,7 +42,7 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
             class_exists('Doctrine\\ORM\\QueryBuilder') &&
             $obj instanceof \Doctrine\ORM\QueryBuilder
         ) {
-            $toAppendToLog = array_merge($toAppendToLog, $this->SymfonyQueryBuilder->returnForLog($obj));
+            $toAppendToLog = array_merge($toAppendToLog, $this->SymfonyQueryBuilder->extractDataLog($obj));
         }
         return $toAppendToLog;
     }

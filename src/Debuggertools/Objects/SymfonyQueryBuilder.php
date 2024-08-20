@@ -2,13 +2,13 @@
 
 namespace Debuggertools\Objects;
 
-use Debuggertools\Interfaces\QueryBuilderInterface;
+use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Objects\SqlDecoder;
 use Debuggertools\Objects\ClassDecoder;
 
 
 
-class SymfonyQueryBuilder implements QueryBuilderInterface
+class SymfonyQueryBuilder implements AppenderLogInterfaces
 {
 
     public function __construct()
@@ -17,7 +17,13 @@ class SymfonyQueryBuilder implements QueryBuilderInterface
         $this->SqlDecoder = new SqlDecoder;
     }
 
-    public function returnForLog($obj): array
+    /**
+     * Undocumented function
+     *
+     * @param [type] $obj
+     * @return array
+     */
+    public function extractDataLog($obj): array
     {
         $retLog = [];
         if ($obj instanceof \Doctrine\ORM\QueryBuilder) {
@@ -29,12 +35,18 @@ class SymfonyQueryBuilder implements QueryBuilderInterface
                 $parameter = $listValues[$key];
                 $listParam[$key] = $this->decodeListObjetSpecialClassQueryBuilder($parameter);
             }
-            $retLog[] = $this->SqlDecoder->decodeSql($sql);
+            $retLog[] = $this->SqlDecoder->serialize($sql);
             $retLog[] = json_encode($listParam);
         }
         return $retLog;
     }
 
+    /**
+     * Convert value of parameters for sql value
+     *
+     * @param any $parameter
+     * @return string
+     */
     protected function decodeListObjetSpecialClassQueryBuilder($parameter): string
     {
         $value = 'TO_DEFINE';
@@ -89,6 +101,12 @@ class SymfonyQueryBuilder implements QueryBuilderInterface
         return $decoded;
     }
 
+    /**
+     * Decode object to convert in string
+     *
+     * @param [type] $parameter
+     * @return string
+     */
     private function decodeString($parameter): string
     {
         $stringReturn = null;
