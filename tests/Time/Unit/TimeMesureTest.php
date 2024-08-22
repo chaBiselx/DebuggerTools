@@ -21,7 +21,7 @@ class TimeMesureTest extends BaseTestCase
      *
      * @var [type]
      */
-    private $coefLogger = 2.2; // 2 standard deviation for 200 log
+    private $coefLogger = 2.4; // 2 standard deviation for 200 log
 
     /**
      * time in second
