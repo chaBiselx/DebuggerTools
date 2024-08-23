@@ -3,7 +3,7 @@
 namespace Debuggertools;
 
 
-class Time
+class TimeMonitor
 {
 
     /**

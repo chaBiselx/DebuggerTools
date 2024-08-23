@@ -1,9 +1,9 @@
 <?php
 
-namespace Test\Time\Unit;
+namespace Test\TimeMonitor\Unit;
 
 
-use Debuggertools\Time;
+use Debuggertools\TimeMonitor;
 use Debuggertools\Logger;
 use Test\ExtendClass\BaseTestCase;
 
@@ -24,11 +24,11 @@ class TimeMesureTest extends BaseTestCase
     private $coefLogger = 2.4; // 2 standard deviation for 200 log
 
     /**
-     * time in second
+     * TimeMonitor in second
      *
      * @var float
      */
-    private $additialTimeForLoggerMesure = 0.0088; // avg for 200 log
+    private $additialTimeMonitorForLoggerMesure = 0.0088; // avg for 200 log
 
 
     public function setUp(): void
@@ -39,110 +39,110 @@ class TimeMesureTest extends BaseTestCase
 
     public function testBase()
     {
-        $Time = new Time();
-        $Time->log();
+        $TimeMonitor = new TimeMonitor();
+        $TimeMonitor->log();
 
         $match = [];
         preg_match('/ => (\d(.\d+)?) Sec/', $this->getContent(), $match);
-        $mesuredTime = (float) $match[1];
-        $this->assertEquals(0, $mesuredTime);
+        $mesuredTimeMonitor = (float) $match[1];
+        $this->assertEquals(0, $mesuredTimeMonitor);
     }
 
     public function testControleSimple()
     {
-        $Time = new Time();
-        $Time->set('label');
+        $TimeMonitor = new TimeMonitor();
+        $TimeMonitor->set('label');
         usleep(10);
-        $Time->log('label');
+        $TimeMonitor->log('label');
 
         $match = [];
         preg_match('/ => (\d(.\d+)?) Sec/', $this->getContent(), $match);
-        $mesuredTime = (float) $match[1];
+        $mesuredTimeMonitor = (float) $match[1];
 
         $espectedValue = 0.0001;
         $marginOFError = $espectedValue * $this->percentMarginError;
         $lowerValue = $espectedValue - $marginOFError;
         $upperValue = $espectedValue + $marginOFError;
         $this->assertTrue(
-            $lowerValue <= $mesuredTime && $mesuredTime <= $upperValue,
-            "$lowerValue <= $mesuredTime <= $upperValue"
+            $lowerValue <= $mesuredTimeMonitor && $mesuredTimeMonitor <= $upperValue,
+            "$lowerValue <= $mesuredTimeMonitor <= $upperValue"
         );
     }
 
     public function testControleSimpleBigger()
     {
-        $Time = new Time();
-        $Time->set('label');
+        $TimeMonitor = new TimeMonitor();
+        $TimeMonitor->set('label');
         usleep(5000); // 5 Millisecond
-        $Time->log('label');
+        $TimeMonitor->log('label');
 
         $match = [];
         preg_match('/ => (\d(.\d+)?) Sec/', $this->getContent(), $match);
-        $mesuredTime = (float) $match[1];
+        $mesuredTimeMonitor = (float) $match[1];
 
         $espectedValue = 0.005;
         $marginOFError = $espectedValue * $this->percentMarginError;
         $lowerValue = $espectedValue - $marginOFError;
         $upperValue = $espectedValue + $marginOFError;
         $this->assertTrue(
-            $lowerValue <= $mesuredTime && $mesuredTime <=  $upperValue,
-            "$lowerValue <= $mesuredTime <= $upperValue"
+            $lowerValue <= $mesuredTimeMonitor && $mesuredTimeMonitor <=  $upperValue,
+            "$lowerValue <= $mesuredTimeMonitor <= $upperValue"
         );
     }
 
-    public function testTimeLogger()
+    public function testTimeMonitorLogger()
     {
         $Logger = new Logger();
-        $Time = new Time();
-        $Time->set('label');
+        $TimeMonitor = new TimeMonitor();
+        $TimeMonitor->set('label');
         $Logger->logger('text');
-        $Time->log('label');
+        $TimeMonitor->log('label');
 
         $match = [];
         preg_match('/ => (\d(.\d+)?) Sec/', $this->getContent(), $match);
-        $mesuredTime = (float) $match[1];
+        $mesuredTimeMonitor = (float) $match[1];
 
         $nbOLogger = 1;
         $espectedValue = 0;
-        $marginOFError = $espectedValue * $this->percentMarginError +  ($nbOLogger * $this->coefLogger * $this->additialTimeForLoggerMesure);
+        $marginOFError = $espectedValue * $this->percentMarginError +  ($nbOLogger * $this->coefLogger * $this->additialTimeMonitorForLoggerMesure);
         $lowerValue = $espectedValue - $marginOFError;
         $upperValue = $espectedValue + $marginOFError;
         $this->assertTrue(
-            $lowerValue <= $mesuredTime && $mesuredTime <=  $upperValue,
-            "$lowerValue <= $mesuredTime <= $upperValue"
+            $lowerValue <= $mesuredTimeMonitor && $mesuredTimeMonitor <=  $upperValue,
+            "$lowerValue <= $mesuredTimeMonitor <= $upperValue"
         );
     }
 
     public function testMultiLabel()
     {
-        $Time = new Time();
-        $Time->set('total');
-        $Time->set('partial1');
+        $TimeMonitor = new TimeMonitor();
+        $TimeMonitor->set('total');
+        $TimeMonitor->set('partial1');
         usleep(5000); // 5 Millisecond
-        $Time->log('partial1');
-        $Time->set('partial2');
+        $TimeMonitor->log('partial1');
+        $TimeMonitor->set('partial2');
         usleep(5000); // 5 Millisecond
-        $Time->log('partial2');
-        $Time->log('total');
+        $TimeMonitor->log('partial2');
+        $TimeMonitor->log('total');
 
 
         $match = [];
         preg_match('/: partial1 => (\d(.\d+)?) Sec/', $this->getContent(), $match);
-        $partial1MesuredTime = (float) $match[1];
+        $partial1MesuredTimeMonitor = (float) $match[1];
         $match = [];
         preg_match('/: partial2 => (\d(.\d+)?) Sec/', $this->getContent(), $match);
-        $partial2MesuredTime = (float) $match[1];
+        $partial2MesuredTimeMonitor = (float) $match[1];
         $match = [];
         preg_match('/: total => (\d(.\d+)?) Sec/', $this->getContent(), $match);
-        $totalMesuredTime = (float) $match[1];
+        $totalMesuredTimeMonitor = (float) $match[1];
 
         $espectedValue = 0.005;
         $marginOFError = $espectedValue * $this->percentMarginError;
         $lowerValue = $espectedValue - $marginOFError;
         $upperValue = $espectedValue + $marginOFError;
         $this->assertTrue(
-            $lowerValue <= $partial1MesuredTime && $partial1MesuredTime <=  $upperValue,
-            "partial1 $lowerValue <= $partial1MesuredTime <= $upperValue"
+            $lowerValue <= $partial1MesuredTimeMonitor && $partial1MesuredTimeMonitor <=  $upperValue,
+            "partial1 $lowerValue <= $partial1MesuredTimeMonitor <= $upperValue"
         );
 
         $espectedValue = 0.005;
@@ -150,19 +150,19 @@ class TimeMesureTest extends BaseTestCase
         $lowerValue = $espectedValue - $marginOFError;
         $upperValue = $espectedValue + $marginOFError;
         $this->assertTrue(
-            $lowerValue <= $partial2MesuredTime && $partial2MesuredTime <=  $upperValue,
-            "partial2 $lowerValue <= $partial2MesuredTime <= $upperValue"
+            $lowerValue <= $partial2MesuredTimeMonitor && $partial2MesuredTimeMonitor <=  $upperValue,
+            "partial2 $lowerValue <= $partial2MesuredTimeMonitor <= $upperValue"
         );
 
         $nbOLogger = 2;
 
         $espectedValue = 0.01;
-        $marginOFError = $espectedValue * $this->percentMarginError +  ($nbOLogger * $this->coefLogger * $this->additialTimeForLoggerMesure);
+        $marginOFError = $espectedValue * $this->percentMarginError +  ($nbOLogger * $this->coefLogger * $this->additialTimeMonitorForLoggerMesure);
         $lowerValue = $espectedValue - $marginOFError;
         $upperValue = $espectedValue + $marginOFError;
         $this->assertTrue(
-            $lowerValue <= $totalMesuredTime && $totalMesuredTime <=  $upperValue,
-            "total $lowerValue <= $totalMesuredTime <= $upperValue"
+            $lowerValue <= $totalMesuredTimeMonitor && $totalMesuredTimeMonitor <=  $upperValue,
+            "total $lowerValue <= $totalMesuredTimeMonitor <= $upperValue"
         );
     }
 }

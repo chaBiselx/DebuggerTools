@@ -20,7 +20,7 @@ class Trace
      *
      * @return void
      */
-    public function getTrace(): void
+    public function logTrace(): void
     {
         try {
             $texts = $this->TraceDecoder->decode();
