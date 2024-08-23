@@ -38,10 +38,13 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
     protected  function getContentSpecialClass($obj): array
     {
         $toAppendToLog = [];
+        $toAppendToLog = 'getContentSpecialClass';
         if (
             class_exists('Doctrine\\ORM\\QueryBuilder') &&
             $obj instanceof \Doctrine\ORM\QueryBuilder
         ) {
+            $toAppendToLog = 'inQueryBuilder';
+
             $toAppendToLog = array_merge($toAppendToLog, $this->SymfonyQueryBuilder->extractDataLog($obj));
         }
         return $toAppendToLog;

@@ -26,7 +26,14 @@ class SymfonyQueryBuilder implements AppenderLogInterfaces
     public function extractDataLog($obj): array
     {
         $retLog = [];
-        if ($obj instanceof \Doctrine\ORM\QueryBuilder) {
+        $retLog[] = 'extractDataLog';
+        $retLog[] =   class_exists('Doctrine\\ORM\\QueryBuilder');
+
+        if (
+            class_exists('Doctrine\\ORM\\QueryBuilder') &&
+            $obj instanceof \Doctrine\ORM\QueryBuilder
+        ) {
+            $retLog[] = 'extractDataLogIn';
             $sql = $obj->getQuery()->getSql();
             $listKeys = $obj->getQuery()->getParameters()->getKeys();
             $listValues = $obj->getQuery()->getParameters()->getValues();
