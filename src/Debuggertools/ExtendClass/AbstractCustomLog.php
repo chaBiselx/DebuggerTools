@@ -105,7 +105,7 @@ abstract class AbstractCustomLog
         switch ($type) {
             case 'object':
                 $this->extratDataObject($texts, $data);
-
+                $texts[] = 'extratDataObject';
 
                 break;
             case 'array':
@@ -130,6 +130,7 @@ abstract class AbstractCustomLog
                 $texts[0] = $type;
                 break;
         }
+        $texts[] = $type;
         return $texts;
     }
 
