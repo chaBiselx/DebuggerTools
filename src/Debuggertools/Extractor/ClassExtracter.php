@@ -24,7 +24,7 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
         $this->content = $this->ClassDecoder->decodeObject($obj);
 
         //check instance for more data
-        $this->returnAppendLog = $this->getContentSpecialClass($obj);
+        $this->appendLog = $this->getContentSpecialClass($obj);
 
         return $this;
     }
