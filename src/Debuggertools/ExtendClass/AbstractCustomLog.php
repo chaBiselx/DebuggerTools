@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Debuggertools\ExtendClass;
 
 use Debuggertools\Config\PathLog;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Debuggertools;
 
 use Debuggertools\ExtendClass\AbstractCustomLog;

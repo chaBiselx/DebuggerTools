@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Debuggertools\Extractor;
 
 use Debuggertools\Objects\ClassDecoder;

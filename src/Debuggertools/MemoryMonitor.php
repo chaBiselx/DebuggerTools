@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Debuggertools;
 
 use Debuggertools\Logger;
@@ -88,7 +90,7 @@ class MemoryMonitor
     {
         $val = trim($memoryLimit);
         $num = (float) preg_replace('/\D*(\s)*$/', '', $val);
-        $last = strtoupper(trim(str_replace($num, '', $val)));
+        $last = strtoupper(trim(str_replace(strval($num), '', $val)));
 
         switch ($last) {
                 // The 'G' modifier is available
