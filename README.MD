@@ -96,7 +96,7 @@ $logger->logger($dataToLog);
 via singleton 
 
 ```php
-Logger::loggerStatic($dataToLog, $ArrayOfOption);
+\Debuggertools\Logger::loggerStatic($dataToLog, $ArrayOfOption);
 ```
 
 list of element : 
@@ -144,7 +144,7 @@ $trace->logTrace();
 via singleton 
 
 ```php
-Trace::getTraceStatic($ArrayOfOption);
+\Debuggertools\Trace::getTraceStatic($ArrayOfOption);
 ```
 
 ## Contribuer
