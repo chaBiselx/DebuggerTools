@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Debuggertools\Extractor;
 
 use Debuggertools\Objects\ClassDecoder;
+use Debuggertools\Objects\ClosureDecoder;
 use Debuggertools\Objects\SymfonyQueryBuilder;
 use Debuggertools\Interfaces\ExtracterInterface;
 use Debuggertools\ExtendClass\AbstractAdvancedExtracter;
@@ -16,6 +17,7 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
     {
         parent::__construct();
         $this->ClassDecoder = new ClassDecoder();
+        $this->ClosureDecoder = new ClosureDecoder();
         $this->SymfonyQueryBuilder = new SymfonyQueryBuilder();
     }
 
@@ -23,8 +25,11 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
     public function extract($obj): ExtracterInterface
     {
         $this->class = get_class($obj); // get classname
-        $this->content = $this->ClassDecoder->decodeObject($obj);
-
+        if ($this->class == "Closure") {
+            $this->content = $this->ClosureDecoder->decodeObject($obj);
+        } else {
+            $this->content = $this->ClassDecoder->decodeObject($obj);
+        }
         //check instance for more data
         $this->appendLog = $this->getContentSpecialClass($obj);
 

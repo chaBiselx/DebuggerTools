@@ -107,8 +107,6 @@ abstract class AbstractCustomLog
         switch ($type) {
             case 'object':
                 $this->extratDataObject($texts, $data);
-
-
                 break;
             case 'array':
                 $texts[0] = $type . " : " . $this->decodeArrayForLog($data);
@@ -126,7 +124,6 @@ abstract class AbstractCustomLog
             case 'resource':
                 $texts[0] = $type;
                 $this->extratDataResource($texts, $data);
-
                 break;
             default:
                 $texts[0] = $type;
