@@ -10,13 +10,20 @@ use Test\ObjectForTest\UserEntity;
 class ClosureTest extends BaseTestCase
 {
 
-    private $urlTest = "http://www.example.com/";
-
     public function setUp(): void
     {
         parent::setUp();
         $this->purgeLog();
         $this->Logger = new Logger();
+    }
+
+    public function testClosure()
+    {
+        $function = function () {
+            return 'testOK';
+        };
+        $this->Logger->logger($function);
+        $this->assertMatchesRegularExpression('/ : class \'Closure\' : \[\]$/', $this->getContent());
     }
 
     public function testParamSimple()
