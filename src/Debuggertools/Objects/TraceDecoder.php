@@ -144,7 +144,7 @@ class TraceDecoder implements TraceDecoderInterface
             case 'float':
             case 'double':
             case 'string':
-                $text = $arg;
+                $text = (string) $arg;
                 break;
             case 'boolean':
                 $text = $type . ' : ' . ($arg ? 'TRUE' : 'FALSE');
