@@ -73,7 +73,9 @@ class TraceDecoder implements TraceDecoderInterface
     {
         $messageFunction = "";
         if (isset($trace['function'])) {
-            $messageFunction .= "          " . $trace['type'] . ' ' .  $trace['function'];
+            $type = $trace['type'] ?? '';
+            $function = $trace['function'] ?? '';
+            $messageFunction .= "          " . $type . ' ' .  $function;
             $messageFunction .= "(";
             if ($trace['args'] && !empty($trace['args'])) {
                 foreach ($trace['args'] as $k => $arg) {
