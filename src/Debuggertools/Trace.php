@@ -18,7 +18,7 @@ class Trace
     }
 
     /**
-     * get trace
+     * get logTrace
      *
      * @return void
      */
@@ -36,7 +36,7 @@ class Trace
     }
 
     /**
-     * static getTrace
+     * static getTraceStatic
      *
      * @param bool|int|float|double|string|array|object|Doctrine\\ORM\\QueryBuilder $data , same data as logger
      * @param  $Option , same data as constructor
@@ -45,6 +45,6 @@ class Trace
      */
     public static function getTraceStatic($Option = []): void
     {
-        (new Trace($Option))->getTrace();
+        (new Trace($Option))->logTrace();
     }
 }
