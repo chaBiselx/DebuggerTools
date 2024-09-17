@@ -11,6 +11,7 @@ class TraceDecoder implements TraceDecoderInterface
 
     private $traces = [];
     private $basePath = "";
+    private $delimiter = "===========";
 
     public function __construct()
     {
@@ -26,12 +27,12 @@ class TraceDecoder implements TraceDecoderInterface
     public function decode(): array
     {
         $arrayText = [];
-        $arrayText[] = "=========== TRACE START ===========";
+        $arrayText[] = $this->delimiter . " TRACE START " . $this->delimiter;
         foreach ($this->traces as $trace) {
             //ignore package
             if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
             if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Trace') continue;
-            if (isset($trace['class']) && $trace['class'] == 'Debuggertools\TraceDecoder') continue;
+            if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Objects\TraceDecoder') continue;
 
             $messageFile = $this->getFileMessage($trace);
             if ($messageFile) $arrayText[] = $messageFile;
@@ -39,7 +40,7 @@ class TraceDecoder implements TraceDecoderInterface
             $messageFunction = $this->getFunctionMessage($trace);
             if ($messageFunction) $arrayText[] = $messageFunction;
         }
-        $arrayText[] = "=========== TRACE END ===========";
+        $arrayText[] =  $this->delimiter . " TRACE END " . $this->delimiter;
         return $arrayText;
     }
 

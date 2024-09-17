@@ -19,6 +19,7 @@
 - [Lancer docker pour le developpement](#docker)
 - [Test](#Test)
 - [Utilisation](#utilisation)
+  - [ArrayOfOption](#ArrayOfOption)
   - [Logger](#logger)
   - [Time monitor](#time-monitor)
   - [Memory monitor](#memory-monitor)
@@ -80,6 +81,25 @@ php vendor/bin/phpunit -v --filter file::function
 ```
 
 ## Utilisation
+
+### ArrayOfOption
+
+Le paramètre ArrayOf option est une liste optionnel. 
+les different champs possible :
+
+All :
+
+- hidePrefix [boolean] : Hide the date at the beginning of the string (default : false)
+- showPrefix [boolean] : Show the date at the beginning of the string (default : true)
+- purgeFileBefore [boolean] : purgeFileBefore purge the file before write (default : false)
+- expendObject [boolean] : expend for best visibility for array in log file (default : false)
+- fileName [string] :  write in the file with the same name (default: log)
+
+Class MemoryMonitor :
+
+- activeConvertion [boolean] : active convert with unit to byte (default: true)
+- disactiveConvertion [boolean] : active convert with unit to byte (default: false)
+
 
 ### Logger
 
@@ -165,7 +185,6 @@ Ce projet est sous licence MIT. Consultez le fichier [LICENSE](https://github.co
 
 - Make a better README
 - test Doctrine\ORM\PersistentCollection
-- test for trace
 - test for controle data memoryMonitor
 - get info from curl and generate a command line test
 - middleware for all input/output
