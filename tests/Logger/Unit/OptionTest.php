@@ -67,16 +67,18 @@ class OptionTest extends BaseTestCase
     {
         $logger = new Logger(['fileName' => 'foo']);
         $logger->logger('otherLog');
-        $this->assertTrue($this->fileExist('log/foo.log'));
-        $this->assertMatchesRegularExpression('/otherLog(\s*)$/', $this->getContent('log/foo.log'));
+        $this->setPath('log/foo.log');
+        $this->assertTrue($this->fileExist());
+        $this->assertMatchesRegularExpression('/otherLog(\s*)$/', $this->getContent());
     }
 
     public function testLogOtherWithPathFile()
     {
         $logger = new Logger(['fileName' => 'foo/bar/example']);
         $logger->logger('log with path');
-        $this->assertTrue($this->fileExist('log/foo/bar/example.log'));
-        $this->assertMatchesRegularExpression('/log with path(\s*)$/', $this->getContent('log/foo/bar/example.log'));
+        $this->setPath('log/foo/bar/example.log');
+        $this->assertTrue($this->fileExist());
+        $this->assertMatchesRegularExpression('/log with path(\s*)$/', $this->getContent());
     }
 
     public function testDefaultArray()

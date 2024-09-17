@@ -18,23 +18,34 @@ abstract class BaseTestCase extends TestCase
         $this->projectFolder .= 'Dev'; //add base folder
     }
 
-    protected function fileExist(string $basePath = null): bool
+    protected function setPath(string $basePath): void
     {
-        if (is_null($basePath)) {
-            $basePath = $this->defaulPathLog;
-        }
+        $this->defaulPathLog = $basePath;
+    }
+
+    protected function fileExist(): bool
+    {
         return file_exists($this->projectFolder . DIRECTORY_SEPARATOR . $basePath);
     }
 
-    protected function getContent(string $basePath = null): string
+    protected function getContent(): string
     {
-        if (is_null($basePath)) {
-            $basePath = $this->defaulPathLog;
-        }
-        if ($this->fileExist($basePath)) {
-            return file_get_contents($this->projectFolder . DIRECTORY_SEPARATOR . $basePath);
+
+        if ($this->fileExist($this->defaulPathLog)) {
+            return file_get_contents($this->projectFolder . DIRECTORY_SEPARATOR . $this->defaulPathLog);
         }
         return '';
+    }
+
+    protected function getArrayContent(): array
+    {
+        $trimedContent = preg_replace('/\n$/', '', $this->getContent());
+        return explode("\n", $trimedContent);
+    }
+
+    protected function getLastLine(): string
+    {
+        return end($this->getArrayContent());
     }
 
 

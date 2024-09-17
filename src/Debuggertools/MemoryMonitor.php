@@ -24,10 +24,8 @@ class MemoryMonitor
      */
     public function __construct(array $Option = [])
     {
-        $this->initialMemory = memory_get_usage();
         $this->logger = new Logger($Option);
         $this->totalMemoryLimit = $this->decodeMemoryLimit(ini_get('memory_limit'));
-
 
         if (isset($Option['activeConvertion']) && $Option['activeConvertion']) {
             $this->activeConvertion = true;
@@ -35,6 +33,7 @@ class MemoryMonitor
         if (isset($Option['disactiveConvertion']) && $Option['disactiveConvertion']) {
             $this->activeConvertion = false;
         }
+        $this->initialMemory = memory_get_usage();
     }
 
     /**

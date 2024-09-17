@@ -43,9 +43,10 @@ class BaseTraceTest extends BaseTestCase
     public function testFile()
     {
         Trace::getTraceStatic(['fileName' => 'trace']);
-        $this->assertTrue($this->fileExist('log/trace.log'));
-        $this->assertMatchesRegularExpression('/TRACE START/', $this->getContent('log/trace.log'));
-        $this->assertMatchesRegularExpression('/TRACE END/', $this->getContent('log/trace.log'));
+        $this->setPath('log/trace.log');
+        $this->assertTrue($this->fileExist());
+        $this->assertMatchesRegularExpression('/TRACE START/', $this->getContent());
+        $this->assertMatchesRegularExpression('/TRACE END/', $this->getContent());
     }
 
     public function testDetectStatic()
