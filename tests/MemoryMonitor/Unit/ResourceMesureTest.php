@@ -19,7 +19,7 @@ class ResourceMesureTest extends BaseTestCase
         ini_set('memory_limit', $this->memoryLimit);
 
         $init = memory_get_usage();
-        $string = str_repeat('A',  $this->memoryValue);
+        $string = str_repeat('A',  $this->memoryValue); //NOSONAR
         $end = memory_get_usage();
         $this->diffGarbageCollector = $end - $init -  $this->memoryValue;
     }
@@ -27,7 +27,7 @@ class ResourceMesureTest extends BaseTestCase
     public function testBaseData()
     {
         $MemoryMonitor = new MemoryMonitor(['disactiveConvertion' => true]);
-        $string = str_repeat('A', $this->memoryValue);
+        $string = str_repeat('A', $this->memoryValue); //NOSONAR
         $MemoryMonitor->logMemoryUsage();
         $match = [];
         preg_match('/ From start (\d*(.\d*)?) .?B /', $this->getContent(), $match);
@@ -35,16 +35,16 @@ class ResourceMesureTest extends BaseTestCase
         $this->assertEquals($this->memoryValue + $this->diffGarbageCollector, $mesuredReource);
     }
 
-    // public function testBaseDataSecond()
-    // {
-    //     $MemoryMonitor = new MemoryMonitor(['disactiveConvertion' => true]);
-    //     $MemoryMonitor->logMemoryUsage();
-    //     $string = str_repeat('A', $this->memoryValue);
-    //     $MemoryMonitor->logMemoryUsage();
+    public function testBaseDataSecond()
+    {
+        $MemoryMonitor = new MemoryMonitor(['disactiveConvertion' => true]);
+        $MemoryMonitor->logMemoryUsage();
+        $string = str_repeat('A', $this->memoryValue); //NOSONAR
+        $MemoryMonitor->logMemoryUsage();
 
-    //     $match = [];
-    //     preg_match('/ From start (\d*(.\d*)?) .?B /', $this->getLastLine(), $match);
-    //     $mesuredReource = (float) $match[1];
-    //     $this->assertEquals($this->memoryValue + $this->diffGarbageCollector, $mesuredReource);
-    // }
+        $match = [];
+        preg_match('/ From start (\d*(.\d*)?) .?B /', $this->getLastLine(), $match);
+        $mesuredReource = (float) $match[1];
+        $this->assertEqualsWithDelta($this->memoryValue + $this->diffGarbageCollector, $mesuredReource, 32); // delta from garbagColler stored in MemoryMonitor
+    }
 }

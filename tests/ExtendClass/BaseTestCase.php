@@ -25,7 +25,7 @@ abstract class BaseTestCase extends TestCase
 
     protected function fileExist(): bool
     {
-        return file_exists($this->projectFolder . DIRECTORY_SEPARATOR . $basePath);
+        return file_exists($this->projectFolder . DIRECTORY_SEPARATOR . $this->defaulPathLog);
     }
 
     protected function getContent(): string

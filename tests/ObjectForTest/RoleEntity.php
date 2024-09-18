@@ -2,6 +2,7 @@
 
 namespace Test\ObjectForTest;
 
+
 class RoleEntity
 {
     private $id;
@@ -13,7 +14,7 @@ class RoleEntity
 
     public function __construct()
     {
-        $this->permissions = new \ArrayCollection();
+        $this->permissions = [];
     }
 
     public function __toString()
