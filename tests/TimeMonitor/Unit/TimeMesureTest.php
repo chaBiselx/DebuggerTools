@@ -61,12 +61,7 @@ class TimeMesureTest extends BaseTestCase
 
         $espectedValue = 0.0001;
         $marginOFError = $espectedValue * $this->percentMarginError;
-        $lowerValue = $espectedValue - $marginOFError;
-        $upperValue = $espectedValue + $marginOFError;
-        $this->assertTrue(
-            $lowerValue <= $mesuredTimeMonitor && $mesuredTimeMonitor <= $upperValue,
-            "$lowerValue <= $mesuredTimeMonitor <= $upperValue"
-        );
+        $this->assertEqualsWithDelta($espectedValue, $mesuredTimeMonitor, $marginOFError);
     }
 
     public function testControleSimpleBigger()
@@ -82,12 +77,7 @@ class TimeMesureTest extends BaseTestCase
 
         $espectedValue = 0.005;
         $marginOFError = $espectedValue * $this->percentMarginError;
-        $lowerValue = $espectedValue - $marginOFError;
-        $upperValue = $espectedValue + $marginOFError;
-        $this->assertTrue(
-            $lowerValue <= $mesuredTimeMonitor && $mesuredTimeMonitor <=  $upperValue,
-            "$lowerValue <= $mesuredTimeMonitor <= $upperValue"
-        );
+        $this->assertEqualsWithDelta($espectedValue, $mesuredTimeMonitor, $marginOFError);
     }
 
     public function testTimeMonitorLogger()
@@ -105,12 +95,7 @@ class TimeMesureTest extends BaseTestCase
         $nbOLogger = 1;
         $espectedValue = 0;
         $marginOFError = $espectedValue * $this->percentMarginError +  ($nbOLogger * $this->coefLogger * $this->additialTimeMonitorForLoggerMesure);
-        $lowerValue = $espectedValue - $marginOFError;
-        $upperValue = $espectedValue + $marginOFError;
-        $this->assertTrue(
-            $lowerValue <= $mesuredTimeMonitor && $mesuredTimeMonitor <=  $upperValue,
-            "$lowerValue <= $mesuredTimeMonitor <= $upperValue"
-        );
+        $this->assertEqualsWithDelta($espectedValue, $mesuredTimeMonitor, $marginOFError);
     }
 
     public function testMultiLabel()
@@ -147,22 +132,12 @@ class TimeMesureTest extends BaseTestCase
 
         $espectedValue = 0.005;
         $marginOFError = $espectedValue * $this->percentMarginError;
-        $lowerValue = $espectedValue - $marginOFError;
-        $upperValue = $espectedValue + $marginOFError;
-        $this->assertTrue(
-            $lowerValue <= $partial2MesuredTimeMonitor && $partial2MesuredTimeMonitor <=  $upperValue,
-            "partial2 $lowerValue <= $partial2MesuredTimeMonitor <= $upperValue"
-        );
+        $this->assertEqualsWithDelta($espectedValue, $partial2MesuredTimeMonitor, $marginOFError);
 
         $nbOLogger = 2;
 
         $espectedValue = 0.01;
         $marginOFError = $espectedValue * $this->percentMarginError +  ($nbOLogger * $this->coefLogger * $this->additialTimeMonitorForLoggerMesure);
-        $lowerValue = $espectedValue - $marginOFError;
-        $upperValue = $espectedValue + $marginOFError;
-        $this->assertTrue(
-            $lowerValue <= $totalMesuredTimeMonitor && $totalMesuredTimeMonitor <=  $upperValue,
-            "total $lowerValue <= $totalMesuredTimeMonitor <= $upperValue"
-        );
+        $this->assertEqualsWithDelta($espectedValue, $totalMesuredTimeMonitor, $marginOFError);
     }
 }
