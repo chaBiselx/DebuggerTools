@@ -6,6 +6,7 @@ use Closure;
 use Debuggertools\Trace;
 use Test\ExtendClass\BaseTestCase;
 use Test\ObjectForTest\UserEntity;
+use Test\ObjectForTest\TraceEntity;
 
 class BaseTraceTest extends BaseTestCase
 {
@@ -107,6 +108,38 @@ class BaseTraceTest extends BaseTestCase
             return strtoupper($match[1]);
         });
         $this->assertMatchesRegularExpression('/tests\/Trace\/Unit\/BaseTraceTest\.php \(line : \d+\)  \'Test\\\\Trace\\\\Unit\\\\BaseTraceTest\'\s*\n\s*-> traceParamClosure\(\'Closure\'\)/', $this->getContent());
+    }
+
+    public function testTraceInObjectPublic()
+    {
+        $TraceEntity = new TraceEntity();
+        $TraceEntity->traceInPublic();
+        $this->assertMatchesRegularExpression('/tests\/Trace\/Unit\/BaseTraceTest\.php \(line : \d+\)  \'Test\\\\ObjectForTest\\\\TraceEntity\'\s*\n\s*-> traceInPublic\(\)/', $this->getContent());
+    }
+
+
+    public function testTraceInObjectPrivate()
+    {
+        $TraceEntity = new TraceEntity();
+        $TraceEntity->traceInPrivate();
+        $this->assertMatchesRegularExpression('/tests\/ObjectForTest\/TraceEntity\.php \(line : \d+\)  \'Test\\\\ObjectForTest\\\\TraceEntity\'\s*\n\s*-> functionPrivate\(\)/', $this->getContent());
+        $this->assertMatchesRegularExpression('/tests\/Trace\/Unit\/BaseTraceTest\.php \(line : \d+\)  \'Test\\\\ObjectForTest\\\\TraceEntity\'\s*\n\s*-> traceInPrivate\(\)/', $this->getContent());
+    }
+
+    public function testTraceInObjectStatic()
+    {
+        $TraceEntity = new TraceEntity();
+        $TraceEntity->traceInStatic();
+        $this->assertMatchesRegularExpression('/tests\/ObjectForTest\/TraceEntity\.php \(line : \d+\)  \'Test\\\\ObjectForTest\\\\TraceEntity\'\s*\n\s*:: functionStatic\(\)/', $this->getContent());
+        $this->assertMatchesRegularExpression('/tests\/Trace\/Unit\/BaseTraceTest\.php \(line : \d+\)  \'Test\\\\ObjectForTest\\\\TraceEntity\'\s*\n\s*-> traceInStatic\(\)/', $this->getContent());
+    }
+
+    public function testTraceInObjectClosure()
+    {
+        $TraceEntity = new TraceEntity();
+        $TraceEntity->traceInClosure();
+        $this->assertMatchesRegularExpression('/tests\/ObjectForTest\/TraceEntity\.php \(line : \d+\)  \'Test\\\\ObjectForTest\\\\TraceEntity\'\s*\n\s*-> Test\\\\ObjectForTest\\\\\{closure\}\(\)/', $this->getContent());
+        $this->assertMatchesRegularExpression('/tests\/Trace\/Unit\/BaseTraceTest\.php \(line : \d+\)  \'Test\\\\ObjectForTest\\\\TraceEntity\'\s*\n\s*-> traceInClosure\(\)/', $this->getContent());
     }
 
     //function for test
