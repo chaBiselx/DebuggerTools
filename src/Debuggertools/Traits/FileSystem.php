@@ -33,6 +33,28 @@ trait FileSystem
         system("echo $logMessage >> " . $pathLog);
     }
 
+    /**
+     * Create missing directory
+     *
+     * @return boolean
+     */
+    protected function createMissingDirectories(): bool
+    {
+        $permissions = 0755;
+        $path = dirname($this->pathFile);
+        if (is_dir($path)) {
+            return true; // Le dossier existe déjà
+        }
+
+        // Tente de créer le dossier et retourne true en cas de succès
+        if (mkdir($path, $permissions, true)) {
+            return true;
+        }
+
+        // Retourne false en cas d'échec
+        return false;
+    }
+
 
     /**
      * Decomposition to process error messages below
