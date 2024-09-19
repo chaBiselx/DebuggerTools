@@ -113,20 +113,19 @@ abstract class AbstractCustomLog
             case 'array':
                 $texts[0] = $type . " : " . $this->decodeArrayForLog($data);
                 break;
+            case 'resource':
+                $texts[0] = $type;
+                $this->extratDataResource($texts, $data);
+                break;
             case 'integer':
             case 'float':
             case 'double':
             case 'real':
             case 'string':
-                $texts[0] = $data;
-                break;
             case 'boolean':
-                $texts[0] = $type . ' : ' . ($data ? 'true' : 'false');
+                $texts[0] = $this->typeConverter->convertArgToString($data);
                 break;
-            case 'resource':
-                $texts[0] = $type;
-                $this->extratDataResource($texts, $data);
-                break;
+
             default:
                 $texts[0] = $type;
                 break;

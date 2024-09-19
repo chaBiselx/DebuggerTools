@@ -26,13 +26,13 @@ class SimpleTypeTest extends BaseTestCase
     public function testBooleanTrue()
     {
         $this->Logger->logger(true);
-        $this->assertMatchesRegularExpression('/ : boolean : true(\s*)$/', $this->getContent());
+        $this->assertMatchesRegularExpression('/ : true(\s*)$/', $this->getContent());
     }
 
     public function testBooleanFalse()
     {
         $this->Logger->logger(false);
-        $this->assertMatchesRegularExpression('/ : boolean : false(\s*)$/', $this->getContent());
+        $this->assertMatchesRegularExpression('/ : false(\s*)$/', $this->getContent());
     }
 
     public function testInt()
