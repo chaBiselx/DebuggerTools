@@ -52,7 +52,7 @@ class ConverterTypeTest extends BaseTestCase
     {
 
         $returnType = TypeConverter::convertArgToString(true);
-        $this->assertEquals('boolean : TRUE', $returnType);
+        $this->assertEquals('true', $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
 
@@ -60,7 +60,7 @@ class ConverterTypeTest extends BaseTestCase
     {
 
         $returnType = TypeConverter::convertArgToString(false);
-        $this->assertEquals('boolean : FALSE', $returnType);
+        $this->assertEquals('false', $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
 

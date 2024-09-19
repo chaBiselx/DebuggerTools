@@ -10,6 +10,6 @@ class BooleanConverter implements ConverterStrategyInterface
 {
     public function convert($arg): string
     {
-        return 'boolean : ' . ($arg ? 'TRUE' : 'FALSE');
+        return $arg ? 'true' : 'false';
     }
 }

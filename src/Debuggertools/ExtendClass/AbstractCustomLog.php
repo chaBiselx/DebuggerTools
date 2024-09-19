@@ -8,6 +8,7 @@ use Debuggertools\Config\PathLog;
 use Debuggertools\Traits\FileSystem;
 use Debuggertools\Objects\ClassDecoder;
 use Debuggertools\Config\Configurations;
+use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Extractor\ClassExtracter;
 use Debuggertools\Extractor\ResourceExtracter;
 use Debuggertools\Exceptions\FunctionalException;
@@ -75,6 +76,7 @@ abstract class AbstractCustomLog
         $this->ClassDecoder = new ClassDecoder();
         $this->ResourceExtracter = new ResourceExtracter();
         $this->ClassExtracter = new ClassExtracter();
+        $this->typeConverter = new TypeConverter();
     }
 
     private function setDefaultWithConfig()
@@ -257,18 +259,7 @@ abstract class AbstractCustomLog
                 $stringResponse = $indent . json_encode($data);
             }
         } else {
-            $stringResponse = $this->convertBasicDataToString($data);
-        }
-        return $stringResponse;
-    }
-
-    private function convertBasicDataToString($data): string
-    {
-        if ($data === null) $data = "null";
-        if (gettype($data) == 'boolean') {
-            $stringResponse = ($data) ? 'true' : 'false';
-        } else {
-            $stringResponse = (string) $data;
+            $stringResponse = $this->typeConverter->convertArgToString($data);
         }
         return $stringResponse;
     }
