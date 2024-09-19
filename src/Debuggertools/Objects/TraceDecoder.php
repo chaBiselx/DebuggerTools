@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Debuggertools\Objects;
 
+use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Interfaces\TraceDecoderInterface;
 
 class TraceDecoder implements TraceDecoderInterface
@@ -17,6 +18,7 @@ class TraceDecoder implements TraceDecoderInterface
     {
         $this->traces = debug_backtrace();
         $this->basePath = $this->detectBasePathFromTraces();
+        $this->TypeConverter = new TypeConverter();
     }
 
     /**
@@ -81,7 +83,7 @@ class TraceDecoder implements TraceDecoderInterface
             if ($trace['args'] && !empty($trace['args'])) {
                 foreach ($trace['args'] as $k => $arg) {
                     if ($k != 0) $messageFunction .= ', ';
-                    $messageFunction .= $this->convertArgToString($arg);
+                    $messageFunction .= $this->TypeConverter->convertArgToString($arg);
                 }
             }
             $messageFunction .= ")";
@@ -129,37 +131,5 @@ class TraceDecoder implements TraceDecoderInterface
             }
         }
         return implode(DIRECTORY_SEPARATOR, $commonPathParts);
-    }
-
-    /**
-     * Convert Arg to string for parameters of function
-     *
-     * @param $arg
-     * @return string
-     */
-    protected function convertArgToString($arg): string
-    {
-        $text = "";
-        //check type
-        $type = gettype($arg);
-        switch ($type) {
-            case 'integer':
-            case 'float':
-            case 'double':
-            case 'string':
-                $text = (string) $arg;
-                break;
-            case 'boolean':
-                $text = $type . ' : ' . ($arg ? 'TRUE' : 'FALSE');
-                break;
-            case 'object':
-                $text = "'" . get_class($arg) . "'";
-                break;
-            case 'array':
-            default:
-                $text = $type;
-                break;
-        }
-        return $text;
     }
 }
