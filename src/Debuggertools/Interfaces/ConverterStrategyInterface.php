@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Debuggertools\Converter\Interfaces;
+namespace Debuggertools\Interfaces;
 
 interface ConverterStrategyInterface
 {

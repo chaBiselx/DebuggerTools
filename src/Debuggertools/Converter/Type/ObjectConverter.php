@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Debuggertools\Converter\Type;
 
-use Debuggertools\Converter\Interfaces\ConverterStrategyInterface;
+use Debuggertools\Interfaces\ConverterStrategyInterface;
 
 class ObjectConverter implements ConverterStrategyInterface
 {

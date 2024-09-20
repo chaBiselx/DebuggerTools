@@ -9,7 +9,7 @@ use Debuggertools\Converter\Type\ObjectConverter;
 use Debuggertools\Converter\Type\StringConverter;
 use Debuggertools\Converter\Type\BooleanConverter;
 use Debuggertools\Converter\Type\DefaultConverter;
-use Debuggertools\Converter\Interfaces\ConverterStrategyInterface;
+use Debuggertools\Interfaces\ConverterStrategyInterface;
 
 class TypeConverter
 {
