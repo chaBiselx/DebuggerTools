@@ -11,7 +11,7 @@ use Debuggertools\Config\Configurations;
 use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Extractor\ClassExtracter;
 use Debuggertools\Extractor\ResourceExtracter;
-use Debuggertools\Exceptions\FunctionalException;
+use Debuggertools\Strategy\DataExtractorContext;
 
 abstract class AbstractCustomLog
 {
@@ -133,45 +133,19 @@ abstract class AbstractCustomLog
         return $texts;
     }
 
+
     protected function extratDataObject(&$texts, $data): void
     {
-        $type = 'object';
-        if (is_object($data)) { // class or complexe object
-            $texts[0] = $type;
-            try {
-                $this->ClassExtracter->extract($data);
-                $texts[0] = "class '" . $this->ClassExtracter->getClass() . "' : "; //write type
-                $texts[0] .= $this->createExpendedJson($this->ClassExtracter->getContent()); //Write content of the object
-                $appendLog = $this->ClassExtracter->getAppendedLog();
-                if (isset($appendLog) && count($appendLog)) {
-                    $texts = array_merge($texts, $appendLog); // write more informations
-                }
-            } catch (\Throwable $th) {
-                throw new FunctionalException("Error extract data from $type", 1);
-            }
-        } else { // simple object
-            $texts[0] = $type . " : " . $this->createExpendedJson($data);
-        }
+        $extractor = new DataExtractorContext($this->ClassExtracter, $this->expendObject); // Injecter ClassExtracter
+        $extractor->extractData($texts, $data, 'object');
     }
 
     protected function extratDataResource(&$texts, $data): void
     {
-        $type = 'resource';
-        try {
-            $this->ResourceExtracter->extract($data);
-            $class = $this->ResourceExtracter->getClass();
-            if ($class) {
-                $texts[0] = $type . " '$class' : "; //write type
-                $texts[0] .= $this->createExpendedJson($this->ResourceExtracter->getContent()); //Write content of the object
-                $appendLog = $this->ResourceExtracter->getAppendedLog();
-                if (isset($appendLog) && count($appendLog)) {
-                    $texts = array_merge($texts, $appendLog); // write more informations
-                }
-            }
-        } catch (\Throwable $th) {
-            throw new FunctionalException("Error extract data from $type", 1);
-        }
+        $extractor = new DataExtractorContext($this->ResourceExtracter, $this->expendObject); // Injecter ResourceExtracter
+        $extractor->extractData($texts, $data, 'resource');
     }
+
 
     /**
      * Write in logs file

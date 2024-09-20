@@ -13,6 +13,7 @@ class ResourceExtracter extends AbstractAdvancedExtracter implements ExtracterIn
     public function extract($resource): ExtracterInterface
     {
         $resourceType = get_resource_type($resource);
+        $this->type = 'resource'; //type
         switch ($resourceType) {
             case 'curl':
                 $this->class = $resourceType;

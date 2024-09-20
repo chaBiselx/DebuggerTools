@@ -7,8 +7,9 @@ namespace Debuggertools\ExtendClass;
 
 abstract class AbstractAdvancedExtracter
 {
-    protected $class = null;
-    protected $content = null;
+    protected $class = '';
+    protected $content = '';
+    protected $type = '';
     protected $appendLog = [];
 
     public function __construct() {}
@@ -16,6 +17,11 @@ abstract class AbstractAdvancedExtracter
     public function getClass()
     {
         return $this->class;
+    }
+
+    public function gettype()
+    {
+        return $this->type;
     }
 
     public function getContent()

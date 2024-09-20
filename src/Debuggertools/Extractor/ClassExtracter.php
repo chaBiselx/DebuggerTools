@@ -27,6 +27,7 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
     public function extract($obj): ExtracterInterface
     {
         $this->class = get_class($obj); // get classname
+        $this->type = 'class'; //type
         switch ($this->class) {
             case 'Closure':
                 $this->content = $this->ClosureDecoder->decodeObject($obj);
