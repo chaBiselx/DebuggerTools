@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Debuggertools;
 
 use Debuggertools\Logger;
+use Debuggertools\Converter\RessourceValueConverter;
 
 
 /**
@@ -33,6 +34,7 @@ class MemoryMonitor
         if (isset($Option['disactiveConvertion']) && $Option['disactiveConvertion']) {
             $this->activeConvertion = false;
         }
+        $this->RessourceValueConverter = new RessourceValueConverter($this->activeConvertion);
         $this->initialMemory = memory_get_usage();
     }
 
@@ -48,16 +50,16 @@ class MemoryMonitor
         $usedMemoryPercentage = ($currentMemory / $this->totalMemoryLimit) * 100;
         $prefixLabel = ($label) ? "$label : " : "";
 
-        $messageToLog = $prefixLabel . $this->convertMemoryUsage($currentMemory) . ' of ' . $this->convertMemoryUsage($this->totalMemoryLimit) . ' (' . $usedMemoryPercentage . '%) ';
+        $messageToLog = $prefixLabel . $this->RessourceValueConverter->convertToString($currentMemory) . ' of ' . $this->RessourceValueConverter->convertToString($this->totalMemoryLimit) . ' (' . $usedMemoryPercentage . '%) ';
         if (!is_null($this->lastMemory)) {
             $usedMemoryEvol = $currentMemory - $this->lastMemory;
             $usedMemoryPercentageEvol = ($usedMemoryEvol / $this->totalMemoryLimit) * 100;
-            $messageToLog .= '| From last mesure ' . $this->convertMemoryUsage($usedMemoryEvol) . ' (' . $usedMemoryPercentageEvol . '%) ';
+            $messageToLog .= '| From last mesure ' . $this->RessourceValueConverter->convertToString($usedMemoryEvol) . ' (' . $usedMemoryPercentageEvol . '%) ';
         }
         if (!is_null($this->initialMemory)) {
             $usedMemoryStart = $currentMemory - $this->initialMemory;
             $usedMemoryPercentageStart = ($usedMemoryStart / $this->totalMemoryLimit) * 100;
-            $messageToLog .= '| From start ' . $this->convertMemoryUsage($usedMemoryStart) . ' (' . $usedMemoryPercentageStart . '%) ';
+            $messageToLog .= '| From start ' . $this->RessourceValueConverter->convertToString($usedMemoryStart) . ' (' . $usedMemoryPercentageStart . '%) ';
         }
 
 
@@ -65,25 +67,7 @@ class MemoryMonitor
         $this->lastMemory = $currentMemory;
     }
 
-    /**
-     * Converts memory usage to a readable format.
-     *
-     * @param int $memoryInBytes Memory usage in bytes.
-     * @return string Memory usage in a readable format.
-     */
-    private function convertMemoryUsage($memoryInBytes)
-    {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-        $i = 0;
-        if ($this->activeConvertion) {
-            for ($i = 0; $memoryInBytes >= 1024 && $i < count($units) - 1; $i++) {
-                $memoryInBytes /= 1024;
-            }
-        }
-
-        return round($memoryInBytes, 2) . ' ' . $units[$i];
-    }
 
     private function decodeMemoryLimit(string $memoryLimit): float
     {
