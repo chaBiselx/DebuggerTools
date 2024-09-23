@@ -9,17 +9,16 @@ use Test\ObjectForTest\UserEntity;
 
 class ConverterTypeTest extends BaseTestCase
 {
-    public function testConvertStringStatic()
+    public function setUp(): void
     {
-        $returnType = TypeConverter::convertArgToString('string');
-        $this->assertEquals('string', $returnType);
-        $this->assertEquals('string', gettype($returnType));
+        parent::setUp();
+        $this->TypeConverter = new TypeConverter();
     }
 
-    public function testConvertStringNonStatic()
+
+    public function testConvertString()
     {
-        $TypeConverter = new TypeConverter();
-        $returnType = $TypeConverter->convertArgToString('string');
+        $returnType = $this->TypeConverter->convertArgToString('string');
         $this->assertEquals('string', $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
@@ -27,7 +26,7 @@ class ConverterTypeTest extends BaseTestCase
     public function testConvertInt()
     {
 
-        $returnType = TypeConverter::convertArgToString(1526);
+        $returnType =  $this->TypeConverter->convertArgToString(1526);
         $this->assertEquals(1526, $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
@@ -35,7 +34,7 @@ class ConverterTypeTest extends BaseTestCase
     public function testConvertFloat()
     {
 
-        $returnType = TypeConverter::convertArgToString(0.2156);
+        $returnType =  $this->TypeConverter->convertArgToString(0.2156);
         $this->assertEquals(0.2156, $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
@@ -43,7 +42,7 @@ class ConverterTypeTest extends BaseTestCase
     public function testConvertNull()
     {
 
-        $returnType = TypeConverter::convertArgToString(null);
+        $returnType =  $this->TypeConverter->convertArgToString(null);
         $this->assertEquals('NULL', $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
@@ -51,7 +50,7 @@ class ConverterTypeTest extends BaseTestCase
     public function testConvertBooleanTrue()
     {
 
-        $returnType = TypeConverter::convertArgToString(true);
+        $returnType =  $this->TypeConverter->convertArgToString(true);
         $this->assertEquals('true', $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
@@ -59,7 +58,7 @@ class ConverterTypeTest extends BaseTestCase
     public function testConvertBooleanFalse()
     {
 
-        $returnType = TypeConverter::convertArgToString(false);
+        $returnType =  $this->TypeConverter->convertArgToString(false);
         $this->assertEquals('false', $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
@@ -67,7 +66,7 @@ class ConverterTypeTest extends BaseTestCase
     public function testConvertObject()
     {
 
-        $returnType = TypeConverter::convertArgToString(new UserEntity());
+        $returnType =  $this->TypeConverter->convertArgToString(new UserEntity());
         $this->assertEquals('\'Test\ObjectForTest\UserEntity\'', $returnType);
         $this->assertEquals('string', gettype($returnType));
     }
@@ -75,7 +74,7 @@ class ConverterTypeTest extends BaseTestCase
     public function testConvertClosure()
     {
 
-        $returnType = TypeConverter::convertArgToString(function () {
+        $returnType =  $this->TypeConverter->convertArgToString(function () {
             return 'closure';
         });
         $this->assertEquals('\'Closure\'', $returnType);

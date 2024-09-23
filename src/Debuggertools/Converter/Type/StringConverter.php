@@ -8,8 +8,18 @@ use Debuggertools\Interfaces\ConverterStrategyInterface;
 
 class StringConverter implements ConverterStrategyInterface
 {
+    private $activeQuote = false;
+    public function setQuoteIfNeccesary(bool $activeQuote = true): void
+    {
+        $this->activeQuote = $activeQuote;
+    }
+
     public function convert($arg): string
     {
-        return (string) $arg;
+        if ($this->activeQuote) {
+            return "\"" . (string) str_replace('"', '\\"', $arg) . "\"";
+        } else {
+            return (string) $arg;
+        }
     }
 }

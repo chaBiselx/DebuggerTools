@@ -28,9 +28,29 @@ class JSONFormatterTest extends BaseTestCase
     {
         $this->instanceConfig->set('expendObject', true);
         $result = $this->JSONformatter->createExpendedJson([10, 'string', 1245, 12.65, true, false, new RoleEntity]);
-        $this->assertMatchesRegularExpression('/\[\n {2,}0 : 10,\n {2,}1 : string\,\n {2,}2 : 1245,\n {2,}3 : 12.65,\n {2,}4 : true,\n {2,}5 : false,\n {2,}6 : \n {2,}\{\n {4,}"permissions" : \[\],\n {2,}\}\n\]/', $result);
+        $this->assertMatchesRegularExpression('/\[\n {2,}0 : 10,\n {2,}1 : "string"\,\n {2,}2 : 1245,\n {2,}3 : 12.65,\n {2,}4 : true,\n {2,}5 : false,\n {2,}6 : \n {2,}\{\n {4,}"permissions" : \[\],\n {2,}\}\n\]/', $result);
     }
 
+    public function testTextWithQuoteInArrayNotExpend()
+    {
+        $this->instanceConfig->set('expendObject', false);
+        $result = $this->JSONformatter->createExpendedJson(['Hello "John Doe" ']);
+        $this->assertEquals('["Hello \\"John Doe\\" "]', $result);
+    }
+
+    public function testTextWithQuoteInArrayExpened()
+    {
+        $this->instanceConfig->set('expendObject', true);
+        $result = $this->JSONformatter->createExpendedJson(['Hello "John Doe" ']);
+        $this->assertMatchesRegularExpression('/\[\n {2,}0 : "Hello \\\\"John Doe\\\\" "\n\]/', $result);
+    }
+
+    public function testTextWithQuoteInAssociativeArray()
+    {
+        $this->instanceConfig->set('expendObject', true);
+        $result = $this->JSONformatter->createExpendedJson(['key' => 'Hello "John Doe" ']);
+        $this->assertMatchesRegularExpression('/\{\n {2,}"key" : "Hello \\\\"John Doe\\\\" "\n\}/', $result);
+    }
 
     public function testAssociativeArrayNotExpend()
     {

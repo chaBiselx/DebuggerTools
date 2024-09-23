@@ -13,6 +13,7 @@ class JSONformatter
     {
         $this->typeConverter = new TypeConverter();
         $this->instanceConfig = new InstanceConfig();
+        $this->typeConverter->setQuote(true);
     }
 
     /**

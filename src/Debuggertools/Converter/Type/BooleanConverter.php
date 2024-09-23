@@ -8,6 +8,9 @@ use Debuggertools\Interfaces\ConverterStrategyInterface;
 
 class BooleanConverter implements ConverterStrategyInterface
 {
+
+    public function setQuoteIfNeccesary(bool $activeQuote = true): void {}
+
     public function convert($arg): string
     {
         return $arg ? 'true' : 'false';

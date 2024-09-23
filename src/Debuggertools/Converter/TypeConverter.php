@@ -13,20 +13,34 @@ use Debuggertools\Interfaces\ConverterStrategyInterface;
 
 class TypeConverter
 {
+    private $activeQuote = false;
+
+    public function setQuote(bool $activeQuote = true)
+    {
+        $this->activeQuote = $activeQuote;
+    }
+
+    public function getQuote(): bool
+    {
+        return $this->activeQuote;
+    }
+
+
     /**
      * Convert Arg to string for parameters of function
      *
      * @param $arg
      * @return string
      */
-    public static function convertArgToString($arg): string
+    public function convertArgToString($arg): string
     {
         $type = gettype($arg);
-        $converter = self::getConverterForType($type);
+        $converter = $this->getConverterForType($type);
+        if ($this->getQuote()) $converter->setQuoteIfNeccesary(true);
         return $converter->convert($arg);
     }
 
-    private static function getConverterForType(string $type): ConverterStrategyInterface
+    private function getConverterForType(string $type): ConverterStrategyInterface
     {
         switch ($type) {
             case 'integer':

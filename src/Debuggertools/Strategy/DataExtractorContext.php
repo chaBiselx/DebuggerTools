@@ -2,8 +2,6 @@
 
 namespace Debuggertools\Strategy;
 
-use Debuggertools\Config\InstanceConfig;
-use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Formatter\JSONformatter;
 use Debuggertools\Interfaces\ExtracterInterface;
 use Debuggertools\Exceptions\FunctionalException;
@@ -15,7 +13,6 @@ class DataExtractorContext
     public function __construct(ExtracterInterface $extracter)
     {
         $this->extracter = $extracter;
-        $this->typeConverter = new TypeConverter();
         $this->JSONformatter = new JSONformatter();
     }
 

@@ -8,7 +8,7 @@ namespace Debuggertools\ExtendClass;
 abstract class AbstractAdvancedExtracter
 {
     protected $class = '';
-    protected $content = '';
+    protected $content = null;
     protected $type = '';
     protected $appendLog = [];
 

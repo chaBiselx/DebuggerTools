@@ -7,4 +7,6 @@ namespace Debuggertools\Interfaces;
 interface ConverterStrategyInterface
 {
     public function convert($arg): string;
+
+    public function setQuoteIfNeccesary(bool $activeQuote = true): void;
 }
