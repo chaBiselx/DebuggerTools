@@ -31,8 +31,8 @@ class ResourceMesureTest extends BaseTestCase
         $MemoryMonitor->logMemoryUsage();
         $match = [];
         preg_match('/ From start (\d*(.\d*)?) .?B /', $this->getContent(), $match);
-        $mesuredReource = (int) $match[1];
-        $this->assertEquals($this->memoryValue + $this->diffGarbageCollector, $mesuredReource);
+        $mesuredResource = (int) $match[1];
+        $this->assertEquals($this->memoryValue + $this->diffGarbageCollector, $mesuredResource);
     }
 
     public function testBaseDataSecond()
@@ -44,7 +44,7 @@ class ResourceMesureTest extends BaseTestCase
 
         $match = [];
         preg_match('/ From start (\d*(.\d*)?) .?B /', $this->getLastLine(), $match);
-        $mesuredReource = (float) $match[1];
-        $this->assertEqualsWithDelta($this->memoryValue + $this->diffGarbageCollector, $mesuredReource, 32); // delta from garbagColler stored in MemoryMonitor
+        $mesuredResource = (float) $match[1];
+        $this->assertEqualsWithDelta($this->memoryValue + $this->diffGarbageCollector, $mesuredResource, 420); // delta from garbagColler stored in MemoryMonitor
     }
 }

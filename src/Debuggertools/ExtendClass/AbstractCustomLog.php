@@ -8,7 +8,9 @@ use Debuggertools\Config\PathLog;
 use Debuggertools\Traits\FileSystem;
 use Debuggertools\Objects\ClassDecoder;
 use Debuggertools\Config\Configurations;
+use Debuggertools\Config\InstanceConfig;
 use Debuggertools\Converter\TypeConverter;
+use Debuggertools\Formatter\JSONformatter;
 use Debuggertools\Extractor\ClassExtracter;
 use Debuggertools\Extractor\ResourceExtracter;
 use Debuggertools\Strategy\DataExtractorContext;
@@ -69,14 +71,16 @@ abstract class AbstractCustomLog
     public function __construct()
     {
         $this->folderPath = (new PathLog())->getLogFolderPath();
-        $this->setDefaultWithConfig();
         $this->createDirIfNotExist($this->folderPath); // FileSystem
-
 
         $this->ClassDecoder = new ClassDecoder();
         $this->ResourceExtracter = new ResourceExtracter();
         $this->ClassExtracter = new ClassExtracter();
         $this->typeConverter = new TypeConverter();
+        $this->JSONformatter = new JSONformatter();
+        $this->instanceConfig = new InstanceConfig();
+
+        $this->setDefaultWithConfig();
     }
 
     private function setDefaultWithConfig()
@@ -88,6 +92,7 @@ abstract class AbstractCustomLog
         //bool
         $this->showPrefix = $this->config['prefixLog']['defaultShowPrefix'] ?? true;
         $this->setPathFile();
+        $this->setGlobals();
     }
 
     protected function setPathFile()
@@ -103,6 +108,8 @@ abstract class AbstractCustomLog
      */
     protected function generateTextFormData($data): array
     {
+
+        $this->setGlobals();
         //check type and get contennt
         $type = gettype($data);
         $texts = [];
@@ -130,19 +137,27 @@ abstract class AbstractCustomLog
                 $texts[0] = $type;
                 break;
         }
+        $this->instanceConfig->reset();
         return $texts;
+    }
+
+    protected function setGlobals()
+    {
+        $this->instanceConfig->set('showPrefix', $this->showPrefix);
+        $this->instanceConfig->set('expendObject', $this->expendObject);
+        $this->instanceConfig->set('pathFile', $this->pathFile);
     }
 
 
     protected function extratDataObject(&$texts, $data): void
     {
-        $extractor = new DataExtractorContext($this->ClassExtracter, $this->expendObject); // Injecter ClassExtracter
+        $extractor = new DataExtractorContext($this->ClassExtracter); // Injecter ClassExtracter
         $extractor->extractData($texts, $data, 'object');
     }
 
     protected function extratDataResource(&$texts, $data): void
     {
-        $extractor = new DataExtractorContext($this->ResourceExtracter, $this->expendObject); // Injecter ResourceExtracter
+        $extractor = new DataExtractorContext($this->ResourceExtracter); // Injecter ResourceExtracter
         $extractor->extractData($texts, $data, 'resource');
     }
 
@@ -170,76 +185,21 @@ abstract class AbstractCustomLog
         }
     }
 
-    /**
-     * Create a json if necessery
-     *
-     * @param mixed $data
-     * @param boolean $expendObject if true expend the object
-     * @param integer $nbSpace
-     * @return string
-     */
-    protected  function createExpendedJson($data, $nbSpace = 0): string
+    protected function decodeArrayForLog($data): string
     {
-        $stringResponse = '';
-        $type = gettype($data);
-        //base indent
-        $indent = self::createIndent($nbSpace);
-
-        if (in_array($type, ['object', 'array'])) {
-            if ($this->expendObject) {
-                $stringResponse .= $indent . "\n";
-                if (
-                    $type == 'object' ||
-                    $this->hasStringKeys($data)
-                ) {
-                    $srtCroche = '{';
-                    $endCroche = '}';
-                } else {
-                    $srtCroche = '[';
-                    $endCroche = ']';
-                }
-
-                $stringResponse .= $indent . $srtCroche . "\n";
-                foreach ($data as $key => $subData) {
-                    $stringResponse .= $indent . "  " . $key . " : ";
-                    $stringResponse .= $this->createExpendedJson($subData, $nbSpace + 2) . "\n";
-                }
-                $stringResponse .= $indent . $endCroche;
+        $ret = "";
+        if (!empty($data)) {
+            if (isset($data[0]) && gettype($data[0]) == "object") {
+                $fakeData = $this->decodeListObjet($data);
+                $ret = $this->JSONformatter->createExpendedJson($fakeData);
             } else {
-                $stringResponse = $indent . json_encode($data);
+                $ret = $this->JSONformatter->createExpendedJson($data);
             }
         } else {
-            $stringResponse = $this->typeConverter->convertArgToString($data);
+            $ret = $this->JSONformatter->createExpendedJson($data);
         }
-        return $stringResponse;
+        return $ret;
     }
-
-    /**
-     * Create base to indentation
-     *
-     * @param integer $nbSpace
-     * @return string
-     */
-    protected static function createIndent(int $nbSpace): string
-    {
-        $indent = "";
-        for ($i = 0; $i < $nbSpace; $i++) {
-            $indent .= " ";
-        }
-        return $indent;
-    }
-
-    /**
-     * check if the array associative or not
-     *
-     * @param array $array
-     * @return boolean
-     */
-    protected  function hasStringKeys(array $array): bool
-    {
-        return count(array_filter(array_keys($array), 'is_string')) > 0;
-    }
-
 
     /**
      * Decode a liste of objects
@@ -261,21 +221,5 @@ abstract class AbstractCustomLog
         }
 
         return $fakeData;
-    }
-
-    protected function decodeArrayForLog($data): string
-    {
-        $ret = "";
-        if (!empty($data)) {
-            if (isset($data[0]) && gettype($data[0]) == "object") {
-                $fakeData = $this->decodeListObjet($data);
-                $ret = $this->createExpendedJson($fakeData);
-            } else {
-                $ret = $this->createExpendedJson($data);
-            }
-        } else {
-            $ret = $this->createExpendedJson($data);
-        }
-        return $ret;
     }
 }

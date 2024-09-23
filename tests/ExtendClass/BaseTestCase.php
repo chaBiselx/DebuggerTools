@@ -3,6 +3,7 @@
 namespace Test\ExtendClass;
 
 use PHPUnit\Framework\TestCase;
+use Debuggertools\Config\InstanceConfig;
 
 abstract class BaseTestCase extends TestCase
 {
@@ -16,6 +17,8 @@ abstract class BaseTestCase extends TestCase
         $BasePath = __DIR__;
         $this->projectFolder = preg_replace('/\/tests(\/.*)$/', DIRECTORY_SEPARATOR, $BasePath);
         $this->projectFolder .= 'Dev'; //add base folder
+        $instanceConfig = new InstanceConfig();
+        $instanceConfig->reset();
     }
 
     protected function setPath(string $basePath): void
