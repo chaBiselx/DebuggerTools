@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Debuggertools\Objects;
+namespace Debuggertools\Decoder;
 
-use DateTimeInterface;
 use ReflectionFunction;
 use Debuggertools\Interfaces\ClassDecoderInterface;
-use Error;
 
 class ClosureDecoder implements ClassDecoderInterface
 {
-
-    public function decodeObject($closure): ?array
+    /**
+     * {@inheritDoc}
+     */
+    public function decodeObject($obj): ?array
     {
         $fakeData = [];
-        $r = new ReflectionFunction($closure);
+        $r = new ReflectionFunction($obj);
 
         $Parameters = $r->getParameters();
         if (!empty($Parameters)) {

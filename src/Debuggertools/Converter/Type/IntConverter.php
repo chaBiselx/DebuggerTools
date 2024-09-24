@@ -8,7 +8,9 @@ use Debuggertools\Interfaces\ConverterStrategyInterface;
 
 class IntConverter implements ConverterStrategyInterface
 {
-
+    /**
+     * {@inheritdoc }
+     */
     public function setQuoteIfNeccesary(bool $activeQuote = true): void {}
 
     public function convert($arg): string

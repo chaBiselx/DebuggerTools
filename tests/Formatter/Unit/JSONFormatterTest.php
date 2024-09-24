@@ -65,4 +65,60 @@ class JSONFormatterTest extends BaseTestCase
         $result = $this->JSONformatter->createExpendedJson(['el' => true]);
         $this->assertMatchesRegularExpression('/\{\n {2,}"el" : true\n\}/', $result);
     }
+
+    public function testMultiLevelArrayNotExpended()
+    {
+        $this->instanceConfig->set('expendObject', false);
+        $result = $this->JSONformatter->createExpendedJson([['el1'], [['el2']]]);
+        $this->assertEquals('[["el1"],[["el2"]]]', $result);
+    }
+
+    public function testMultiLevelArrayExpended()
+    {
+        $this->instanceConfig->set('expendObject', true);
+        $result = $this->JSONformatter->createExpendedJson([['el1'], [['el2']]]);
+        $this->assertMatchesRegularExpression('/\[\n {2,}0 : \n {2,}\[\n {4,}0 : "el1"\n {2,}\],\n {2,}1 : \n {2,}\[\n {4,}0 : \n {4,}\[\n {6,}0 : "el2"\n {4,}\]\n {2,}\]\n\]/', $result);
+    }
+
+    public function testMultiLevelAssociativeArrayNotExpended()
+    {
+        $this->instanceConfig->set('expendObject', false);
+        $result = $this->JSONformatter->createExpendedJson(["levelA1" => ["levelA1A" => 'el1'], "levelA2" => ["levelA2A" => ["levelA2A1" => 'el2']]]);
+        $this->assertEquals('{"levelA1":{"levelA1A":"el1"},"levelA2":{"levelA2A":{"levelA2A1":"el2"}}}', $result);
+    }
+
+    public function testMultiLevelAssociativeArrayExpended()
+    {
+        $this->instanceConfig->set('expendObject', true);
+        $result = $this->JSONformatter->createExpendedJson(["levelA1" => ["levelA1A" => 'el1'], "levelA2" => ["levelA2A" => ["levelA2A1" => 'el2']]]);
+        $this->assertMatchesRegularExpression('/\{\n {2,}"levelA1" : \n {2,}\{\n {4,}"levelA1A" : "el1"\n {2,}\},\n {2,}"levelA2" : \n {2,}\{\n {4,}"levelA2A" : \n {4,}\{\n {6,}"levelA2A1" : "el2"\n {4,}\}\n {2,}\}\n\}/', $result);
+    }
+
+    public function testBoolTrueInKeyNotExpended()
+    {
+        $this->instanceConfig->set('expendObject', false);
+        $result = $this->JSONformatter->createExpendedJson([true => 1]);
+        $this->assertEquals('{"1":1}', $result);
+    }
+
+    public function testBoolTrueInKeyExpended()
+    {
+        $this->instanceConfig->set('expendObject', true);
+        $result = $this->JSONformatter->createExpendedJson([true => 1]);
+        $this->assertMatchesRegularExpression('/\{\n {2,}1 : 1\n\}/', $result);
+    }
+
+    public function testBoolFalseInKeyNotExpended()
+    {
+        $this->instanceConfig->set('expendObject', false);
+        $result = $this->JSONformatter->createExpendedJson([false => 1]);
+        $this->assertEquals('[1]', $result);
+    }
+
+    public function testBoolFalseInKeyExpended()
+    {
+        $this->instanceConfig->set('expendObject', true);
+        $result = $this->JSONformatter->createExpendedJson([false => 1]);
+        $this->assertMatchesRegularExpression('/\[\n {2,}0 : 1\n\]/', $result);
+    }
 }

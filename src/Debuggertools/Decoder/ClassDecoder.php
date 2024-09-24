@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Debuggertools\Objects;
+namespace Debuggertools\Decoder;
 
 use DateTimeInterface;
 use Debuggertools\Interfaces\ClassDecoderInterface;
@@ -10,6 +10,9 @@ use Debuggertools\Interfaces\ClassDecoderInterface;
 class ClassDecoder implements ClassDecoderInterface
 {
 
+    /**
+     * {@inheritDoc}
+     */
     public function decodeObject($obj): ?array
     {
         $class = get_class($obj); // get classname

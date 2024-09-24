@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Debuggertools\Extractor;
 
-use Debuggertools\Objects\ClassDecoder;
-use Debuggertools\Objects\ClosureDecoder;
+use Debuggertools\Decoder\ClassDecoder;
+use Debuggertools\Decoder\ClosureDecoder;
 use Debuggertools\Objects\SymfonyQueryBuilder;
-use Debuggertools\Objects\ArrayIteratorDecoder;
+use Debuggertools\Decoder\ArrayIteratorDecoder;
 use Debuggertools\Interfaces\ExtracterInterface;
+use Debuggertools\Interfaces\AppenderLogInterfaces;
+use Debuggertools\Interfaces\ClassDecoderInterface;
 use Debuggertools\ExtendClass\AbstractAdvancedExtracter;
 
 class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInterface
@@ -30,13 +32,13 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
         $this->type = 'class'; //type
         switch ($this->class) {
             case 'Closure':
-                $this->content = $this->ClosureDecoder->decodeObject($obj);
+                $this->decodeContent($obj, $this->ClosureDecoder);
                 break;
             case 'ArrayIterator':
-                $this->content = $this->ArrayIteratorDecoder->decodeObject($obj);
+                $this->decodeContent($obj, $this->ArrayIteratorDecoder);
                 break;
             default:
-                $this->content = $this->ClassDecoder->decodeObject($obj);
+                $this->decodeContent($obj, $this->ClassDecoder);
                 break;
         }
         //check instance for more data
@@ -45,21 +47,33 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
         return $this;
     }
 
+    private function decodeContent($obj, ClassDecoderInterface $decoder): void
+    {
+        $this->content = $decoder->decodeObject($obj);
+    }
+
     /**
      * Get more content from spécial class
      *
      * @param object $obj
      * @return array
      */
-    protected  function getContentSpecialClass($obj): array
+    private function getContentSpecialClass($obj): array
     {
         $toAppendToLog = [];
+        $appender = null;
         if (
             class_exists('Doctrine\\ORM\\QueryBuilder') &&
             $obj instanceof \Doctrine\ORM\QueryBuilder
         ) {
-            $toAppendToLog = array_merge($toAppendToLog, $this->SymfonyQueryBuilder->extractDataLog($obj));
+            $appender =  $this->SymfonyQueryBuilder;
         }
+        if ($appender) $toAppendToLog = array_merge($toAppendToLog, $this->extractMoreData($obj, $appender));
         return $toAppendToLog;
+    }
+
+    private function extractMoreData($obj, AppenderLogInterfaces $appender): array
+    {
+        return $appender->extractDataLog($obj);
     }
 }

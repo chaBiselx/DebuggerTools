@@ -9,6 +9,9 @@ use Debuggertools\Interfaces\ConverterStrategyInterface;
 class DefaultConverter implements ConverterStrategyInterface
 {
 
+    /**
+     * {@inheritdoc }
+     */
     public function setQuoteIfNeccesary(bool $activeQuote = true): void {}
 
     public function convert($arg): string

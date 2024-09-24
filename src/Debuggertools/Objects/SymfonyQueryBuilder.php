@@ -6,7 +6,7 @@ namespace Debuggertools\Objects;
 
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Objects\SqlDecoder;
-use Debuggertools\Objects\ClassDecoder;
+use Debuggertools\Decoder\ClassDecoder;
 
 
 

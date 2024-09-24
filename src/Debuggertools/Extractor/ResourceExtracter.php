@@ -18,6 +18,9 @@ class ResourceExtracter extends AbstractAdvancedExtracter implements ExtracterIn
             case 'curl':
                 $this->class = $resourceType;
                 break;
+            case 'ftp':
+                $this->class = $resourceType;
+                break;
             default:
                 break;
         }

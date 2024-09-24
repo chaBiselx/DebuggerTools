@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Debuggertools\Objects;
 
 use Debuggertools\Converter\TypeConverter;
-use Debuggertools\Interfaces\TraceDecoderInterface;
+use Debuggertools\Interfaces\TraceInterpretInterface;
 
-class TraceDecoder implements TraceDecoderInterface
+class TraceInterpret implements TraceInterpretInterface
 {
 
     private $traces = [];
@@ -34,7 +34,7 @@ class TraceDecoder implements TraceDecoderInterface
             //ignore package
             if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
             if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Trace') continue;
-            if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Objects\TraceDecoder') continue;
+            if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Objects\TraceInterpret') continue;
 
             $messageFile = $this->getFileMessage($trace);
             if ($messageFile) $arrayText[] = $messageFile;

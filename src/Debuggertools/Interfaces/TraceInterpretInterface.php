@@ -2,10 +2,7 @@
 
 namespace Debuggertools\Interfaces;
 
-interface TraceDecoderInterface
+interface TraceInterpretInterface
 {
-
-
-
     public function decode(): array;
 }

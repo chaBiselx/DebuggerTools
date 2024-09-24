@@ -9,6 +9,10 @@ use Debuggertools\Interfaces\ConverterStrategyInterface;
 class StringConverter implements ConverterStrategyInterface
 {
     private $activeQuote = false;
+
+    /**
+     * {@inheritdoc }
+     */
     public function setQuoteIfNeccesary(bool $activeQuote = true): void
     {
         $this->activeQuote = $activeQuote;

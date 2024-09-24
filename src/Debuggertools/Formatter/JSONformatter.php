@@ -9,6 +9,11 @@ use Debuggertools\Converter\TypeConverter;
 class JSONformatter
 {
 
+    const OPEN_OBJECT = "{";
+    const CLOSE_OBJECT = "}";
+    const OPEN_ARRAY = "[";
+    const CLOSE_ARRAY = "]";
+
     public function __construct()
     {
         $this->typeConverter = new TypeConverter();
@@ -48,17 +53,17 @@ class JSONformatter
 
         $stringResponse = "\n";
         if (gettype($data) == 'object') { // object
-            $srtCroche = '{';
-            $endCroche = '}';
-        } elseif ($this->hasStringKeys($data)) { // associative array
-            $srtCroche = '{';
-            $endCroche = '}';
-            if (empty($data)) return '[]';
+            $srtCroche = self::OPEN_OBJECT;
+            $endCroche = self::CLOSE_OBJECT;
+        } elseif ($this->isAssociativeArray($data)) { // associative array
+            $srtCroche =  self::OPEN_OBJECT;
+            $endCroche = self::CLOSE_OBJECT;
+            if (empty($data)) return $this->returnEmptyArray();
             $lastKey = end(array_keys($data));
         } else { // array
-            $srtCroche = '[';
-            $endCroche = ']';
-            if (empty($data)) return '[]';
+            $srtCroche = self::OPEN_ARRAY;
+            $endCroche = self::CLOSE_ARRAY;
+            if (empty($data)) return $this->returnEmptyArray();
             $lastKey = end(array_keys($data));
         }
 
@@ -73,6 +78,11 @@ class JSONformatter
         }
         $stringResponse .= $indent . $endCroche;
         return $stringResponse;
+    }
+
+    private static function returnEmptyArray(): string
+    {
+        return self::OPEN_ARRAY . self::CLOSE_ARRAY;
     }
 
     private function generageIndex($key): string
@@ -99,9 +109,10 @@ class JSONformatter
      * @param array $array
      * @return boolean
      */
-    private  function hasStringKeys(array $array): bool
+    private  function isAssociativeArray(array $array): bool
     {
-        return count(array_filter(array_keys($array), 'is_string')) > 0;
+        $keys = array_keys($array);
+        return $keys !== array_keys($keys);
     }
 
     /**

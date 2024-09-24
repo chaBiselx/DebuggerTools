@@ -9,9 +9,9 @@ use Debuggertools\Interfaces\SqlDecoderInterface;
 
 class SqlDecoder implements SqlDecoderInterface
 {
-    private $indent = "    ";
+    const INDENT = "    ";
     private $SubQuery = [];
-    private $indicatorSubQuery = '!#!';
+    const INDICATOR_SUB_QUERY = '!#!';
 
     public function serialize(string $sql): string
     {
@@ -34,13 +34,13 @@ class SqlDecoder implements SqlDecoderInterface
 
         // Add new lines and indentation for main SQL components
         $sql = preg_replace('/\b(FROM|WHERE|GROUP BY|HAVING|ORDER BY|LIMIT|OFFSET|INSERT INTO|VALUES|SET|INNER JOIN|LEFT JOIN|RIGHT JOIN|OUTER JOIN)\b/i', "\n$1", $sql);
-        $sql = preg_replace('/\b(AND|OR)\b/i', "\n" . str_repeat($this->indent, ($level + 1)) . "$1", $sql);
+        $sql = preg_replace('/\b(AND|OR)\b/i', "\n" . str_repeat(self::INDENT, ($level + 1)) . "$1", $sql);
         $sql = $this->upperCaseSqlComponent($sql);
 
 
         // Further indentation for select fields
         if ($level === 0) {
-            $sql = preg_replace('/\bSELECT\b/i', "SELECT\n" . $this->indent, $sql);
+            $sql = preg_replace('/\bSELECT\b/i', "SELECT\n" . self::INDENT, $sql);
         }
         $sql = $this->indentForComma($sql, $level);
 
@@ -54,7 +54,7 @@ class SqlDecoder implements SqlDecoderInterface
         $lines = explode("\n", $sql);
         $formattedSql = '';
         foreach ($lines as $line) {
-            $formattedSql .= str_repeat($this->indent, $level) . $line . "\n";
+            $formattedSql .= str_repeat(self::INDENT, $level) . $line . "\n";
         }
         $formattedSql = preg_replace('/\s*$/', "", $formattedSql);
 
@@ -83,7 +83,7 @@ class SqlDecoder implements SqlDecoderInterface
      */
     private function indentForComma(string $sql, int $level): string
     {
-        return preg_replace('/,(?![^()]*\))/', ",\n" . str_repeat($this->indent, ($level + 1)) . "", $sql);
+        return preg_replace('/,(?![^()]*\))/', ",\n" . str_repeat(self::INDENT, ($level + 1)) . "", $sql);
     }
 
     /**
@@ -98,7 +98,7 @@ class SqlDecoder implements SqlDecoderInterface
         while (preg_match('/\(([^()]+)\)/', $sql, $matches)) {
             $index = count($this->SubQuery);
             $this->SubQuery[$index] = $matches[1];
-            $sql = preg_replace('/\(([^()]+)\)/', $this->indicatorSubQuery . $index . $this->indicatorSubQuery, $sql, 1);
+            $sql = preg_replace('/\(([^()]+)\)/', self::INDICATOR_SUB_QUERY . $index . self::INDICATOR_SUB_QUERY, $sql, 1);
             $matches = [];
         }
         return $sql;
@@ -114,21 +114,21 @@ class SqlDecoder implements SqlDecoderInterface
     private function replaceIndicatorWithSubQuery(string $sql, int $level): string
     {
         $matches = [];
-        while (preg_match('/' . $this->indicatorSubQuery . '\d*' . $this->indicatorSubQuery . '/', $sql, $matches)) {
-            $index = str_replace($this->indicatorSubQuery, '', $matches[0]);
+        while (preg_match('/' . self::INDICATOR_SUB_QUERY . '\d*' . self::INDICATOR_SUB_QUERY . '/', $sql, $matches)) {
+            $index = str_replace(self::INDICATOR_SUB_QUERY, '', $matches[0]);
             $subQuery = $this->SubQuery[$index];
             $subQuery = preg_replace('/(^\(|\)$)/i', '', $subQuery); //NOSONARLINT
 
             if (!preg_match('/\b(SELECT|UPDATE|DELETE)\b/i', $subQuery)) { // function
                 $sql = preg_replace(
-                    '/' . $this->indicatorSubQuery . '\d*' . $this->indicatorSubQuery . '/',
+                    '/' . self::INDICATOR_SUB_QUERY . '\d*' . self::INDICATOR_SUB_QUERY . '/',
                     "(" . $subQuery . ")",
                     $sql,
                     1
                 );
             } else { //subquery
                 $sql = preg_replace(
-                    '/' . $this->indicatorSubQuery . '\d*' . $this->indicatorSubQuery . '/',
+                    '/' . self::INDICATOR_SUB_QUERY . '\d*' . self::INDICATOR_SUB_QUERY . '/',
                     "(\n" . $this->decodeString($subQuery, $level + 1) . "\n)",
                     $sql,
                     1

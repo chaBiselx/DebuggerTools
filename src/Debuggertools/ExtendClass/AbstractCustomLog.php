@@ -6,7 +6,6 @@ namespace Debuggertools\ExtendClass;
 
 use Debuggertools\Config\PathLog;
 use Debuggertools\Traits\FileSystem;
-use Debuggertools\Objects\ClassDecoder;
 use Debuggertools\Config\Configurations;
 use Debuggertools\Config\InstanceConfig;
 use Debuggertools\Converter\TypeConverter;
@@ -73,7 +72,6 @@ abstract class AbstractCustomLog
         $this->folderPath = (new PathLog())->getLogFolderPath();
         $this->createDirIfNotExist($this->folderPath); // FileSystem
 
-        $this->ClassDecoder = new ClassDecoder();
         $this->ResourceExtracter = new ResourceExtracter();
         $this->ClassExtracter = new ClassExtracter();
         $this->typeConverter = new TypeConverter();

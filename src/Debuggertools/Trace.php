@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Debuggertools;
 
 use Debuggertools\Logger;
-use Debuggertools\Objects\TraceDecoder;
+use Debuggertools\Objects\TraceInterpret;
 
 class Trace
 {
@@ -14,7 +14,7 @@ class Trace
     {
         $Option['hidePrefix'] = true;
         $this->Logger = new Logger($Option);
-        $this->TraceDecoder = new TraceDecoder();
+        $this->TraceInterpret = new TraceInterpret();
     }
 
     /**
@@ -25,7 +25,7 @@ class Trace
     public function logTrace(): void
     {
         try {
-            $texts = $this->TraceDecoder->decode();
+            $texts = $this->TraceInterpret->decode();
             // write log
             foreach ($texts as $text) {
                 $this->Logger->logger($text);

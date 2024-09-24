@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Debuggertools\Objects;
+namespace Debuggertools\Decoder;
 
 use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Interfaces\ClassDecoderInterface;
@@ -15,13 +15,16 @@ class ArrayIteratorDecoder implements ClassDecoderInterface
         $this->typeConverter = new TypeConverter();
     }
 
-    public function decodeObject($it): ?array
+    /**
+     * {@inheritDoc}
+     */
+    public function decodeObject($obj): ?array
     {
         $fakeData = [];
 
-        while ($it->valid()) {
-            $fakeData[$it->key()] = $this->typeConverter->convertArgToString($it->current());
-            $it->next();
+        while ($obj->valid()) {
+            $fakeData[$obj->key()] = $this->typeConverter->convertArgToString($obj->current());
+            $obj->next();
         }
 
         return $fakeData;
