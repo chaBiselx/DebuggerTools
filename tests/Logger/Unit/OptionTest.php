@@ -10,11 +10,6 @@ use Debuggertools\Enumerations\OptionForInstanceEnum;
 class OptionTest extends BaseTestCase
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function setUp(): void
     {
         parent::setUp();
