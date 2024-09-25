@@ -5,15 +5,15 @@ namespace Debuggertools\Enumerations;
 abstract class OptionForInstanceEnum
 {
     //general
-    const FILE_NAME = 'sdfgqfdgdfg';
-    const EXPEND_OBJECT = 'wfgdfg';
-    const PREFIX_HIDE = 'hidePrdfgwsdfefix';
-    const PREFIX_SHOW = 'showPwdfgdfgrefix';
-    const ACTIVE_PURGE_FILE = 'purgeFileBdfgdfgdfgefore';
+    const FILE_NAME = 'fileName';
+    const EXPEND_OBJECT = 'expendObject';
+    const PREFIX_HIDE = 'hidePrefix';
+    const PREFIX_SHOW = 'showPrefix';
+    const ACTIVE_PURGE_FILE = 'purgeFileBefore';
 
     //MemoryMonitor
-    const MEMORY_CONVERTION_ACTIVE = 'activeCodfgdfgnvertion';
-    const MEMORY_CONVERTION_DISACTIVE = 'disactdfgdfgfdiveConvertion';
+    const MEMORY_CONVERTION_ACTIVE = 'activeConvertion';
+    const MEMORY_CONVERTION_DISACTIVE = 'disactiveConvertion';
 
     const LIST_PARAM = [
         self::EXPEND_OBJECT => true,
