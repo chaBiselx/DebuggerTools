@@ -6,7 +6,7 @@ namespace Debuggertools;
 
 use Debuggertools\Logger;
 use Debuggertools\Converter\RessourceValueConverter;
-
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 
 /**
  * Class to monitor memory usage.
@@ -28,11 +28,11 @@ class MemoryMonitor
         $this->logger = new Logger($Option);
         $this->totalMemoryLimit = $this->decodeMemoryLimit(ini_get('memory_limit'));
 
-        if (isset($Option['activeConvertion']) && $Option['activeConvertion']) {
-            $this->activeConvertion = true;
+        if (isset($Option[OptionForInstanceEnum::MEMORY_CONVERTION_ACTIVE]) && $Option[OptionForInstanceEnum::MEMORY_CONVERTION_ACTIVE]) {
+            $this->activeConvertion = OptionForInstanceEnum::LIST_PARAM[OptionForInstanceEnum::MEMORY_CONVERTION_ACTIVE];
         }
-        if (isset($Option['disactiveConvertion']) && $Option['disactiveConvertion']) {
-            $this->activeConvertion = false;
+        if (isset($Option[OptionForInstanceEnum::MEMORY_CONVERTION_DISACTIVE]) && $Option[OptionForInstanceEnum::MEMORY_CONVERTION_DISACTIVE]) {
+            $this->activeConvertion = OptionForInstanceEnum::LIST_PARAM[OptionForInstanceEnum::MEMORY_CONVERTION_DISACTIVE];
         }
         $this->RessourceValueConverter = new RessourceValueConverter($this->activeConvertion);
         $this->initialMemory = memory_get_usage();

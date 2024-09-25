@@ -6,13 +6,14 @@ namespace Debuggertools;
 
 use Debuggertools\Logger;
 use Debuggertools\Objects\TraceInterpret;
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 
 class Trace
 {
 
     public function __construct(array $Option = [])
     {
-        $Option['hidePrefix'] = true;
+        $Option[OptionForInstanceEnum::PREFIX_HIDE] = true;
         $this->Logger = new Logger($Option);
         $this->TraceInterpret = new TraceInterpret();
     }

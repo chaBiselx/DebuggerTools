@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Debuggertools;
 
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 use Debuggertools\ExtendClass\AbstractCustomLog;
 
 class Logger extends AbstractCustomLog
@@ -23,22 +24,22 @@ class Logger extends AbstractCustomLog
         parent::__construct(); // default value
 
         //Option
-        if (isset($Option['fileName']) && $Option['fileName']) {
-            $this->fileName = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $Option['fileName']);
+        if (isset($Option[OptionForInstanceEnum::FILE_NAME]) && $Option[OptionForInstanceEnum::FILE_NAME]) {
+            $this->fileName = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $Option[OptionForInstanceEnum::FILE_NAME]);
             $this->setPathFile();
         }
-        if (isset($Option['expendObject']) && $Option['expendObject']) { // expend object / array
-            $this->expendObject = true;
+        if (isset($Option[OptionForInstanceEnum::EXPEND_OBJECT]) && $Option[OptionForInstanceEnum::EXPEND_OBJECT]) { // expend object / array
+            $this->expendObject = OptionForInstanceEnum::LIST_PARAM[OptionForInstanceEnum::EXPEND_OBJECT];
         }
-        if (isset($Option['hidePrefix']) && $Option['hidePrefix']) { // hide prefix
-            $this->showPrefix = false;
+        if (isset($Option[OptionForInstanceEnum::PREFIX_HIDE]) && $Option[OptionForInstanceEnum::PREFIX_HIDE]) { // hide prefix
+            $this->showPrefix = OptionForInstanceEnum::LIST_PARAM[OptionForInstanceEnum::PREFIX_HIDE];
         }
-        if (isset($Option['showPrefix']) && $Option['showPrefix']) { // show prefix
-            $this->showPrefix = true;
+        if (isset($Option[OptionForInstanceEnum::PREFIX_SHOW]) && $Option[OptionForInstanceEnum::PREFIX_SHOW]) { // show prefix
+            $this->showPrefix = OptionForInstanceEnum::LIST_PARAM[OptionForInstanceEnum::PREFIX_SHOW];
         }
 
-        if (isset($Option['purgeFileBefore']) && $Option['purgeFileBefore']) { //reset file
-            file_put_contents($this->pathFile, '');
+        if (isset($Option[OptionForInstanceEnum::ACTIVE_PURGE_FILE]) && $Option[OptionForInstanceEnum::ACTIVE_PURGE_FILE]) { //reset file
+            $this->purgeFile();
         }
     }
 

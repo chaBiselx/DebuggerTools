@@ -3,6 +3,7 @@
 namespace Test\Trace\Unit;
 
 use Closure;
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 use Debuggertools\Trace;
 use Test\ExtendClass\BaseTestCase;
 use Test\ObjectForTest\UserEntity;
@@ -43,7 +44,7 @@ class BaseTraceTest extends BaseTestCase
 
     public function testFile()
     {
-        Trace::getTraceStatic(['fileName' => 'trace']);
+        Trace::getTraceStatic([OptionForInstanceEnum::FILE_NAME => 'trace']);
         $this->setPath('log/trace.log');
         $this->assertTrue($this->fileExist());
         $this->assertMatchesRegularExpression('/TRACE START/', $this->getContent());

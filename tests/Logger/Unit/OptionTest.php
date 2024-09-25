@@ -5,6 +5,7 @@ namespace Test\Logger\Unit;
 use Debuggertools\Logger;
 
 use Test\ExtendClass\BaseTestCase;
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 
 class OptionTest extends BaseTestCase
 {
@@ -37,7 +38,7 @@ class OptionTest extends BaseTestCase
 
     public function testHidePrefix()
     {
-        $logger = new Logger(['hidePrefix' => 1]);
+        $logger = new Logger([OptionForInstanceEnum::PREFIX_HIDE => 1]);
         $logger->logger('prefixHide');
         $this->assertMatchesRegularExpression('/^prefixHide(\s*)$/', $this->getContent());
         $this->assertMatchesRegularExpression('/^(?!.*\d{4}\/\d{2}\/\d{2}\.\d{2}:\d{2}:\d{2})/', $this->getContent()); // inexistance of previous log
@@ -46,7 +47,7 @@ class OptionTest extends BaseTestCase
 
     public function testShowPrefix()
     {
-        $logger = new Logger(['showPrefix' => 1]);
+        $logger = new Logger([OptionForInstanceEnum::PREFIX_SHOW => 1]);
         $logger->logger('showPrefix');
         $this->assertMatchesRegularExpression('/\d{4}\/\d{2}\/\d{2}\.\d{2}:\d{2}:\d{2} : showPrefix(\s*)$/', $this->getContent());
     }
@@ -57,7 +58,7 @@ class OptionTest extends BaseTestCase
         $logger->logger('addTextBeforePurge');
         $this->assertMatchesRegularExpression('/addTextBeforePurge(\s*)$/', $this->getContent());
         //new logger
-        $otherLogger = new Logger(['purgeFileBefore' => 1]);
+        $otherLogger = new Logger([OptionForInstanceEnum::ACTIVE_PURGE_FILE => 1]);
         $otherLogger->logger('addTextAfterPurge');
         $this->assertMatchesRegularExpression('/addTextAfterPurge(\s*)$/', $this->getContent());
         $this->assertMatchesRegularExpression('/^(?!.*addTextBeforePurge)/', $this->getContent()); // inexistance of previous log
@@ -65,7 +66,7 @@ class OptionTest extends BaseTestCase
 
     public function testLogOtherFile()
     {
-        $logger = new Logger(['fileName' => 'foo']);
+        $logger = new Logger([OptionForInstanceEnum::FILE_NAME => 'foo']);
         $logger->logger('otherLog');
         $this->setPath('log/foo.log');
         $this->assertTrue($this->fileExist());
@@ -74,7 +75,7 @@ class OptionTest extends BaseTestCase
 
     public function testLogOtherWithPathFile()
     {
-        $logger = new Logger(['fileName' => 'foo/bar/example']);
+        $logger = new Logger([OptionForInstanceEnum::FILE_NAME => 'foo/bar/example']);
         $logger->logger('log with path');
         $this->setPath('log/foo/bar/example.log');
         $this->assertTrue($this->fileExist());
@@ -90,7 +91,7 @@ class OptionTest extends BaseTestCase
 
     public function testExpendArray()
     {
-        $logger = new Logger(['expendObject' => 1]);
+        $logger = new Logger([OptionForInstanceEnum::EXPEND_OBJECT => 1]);
         $logger->logger(['expend' => true]);
         $this->assertMatchesRegularExpression('/{\n\s*"expend" : true\n}(\s*)/', $this->getContent());
     }

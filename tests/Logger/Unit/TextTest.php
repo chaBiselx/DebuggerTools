@@ -2,6 +2,7 @@
 
 namespace Test\Logger\Unit;
 
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 use Debuggertools\Logger;
 
 use Test\ExtendClass\BaseTestCase;
@@ -13,7 +14,7 @@ class TextTest extends BaseTestCase
     {
         parent::setUp();
         $this->purgeLog();
-        $this->Logger = new Logger(['hidePrefix' => 1]);
+        $this->Logger = new Logger([OptionForInstanceEnum::PREFIX_HIDE => 1]);
     }
 
     public function testLongText()

@@ -11,6 +11,7 @@ use Debuggertools\Config\InstanceConfig;
 use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Formatter\JSONformatter;
 use Debuggertools\Extractor\ClassExtracter;
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 use Debuggertools\Extractor\ResourceExtracter;
 use Debuggertools\Strategy\DataExtractorContext;
 
@@ -135,14 +136,13 @@ abstract class AbstractCustomLog
                 $texts[0] = $type;
                 break;
         }
-        $this->instanceConfig->reset();
         return $texts;
     }
 
     protected function setGlobals()
     {
-        $this->instanceConfig->set('showPrefix', $this->showPrefix);
-        $this->instanceConfig->set('expendObject', $this->expendObject);
+        $this->instanceConfig->set(OptionForInstanceEnum::PREFIX_SHOW, $this->showPrefix);
+        $this->instanceConfig->set(OptionForInstanceEnum::EXPEND_OBJECT, $this->expendObject);
         $this->instanceConfig->set('pathFile', $this->pathFile);
     }
 
@@ -159,6 +159,10 @@ abstract class AbstractCustomLog
         $extractor->extractData($texts, $data, 'resource');
     }
 
+    protected function purgeFile()
+    {
+        file_put_contents($this->pathFile, '');
+    }
 
     /**
      * Write in logs file
@@ -176,11 +180,12 @@ abstract class AbstractCustomLog
 
         $prefixText = date($dateFormat) . $separator;
         foreach ($ArrayOfText as $text) {
-            if ($this->showPrefix) {
+            if ($this->instanceConfig->get(OptionForInstanceEnum::PREFIX_SHOW)) {
                 $text = $prefixText . $text;
             }
             $this->appendToFile($this->pathFile, $text);
         }
+        $this->instanceConfig->reset();
     }
 
     protected function decodeArrayForLog($data): string

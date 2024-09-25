@@ -4,6 +4,7 @@ namespace Debuggertools\Formatter;
 
 use Debuggertools\Config\InstanceConfig;
 use Debuggertools\Converter\TypeConverter;
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 
 
 class JSONformatter
@@ -25,7 +26,6 @@ class JSONformatter
      * Create a json if necessery
      *
      * @param mixed $data
-     * @param boolean $expendObject if true expend the object
      * @param integer $nbSpace
      * @return string
      */
@@ -36,7 +36,7 @@ class JSONformatter
         //base indent
         $indent = self::createIndent($nbSpace);
         if (in_array($type, ['object', 'array'])) {
-            if ($this->instanceConfig->get('expendObject')) {
+            if ($this->instanceConfig->get(OptionForInstanceEnum::EXPEND_OBJECT)) {
                 $stringResponse = $this->generateExpendObject($data, $nbSpace);
             } else {
                 $stringResponse = $indent . json_encode($data);

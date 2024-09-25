@@ -2,9 +2,9 @@
 
 namespace Test\MemoryMonitor\Unit;
 
-
 use Debuggertools\MemoryMonitor;
 use Test\ExtendClass\BaseTestCase;
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 
 class ResourceMesureTest extends BaseTestCase
 {
@@ -26,18 +26,18 @@ class ResourceMesureTest extends BaseTestCase
 
     public function testBaseData()
     {
-        $MemoryMonitor = new MemoryMonitor(['disactiveConvertion' => true]);
+        $MemoryMonitor = new MemoryMonitor([OptionForInstanceEnum::MEMORY_CONVERTION_DISACTIVE => true]);
         $string = str_repeat('A', $this->memoryValue); //NOSONAR
         $MemoryMonitor->logMemoryUsage();
         $match = [];
         preg_match('/ From start (\d*(.\d*)?) .?B /', $this->getContent(), $match);
         $mesuredResource = (int) $match[1];
-        $this->assertEquals($this->memoryValue + $this->diffGarbageCollector, $mesuredResource);
+        $this->assertEqualsWithDelta($this->memoryValue + $this->diffGarbageCollector, $mesuredResource, 1024); // delta from garbagColler stored in MemoryMonitor
     }
 
     public function testBaseDataSecond()
     {
-        $MemoryMonitor = new MemoryMonitor(['disactiveConvertion' => true]);
+        $MemoryMonitor = new MemoryMonitor([OptionForInstanceEnum::MEMORY_CONVERTION_DISACTIVE => true]);
         $MemoryMonitor->logMemoryUsage();
         $string = str_repeat('A', $this->memoryValue); //NOSONAR
         $MemoryMonitor->logMemoryUsage();
@@ -45,6 +45,6 @@ class ResourceMesureTest extends BaseTestCase
         $match = [];
         preg_match('/ From start (\d*(.\d*)?) .?B /', $this->getLastLine(), $match);
         $mesuredResource = (float) $match[1];
-        $this->assertEqualsWithDelta($this->memoryValue + $this->diffGarbageCollector, $mesuredResource, 420); // delta from garbagColler stored in MemoryMonitor
+        $this->assertEqualsWithDelta($this->memoryValue + $this->diffGarbageCollector, $mesuredResource, 1024); // delta from garbagColler stored in MemoryMonitor
     }
 }

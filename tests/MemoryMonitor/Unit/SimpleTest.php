@@ -2,7 +2,7 @@
 
 namespace Test\MemoryMonitor\Unit;
 
-
+use Debuggertools\Enumerations\OptionForInstanceEnum;
 use Debuggertools\MemoryMonitor;
 use Test\ExtendClass\BaseTestCase;
 
@@ -44,7 +44,7 @@ class SimpleTest extends BaseTestCase
 
     public function testDisactiveConvertion()
     {
-        $MemoryMonitor = new MemoryMonitor(['disactiveConvertion' => 1]);
+        $MemoryMonitor = new MemoryMonitor([OptionForInstanceEnum::MEMORY_CONVERTION_DISACTIVE => 1]);
         $MemoryMonitor->logMemoryUsage("before");
         $MemoryMonitor->logMemoryUsage("after");
         $this->assertMatchesRegularExpression('/before : -?\d*(.\d*)? B of -?\d*(.\d*)? B \(-?\d+(.\d*)?(E-\d+)?%\) \| From start -?\d*(.\d*)? B \(-?\d+(.\d*)?(E-\d+)?%\)(\s*)/', $this->getContent()); // before : 4500048 B of 2048 B (219728.90625%) | From start 3952 B (192.96875%) 
@@ -53,7 +53,7 @@ class SimpleTest extends BaseTestCase
 
     public function testActiveConvertion()
     {
-        $MemoryMonitor = new MemoryMonitor(['activeConvertion' => 1]);
+        $MemoryMonitor = new MemoryMonitor([OptionForInstanceEnum::MEMORY_CONVERTION_ACTIVE => 1]);
         $MemoryMonitor->logMemoryUsage("before");
         $MemoryMonitor->logMemoryUsage("after");
         $this->assertMatchesRegularExpression('/before : -?\d*(.\d*)? .?B of -?\d*(.\d*)? .?B \(-?\d+(.\d*)?(E-\d+)?%\) \| From start -?\d*(.\d*)? .?B \(-?\d+(.\d*)?(E-\d+)?%\)(\s*)/', $this->getContent()); // 4.27 MB of 1 KB (437525%) | From start 3.86 KB (385.9375%)\n
