@@ -7,13 +7,15 @@ namespace Debuggertools\Decoder;
 use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Interfaces\ClassDecoderInterface;
+use Debuggertools\Appender\DoctrineQueryBuilderAppender;
 
-class ArrayIteratorDecoder implements ClassDecoderInterface
+class DoctrineQueryBuilderDecoder  implements ClassDecoderInterface
 {
 
     public function __construct()
     {
         $this->typeConverter = new TypeConverter();
+        $this->appender = new DoctrineQueryBuilderAppender();
     }
 
     /**
@@ -21,18 +23,10 @@ class ArrayIteratorDecoder implements ClassDecoderInterface
      */
     public function decodeObject($obj): ?array
     {
-        $fakeData = [];
-
-        while ($obj->valid()) {
-            $fakeData[$obj->key()] = $this->typeConverter->convertArgToString($obj->current());
-            $obj->next();
-        }
-
-        return $fakeData;
+        return [];
     }
 
-    
     public function getAppender($obj): ?AppenderLogInterfaces {
-        return null;
+        return $this->appender;
     }
 }

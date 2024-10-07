@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Debuggertools\Decoder;
 
-use ReflectionClass;
 use CurlHandle;
+use ReflectionClass;
+use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Interfaces\ClassDecoderInterface;
 
 class CurlDecoder implements ClassDecoderInterface
@@ -29,6 +30,10 @@ class CurlDecoder implements ClassDecoderInterface
         }
 
         return $this->fakeData;
+    }
+
+    public function getAppender($obj): ?AppenderLogInterfaces {
+        return null;
     }
 
     private function setRequest()

@@ -6,11 +6,12 @@ namespace Debuggertools\Extractor;
 
 use Debuggertools\Decoder\ClassDecoder;
 use Debuggertools\Decoder\ClosureDecoder;
-use Debuggertools\Objects\SymfonyQueryBuilder;
 use Debuggertools\Decoder\ArrayIteratorDecoder;
+use Debuggertools\Decoder\DoctrineQueryDecoder;
 use Debuggertools\Interfaces\ExtracterInterface;
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Interfaces\ClassDecoderInterface;
+use Debuggertools\Decoder\DoctrineQueryBuilderDecoder;
 use Debuggertools\ExtendClass\AbstractAdvancedExtracter;
 
 class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInterface
@@ -22,7 +23,8 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
         $this->ClassDecoder = new ClassDecoder();
         $this->ClosureDecoder = new ClosureDecoder();
         $this->ArrayIteratorDecoder = new ArrayIteratorDecoder();
-        $this->SymfonyQueryBuilder = new SymfonyQueryBuilder();
+        $this->DoctrineQueryDecoder = new DoctrineQueryDecoder();
+        $this->DoctrineQueryBuilderDecoder = new DoctrineQueryBuilderDecoder();
     }
 
 
@@ -30,19 +32,22 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
     {
         $this->class = get_class($obj); // get classname
         $this->type = 'class'; //type
-        switch ($this->class) {
-            case 'Closure':
-                $this->decodeContent($obj, $this->ClosureDecoder);
-                break;
-            case 'ArrayIterator':
-                $this->decodeContent($obj, $this->ArrayIteratorDecoder);
-                break;
-            default:
-                $this->decodeContent($obj, $this->ClassDecoder);
-                break;
+        $decoder = null;
+        if ($this->class === 'Closure') {
+            $decoder = $this->ClosureDecoder;
+        } elseif ($this->class === 'ArrayIterator') {
+            $decoder = $this->ArrayIteratorDecoder;
+        }elseif (class_exists('Doctrine\\ORM\\QueryBuilder') && $this->class === "Doctrine\\ORM\\QueryBuilder") {
+            $decoder = $this->DoctrineQueryBuilderDecoder;
+        }elseif (class_exists('Doctrine\\ORM\\Query') && $this->class === "Doctrine\\ORM\\Query") {
+            $decoder = $this->DoctrineQueryDecoder;
+        } else {
+            $decoder = $this->ClassDecoder;
         }
+        $this->decodeContent($obj, $decoder);
+
         //check instance for more data
-        $this->appendLog = $this->getContentSpecialClass($obj);
+        $this->appendLog = $this->getContentSpecialClass($obj, $decoder);
 
         return $this;
     }
@@ -58,16 +63,11 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
      * @param object $obj
      * @return array
      */
-    private function getContentSpecialClass($obj): array
+    private function getContentSpecialClass($obj,ClassDecoderInterface $decoder): array
     {
         $toAppendToLog = [];
-        $appender = null;
-        if (
-            class_exists('Doctrine\\ORM\\QueryBuilder') &&
-            $obj instanceof \Doctrine\ORM\QueryBuilder
-        ) {
-            $appender =  $this->SymfonyQueryBuilder;
-        }
+ 
+        $appender =  $decoder->getAppender($obj);
         if ($appender) $toAppendToLog = array_merge($toAppendToLog, $this->extractMoreData($obj, $appender));
         return $toAppendToLog;
     }

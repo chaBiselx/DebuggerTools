@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Debuggertools\Decoder;
 
 use ReflectionFunction;
+use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Interfaces\ClassDecoderInterface;
 
 class ClosureDecoder implements ClassDecoderInterface
@@ -30,6 +31,10 @@ class ClosureDecoder implements ClassDecoderInterface
         }
 
         return $fakeData;
+    }
+
+    public function getAppender($obj): ?AppenderLogInterfaces {
+        return null;
     }
 
     /**

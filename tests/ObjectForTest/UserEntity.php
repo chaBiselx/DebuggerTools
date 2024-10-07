@@ -3,33 +3,41 @@
 namespace Test\ObjectForTest;
 
 use Test\ObjectForTest\RoleEntity;
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="User")
+ */
 class UserEntity
 {
-	/**
-	 * @var int
-	 */
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
 	private $id;
 
-	/**
-	 * @var string
-	 */
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
 	public $lastName;
 
-	/**
-	 * @var string
-	 */
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
 	public $firstName;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=RoleEntity::class, fetch="EAGER")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $role;
 
 	public function __construct()
 	{
 		$this->id = rand(1, 999);
 	}
-
-	/**
-	 * @var array|null
-	 */
-	private $role;
 
 	public function getRole(): ?RoleEntity
 	{

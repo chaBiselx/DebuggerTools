@@ -2,6 +2,8 @@
 
 namespace Debuggertools\Interfaces;
 
+use Debuggertools\Interfaces\AppenderLogInterfaces;
+
 interface ClassDecoderInterface
 {
     /**
@@ -11,4 +13,6 @@ interface ClassDecoderInterface
      * @return array|null
      */
     public function decodeObject($obj): ?array;
+
+    public function getAppender($obj): ?AppenderLogInterfaces;
 }

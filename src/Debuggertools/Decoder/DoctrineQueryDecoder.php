@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Debuggertools\Decoder;
 
 use Debuggertools\Converter\TypeConverter;
+use Debuggertools\Appender\DoctrineQueryAppender;
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Interfaces\ClassDecoderInterface;
 
-class ArrayIteratorDecoder implements ClassDecoderInterface
+class DoctrineQueryDecoder implements ClassDecoderInterface
 {
 
     public function __construct()
     {
         $this->typeConverter = new TypeConverter();
+        $this->appender = new DoctrineQueryAppender();
     }
 
     /**
@@ -21,18 +23,10 @@ class ArrayIteratorDecoder implements ClassDecoderInterface
      */
     public function decodeObject($obj): ?array
     {
-        $fakeData = [];
-
-        while ($obj->valid()) {
-            $fakeData[$obj->key()] = $this->typeConverter->convertArgToString($obj->current());
-            $obj->next();
-        }
-
-        return $fakeData;
+        return [];
     }
 
-    
     public function getAppender($obj): ?AppenderLogInterfaces {
-        return null;
+        return $this->appender;
     }
 }

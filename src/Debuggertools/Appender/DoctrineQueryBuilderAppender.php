@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Debuggertools\Objects;
+namespace Debuggertools\Appender;
 
-use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Objects\SqlDecoder;
 use Debuggertools\Decoder\ClassDecoder;
+use Debuggertools\Interfaces\AppenderLogInterfaces;
+use Debuggertools\ExtendClass\AbstractDoctrineAppender;
 
 
 
-class SymfonyQueryBuilder implements AppenderLogInterfaces
+class DoctrineQueryBuilderAppender extends AbstractDoctrineAppender implements AppenderLogInterfaces
 {
 
     public function __construct()
@@ -38,7 +39,9 @@ class SymfonyQueryBuilder implements AppenderLogInterfaces
                 $listParam[$key] = $this->decodeListObjetSpecialClassQueryBuilder($parameter);
             }
             $retLog[] = $this->SqlDecoder->serialize($sql);
-            $retLog[] = json_encode($listParam);
+            if(!empty($listParam)){
+                $retLog[] = json_encode($listParam);
+            }
         }
         return $retLog;
     }
