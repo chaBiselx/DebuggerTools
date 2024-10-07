@@ -1,5 +1,10 @@
+FILTER ?= 
 
 #all test
 test : 
 	@# Help: lance l'ensemble des test unitaire et fonctionnel
-	php vendor/bin/phpunit -v 
+	@if [ -z "$(FILTER)" ]; then \
+		php vendor/bin/phpunit; \
+	else \
+		php vendor/bin/phpunit --filter $(FILTER); \
+	fi
