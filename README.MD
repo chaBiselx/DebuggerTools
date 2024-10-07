@@ -188,5 +188,4 @@ Ce projet est sous licence MIT. Consultez le fichier [LICENSE](https://github.co
 - get info from curl and generate a command line test
 - middleware for all input/output
 - eventListener for Symphony
-- add curl debug 
 - SonarLint error ( pathLog : getRootPath)
