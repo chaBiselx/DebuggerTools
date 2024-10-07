@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Debuggertools\ExtendClass;
 
-use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Objects\SqlDecoder;
 use Debuggertools\Decoder\ClassDecoder;
+use Debuggertools\Converter\TypeConverter;
+use Debuggertools\Interfaces\AppenderLogInterfaces;
 
 
 
@@ -17,6 +18,7 @@ class AbstractDoctrineAppender implements AppenderLogInterfaces
     {
         $this->ClassDecoder = new ClassDecoder;
         $this->SqlDecoder = new SqlDecoder;
+        $this->TypeConverter = new TypeConverter;
     }
 
     /**
@@ -27,25 +29,7 @@ class AbstractDoctrineAppender implements AppenderLogInterfaces
      */
     public function extractDataLog($obj): array
     {
-        $retLog = [];
-        if ($obj instanceof \Doctrine\ORM\QueryBuilder) {
-            $sql = $obj->getQuery()->getSql();
-            $listKeys = $obj->getQuery()->getParameters()->getKeys();
-            $listValues = $obj->getQuery()->getParameters()->getValues();
-            $listParam = [];
-            foreach ($listKeys as $key) {
-                $parameter = $listValues[$key];
-                $listParam[$key] = $this->decodeListObjetSpecialClassQueryBuilder($parameter);
-            }
-            $retLog[] = $this->SqlDecoder->serialize($sql);
-            if(!empty($listParam)){
-                $retLog[] = json_encode($listParam);
-            }
-        }elseif ($obj instanceof \Doctrine\ORM\Query) {
-            $sql = $obj->getSql();
-            $retLog[] = $this->SqlDecoder->serialize($sql);
-        }
-        return $retLog;
+        return [];
     }
 
     /**
@@ -63,17 +47,12 @@ class AbstractDoctrineAppender implements AppenderLogInterfaces
                 break;
             case 'boolean':
             case 1: // boolean
-                $value = " " . ($parameter->getValue() ? 1 : 0) . " ";
-                break;
             case '2': // string
-            case 'string':
-                $value = self::decodeString($parameter);
-
-
-                break;
             case 'integer': // string
-                $value =  $parameter->getValue();
+            case 'string':
+                $value = $this->TypeConverter->convertArgToString($parameter->getValue());
                 break;
+
             case 102:
                 $value = "";
                 foreach ($parameter->getValue() as $k => $v) {

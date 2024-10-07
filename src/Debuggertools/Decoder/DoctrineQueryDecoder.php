@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Debuggertools\Decoder;
 
-use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Appender\DoctrineQueryAppender;
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Interfaces\ClassDecoderInterface;
@@ -14,7 +13,6 @@ class DoctrineQueryDecoder implements ClassDecoderInterface
 
     public function __construct()
     {
-        $this->typeConverter = new TypeConverter();
         $this->appender = new DoctrineQueryAppender();
     }
 
