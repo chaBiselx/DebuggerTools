@@ -6,6 +6,7 @@ namespace Debuggertools\Objects;
 
 use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Interfaces\TraceInterpretInterface;
+use Generator;
 
 class TraceInterpret implements TraceInterpretInterface
 {
@@ -26,10 +27,9 @@ class TraceInterpret implements TraceInterpretInterface
      *
      * @return array array of string
      */
-    public function decode(): array
+    public function decode(): Generator
     {
-        $arrayText = [];
-        $arrayText[] = $this->delimiter . " TRACE START " . $this->delimiter;
+        yield $this->delimiter . " TRACE START " . $this->delimiter;
         foreach ($this->traces as $trace) {
             //ignore package
             if (preg_match('/chabiselx\/debuggertools/', $trace['file'])) continue;
@@ -37,13 +37,12 @@ class TraceInterpret implements TraceInterpretInterface
             if (isset($trace['class']) && $trace['class'] == 'Debuggertools\Objects\TraceInterpret') continue;
 
             $messageFile = $this->getFileMessage($trace);
-            if ($messageFile) $arrayText[] = $messageFile;
+            if ($messageFile) yield $messageFile;
 
             $messageFunction = $this->getFunctionMessage($trace);
-            if ($messageFunction) $arrayText[] = $messageFunction;
+            if ($messageFunction) yield $messageFunction;
         }
-        $arrayText[] =  $this->delimiter . " TRACE END " . $this->delimiter;
-        return $arrayText;
+        yield  $this->delimiter . " TRACE END " . $this->delimiter;
     }
 
     /**
