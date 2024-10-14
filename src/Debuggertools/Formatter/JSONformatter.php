@@ -55,16 +55,21 @@ class JSONformatter
         if (gettype($data) == 'object') { // object
             $srtCroche = self::OPEN_OBJECT;
             $endCroche = self::CLOSE_OBJECT;
+            $array = (array) $data;
+            $keys = array_keys($array);
+            $lastKey = end($keys);
         } elseif ($this->isAssociativeArray($data)) { // associative array
             $srtCroche =  self::OPEN_OBJECT;
             $endCroche = self::CLOSE_OBJECT;
             if (empty($data)) return $this->returnEmptyArray();
-            $lastKey = end(array_keys($data));
+            $keys = array_keys($data);
+            $lastKey = end($keys);
         } else { // array
             $srtCroche = self::OPEN_ARRAY;
             $endCroche = self::CLOSE_ARRAY;
             if (empty($data)) return $this->returnEmptyArray();
-            $lastKey = end(array_keys($data));
+            $keys = array_keys($data);
+            $lastKey = end($keys);
         }
 
 

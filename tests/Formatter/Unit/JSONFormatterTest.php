@@ -29,7 +29,7 @@ class JSONFormatterTest extends BaseTestCase
     {
         $this->instanceConfig->set(OptionForInstanceEnum::EXPEND_OBJECT, true);
         $result = $this->JSONformatter->createExpendedJson([10, 'string', 1245, 12.65, true, false, new RoleEntity]);
-        $this->assertMatchesRegularExpression('/\[\n {2,}0 : 10,\n {2,}1 : "string"\,\n {2,}2 : 1245,\n {2,}3 : 12.65,\n {2,}4 : true,\n {2,}5 : false,\n {2,}6 : \n {2,}\{\n {4,}"permissions" : \[\],\n {2,}\}\n\]/', $result);
+        $this->assertMatchesRegularExpression('/\[\n {2,}0 : 10,\n {2,}1 : "string"\,\n {2,}2 : 1245,\n {2,}3 : 12.65,\n {2,}4 : true,\n {2,}5 : false,\n {2,}6 : \n {2,}\{\n {4,}"permissions" : \[\]\n {2,}\}\n\]/', $result);
     }
 
     public function testTextWithQuoteInArrayNotExpend()

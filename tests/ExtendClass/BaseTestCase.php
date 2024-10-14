@@ -48,7 +48,8 @@ abstract class BaseTestCase extends TestCase
 
     protected function getLastLine(): string
     {
-        return end($this->getArrayContent());
+        $arrayContent = $this->getArrayContent();
+        return end($arrayContent);
     }
 
 

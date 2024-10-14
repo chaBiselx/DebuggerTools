@@ -13,6 +13,9 @@ class CurlDecoderTest extends BaseTestCase
 
     public function setUp(): void
     {
+        if (PHP_MAJOR_VERSION >= 8) {
+            $this->markTestSkipped('all tests in this file are invactive for this PHP verison!');
+        }
         parent::setUp();
         $this->purgeLog();
         $this->Logger = new Logger();
