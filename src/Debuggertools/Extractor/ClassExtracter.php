@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Debuggertools\Extractor;
 
+use UnitEnum;
+use Debuggertools\Decoder\EnumDecoder;
 use Debuggertools\Decoder\CurlDecoder;
 use Debuggertools\Decoder\ClassDecoder;
 use Debuggertools\Decoder\ClosureDecoder;
@@ -27,6 +29,7 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
         $this->ArrayIteratorDecoder = new ArrayIteratorDecoder();
         $this->DoctrineQueryDecoder = new DoctrineQueryDecoder();
         $this->DoctrineQueryBuilderDecoder = new DoctrineQueryBuilderDecoder();
+        $this->EnumDecoder = new EnumDecoder();
         
     }
 
@@ -46,6 +49,9 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
             $decoder = $this->DoctrineQueryBuilderDecoder;
         }elseif (class_exists('Doctrine\\ORM\\Query') && $this->class === "Doctrine\\ORM\\Query") {
             $decoder = $this->DoctrineQueryDecoder;
+        } elseif($obj instanceof UnitEnum) {
+            $this->type = 'UnitEnum';
+            $decoder = $this->EnumDecoder;
         } else {
             $decoder = $this->ClassDecoder;
         }
