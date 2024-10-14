@@ -13,9 +13,6 @@ class CurlDecoderTest extends BaseTestCase
 
     public function setUp(): void
     {
-        if (PHP_MAJOR_VERSION >= 8) {
-            $this->markTestSkipped('all tests in this file are invactive for this PHP verison!');
-        }
         parent::setUp();
         $this->purgeLog();
         $this->Logger = new Logger();
@@ -30,7 +27,12 @@ class CurlDecoderTest extends BaseTestCase
 
         // fermeture des ressources
         curl_close($ch);
-        $this->assertMatchesRegularExpression('/ : resource \'curl\' : \[\]/', $this->getContent());
+        if (PHP_MAJOR_VERSION >= 8) {
+            $this->assertMatchesRegularExpression('/ : class \'CurlHandle\' : \[\]/', $this->getContent());
+        }else{
+            $this->assertMatchesRegularExpression('/ : resource \'curl\' : \[\]/', $this->getContent());
+        }
+
     }
 
     public function testGetSimpleNotSend()
@@ -48,7 +50,12 @@ class CurlDecoderTest extends BaseTestCase
 
         // fermeture des ressources
         curl_close($ch);
-        $this->assertMatchesRegularExpression('/ : resource \'curl\'/', $this->getContent());
+
+        if (PHP_MAJOR_VERSION >= 8) {
+            $this->assertMatchesRegularExpression('/ : class \'CurlHandle\'/', $this->getContent());
+        }else{
+            $this->assertMatchesRegularExpression('/ : resource \'curl\'/', $this->getContent());
+        }
         $this->assertMatchesRegularExpression('/ : \{"request":\{"url":"http:\\\\\/\\\\\/www.example.com\\\\\/"\}\}/', $this->getContent());
     }
 
@@ -68,7 +75,12 @@ class CurlDecoderTest extends BaseTestCase
 
         // fermeture des ressources
         curl_close($ch);
-        $this->assertMatchesRegularExpression('/ : resource \'curl\'/', $this->getContent());
+
+        if (PHP_MAJOR_VERSION >= 8) {
+            $this->assertMatchesRegularExpression('/ : class \'CurlHandle\'/', $this->getContent());
+        }else{
+            $this->assertMatchesRegularExpression('/ : resource \'curl\'/', $this->getContent());
+        }
         $this->assertMatchesRegularExpression('/ : \{"request":\{"url":"http:\\\\\/\\\\\/www.example.com\\\\\/"\},"response":\{"httpCode":200,"ContentType":"text\\\\\/html; charset=UTF-8"\}\}/', $this->getContent());
     }
 

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Debuggertools\Decoder;
 
-use CurlHandle;
-use ReflectionClass;
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\Interfaces\ClassDecoderInterface;
 

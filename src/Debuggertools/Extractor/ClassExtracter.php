@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Debuggertools\Extractor;
 
+use Debuggertools\Decoder\CurlDecoder;
 use Debuggertools\Decoder\ClassDecoder;
 use Debuggertools\Decoder\ClosureDecoder;
 use Debuggertools\Decoder\ArrayIteratorDecoder;
@@ -22,9 +23,11 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
         parent::__construct();
         $this->ClassDecoder = new ClassDecoder();
         $this->ClosureDecoder = new ClosureDecoder();
+        $this->CurlDecoder = new CurlDecoder();
         $this->ArrayIteratorDecoder = new ArrayIteratorDecoder();
         $this->DoctrineQueryDecoder = new DoctrineQueryDecoder();
         $this->DoctrineQueryBuilderDecoder = new DoctrineQueryBuilderDecoder();
+        
     }
 
 
@@ -37,6 +40,8 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
             $decoder = $this->ClosureDecoder;
         } elseif ($this->class === 'ArrayIterator') {
             $decoder = $this->ArrayIteratorDecoder;
+        }elseif ($this->class === 'CurlHandle') {
+            $decoder = $this->CurlDecoder;
         }elseif (class_exists('Doctrine\\ORM\\QueryBuilder') && $this->class === "Doctrine\\ORM\\QueryBuilder") {
             $decoder = $this->DoctrineQueryBuilderDecoder;
         }elseif (class_exists('Doctrine\\ORM\\Query') && $this->class === "Doctrine\\ORM\\Query") {
