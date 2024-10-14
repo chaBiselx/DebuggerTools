@@ -1,5 +1,5 @@
 # Utiliser l'image officielle de PHP 7.3 avec FPM
-FROM php:7.3-fpm-buster
+FROM php:8.1-fpm-buster
 ARG TIMEZONE
 ENV COMPOSER_ALLOW_SUPERUSER=1
 

@@ -70,6 +70,20 @@ services:
       - './:/var/www'
       - 'vendor:/var/www/vendor/'
 
+  php81:
+    env_file: *env_file
+    build:
+      context: .
+      dockerfile: docker/php80/Dockerfile
+      args:
+        TIMEZONE: '${TIMEZONE}'
+    restart: unless-stopped
+    # depends_on:
+    #   - database
+    volumes:
+      - './:/var/www'
+      - 'vendor:/var/www/vendor/'
+
 
 
 
