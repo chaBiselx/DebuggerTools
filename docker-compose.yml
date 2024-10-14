@@ -14,49 +14,63 @@ networks:
 
 
 services:
-  database:
-    env_file: *env_file
-    image: mysql:5.7
+  # database:
+  #   env_file: *env_file
+  #   image: mysql:5.7
 
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: testdb
-      MYSQL_USER: testuser
-      MYSQL_PASSWORD: testpassword
-    ports:
-      - "${BDD_EXT_PORT}:${BDD_EXT_PORT}"
-    volumes:
-      - db_data:/var/lib/mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: rootpassword
+  #     MYSQL_DATABASE: testdb
+  #     MYSQL_USER: testuser
+  #     MYSQL_PASSWORD: testpassword
+  #   ports:
+  #     - "${BDD_EXT_PORT}:${BDD_EXT_PORT}"
+  #   volumes:
+  #     - db_data:/var/lib/mysql
 
+  # nginx:
+  #   env_file: *env_file
+  #   build:
+  #     context: ./docker/nginx/
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   ports:
+  #     - '${PHP_EXT_PORT_1}:${PHP_EXT_PORT_2}'
+  #   depends_on:
+  #     - php
+  #   volumes:
+  #     - './:/var/www'
+  #     - 'vendor:/var/www/vendor/'
 
-  php:
+  php73:
     env_file: *env_file
     build:
       context: .
-      dockerfile: docker/php-fpm/Dockerfile
+      dockerfile: docker/php73/Dockerfile
       args:
         TIMEZONE: '${TIMEZONE}'
     restart: unless-stopped
-    depends_on:
-      - database
+    # depends_on:
+    #   - database
     volumes:
       - './:/var/www'
       - 'vendor:/var/www/vendor/'
-
-
-  nginx:
+  
+  php80:
     env_file: *env_file
     build:
-      context: ./docker/nginx/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/php80/Dockerfile
+      args:
+        TIMEZONE: '${TIMEZONE}'
     restart: unless-stopped
-    ports:
-      - '${PHP_EXT_PORT_1}:${PHP_EXT_PORT_2}'
-    depends_on:
-      - php
+    # depends_on:
+    #   - database
     volumes:
       - './:/var/www'
       - 'vendor:/var/www/vendor/'
+
+
 
 
 

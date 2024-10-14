@@ -3,7 +3,7 @@ FROM php:7.3-fpm-buster
 ARG TIMEZONE
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-COPY 'docker/php-fpm/php.ini' /usr/local/etc/php/conf.d/docker-php-config.ini
+COPY 'docker/php73/php.ini' /usr/local/etc/php/conf.d/docker-php-config.ini
 
 # Mettre à jour le système et installer les dépendances nécessaires
 RUN apt-get update && apt-get install -y \
