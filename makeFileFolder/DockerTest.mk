@@ -1,9 +1,10 @@
 
 docker-test:
 	$(MAKE) .check-docker
-	@$(MAKE) .run-test-internal CONTAINER_NAME=debuggertools-php73-1 VERSION="PHP 7.3"
-	@$(MAKE) .run-test-internal CONTAINER_NAME=debuggertools-php81-1 VERSION="PHP 8.1"
-	@$(MAKE) .run-test-internal CONTAINER_NAME=debuggertools-php80-1 VERSION="PHP 8.0"
+	@for container in $$(docker ps --filter "name=debuggertools-php" --format "{{.Names}}"); do \
+		make .run-test-internal CONTAINER_NAME=$$container; \
+    done
+
 
 .check-docker:
 	@if [ -f /.dockerenv ] || [ -f /proc/1/cgroup ] && grep -q docker /proc/1/cgroup; then \
@@ -15,6 +16,7 @@ docker-test:
 
 .run-test-internal:
 	@echo "$(GREEN)=================================================================$(NC)"
-	@echo "$(GREEN)          PHP :  $(VERSION)$(NC) : $(CONTAINER_NAME)"
+	@VERSION=$$(echo $(CONTAINER_NAME) | sed -E 's/.*php([0-9]*)_([0-9]*)-.*$$/\1.\2/'); \
+		echo "$(GREEN)          PHP : $$VERSION $(NC) : $(CONTAINER_NAME)"
 	@echo "$(GREEN)=================================================================$(NC)"
-	@-docker exec $(CONTAINER_NAME) php vendor/bin/phpunit
+	@-docker exec $(CONTAINER_NAME) make test

@@ -42,7 +42,7 @@ services:
   #     - './:/var/www'
   #     - 'vendor:/var/www/vendor/'
 
-  php73:
+  php7_3:
     env_file: *env_file
     build:
       context: .
@@ -57,7 +57,7 @@ services:
       - './:/var/www'
       - 'vendor:/var/www/vendor/'
   
-  php80:
+  php8_0:
     env_file: *env_file
     build:
       context: .
@@ -72,7 +72,7 @@ services:
       - './:/var/www'
       - 'vendor:/var/www/vendor/'
 
-  php81:
+  php8_1:
     env_file: *env_file
     build:
       context: .
