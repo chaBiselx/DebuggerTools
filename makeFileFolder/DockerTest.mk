@@ -1,7 +1,8 @@
 
 docker-test:
+	@# Help: lance l'ensemble des test unitaire et fonctionnel de tous les container docker
 	$(MAKE) .check-docker
-	@for container in $$(docker ps --filter "name=debuggertools-php" --format "{{.Names}}"); do \
+	@for container in $$(docker ps --filter "name=$(CONTAINER_NAME_PHP)" --format "{{.Names}}"); do \
 		make .run-test-internal CONTAINER_NAME=$$container; \
     done
 

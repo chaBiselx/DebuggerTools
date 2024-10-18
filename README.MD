@@ -55,7 +55,7 @@ Modifier les port dans le .env.local.env en fonction des autres images docker
 
 lancer Docker pour la première fois : 
 ```bash
-docker compose --env-file .env.local up --build --force-recreate -d
+make docker-build
 ```
 
 pour debuguer le build si besoin
@@ -83,7 +83,7 @@ make test
 
 pour lancer un test en particulier
 ```bash
-php vendor/bin/phpunit -v --filter file::function
+make test FILTER=file::function
 ```
 
 ## Utilisation

@@ -7,6 +7,10 @@ YEllOW = \033[0;33m
 RED = \033[0;31m
 NC = \033[0m  # No Color (reinit)
 
+# CONST
+CONTAINER_NAME_PHP=debuggertools-php
+
+
 help:
 	@printf "%-20s %s\n" "Target" "Description"
 	@printf "%-20s %s\n" "------" "-----------"
@@ -19,4 +23,5 @@ help:
 
 include makeFileFolder/Install.mk
 include makeFileFolder/Test.mk
+include makeFileFolder/DockerInit.mk
 include makeFileFolder/DockerTest.mk
