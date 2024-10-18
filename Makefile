@@ -1,4 +1,8 @@
-
+# Couleurs for echo
+GREEN = \033[0;32m
+YEllOW = \033[0;33m
+RED = \033[0;31m
+NC = \033[0m  # No Color (réinitialiser)
 
 help:
 	@printf "%-20s %s\n" "Target" "Description"
@@ -12,3 +16,4 @@ help:
 
 include makeFileFolder/Install.mk
 include makeFileFolder/Test.mk
+include makeFileFolder/DockerTest.mk

@@ -65,11 +65,17 @@ docker-compose build --no-cache 2>&1 | tee build_logs.txt
 
 rentrer dans le contanier PHP 
 ```bash
-docker exec -it debuggertools-php-1 bash
+docker exec -it debuggertools-php73-1 bash
 ```
 
 ## Test 
 
+### En dehors d'un containier 
+```bash
+make docker-test
+```
+
+### Dans un containier 
 pour executer l'ensempble des tests
 ```bash
 make test
