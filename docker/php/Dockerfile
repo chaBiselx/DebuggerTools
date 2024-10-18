@@ -1,9 +1,12 @@
-# Utiliser l'image officielle de PHP 7.3 avec FPM
-FROM php:7.3-fpm-buster
+ARG PHP_VERSION
 ARG TIMEZONE
+
+# Utiliser l'image officielle de PHP spécifié avec FPM
+FROM php:${PHP_VERSION}-fpm-buster
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-COPY 'docker/php_general/php.ini' /usr/local/etc/php/conf.d/docker-php-config.ini
+COPY 'docker/php/php.ini' /usr/local/etc/php/conf.d/docker-php-config.ini
 
 # Mettre à jour le système et installer les dépendances nécessaires
 RUN apt-get update && apt-get install -y \

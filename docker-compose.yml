@@ -46,8 +46,9 @@ services:
     env_file: *env_file
     build:
       context: .
-      dockerfile: docker/php73/Dockerfile
+      dockerfile: docker/php/Dockerfile
       args:
+        PHP_VERSION: '7.3'
         TIMEZONE: '${TIMEZONE}'
     restart: unless-stopped
     # depends_on:
@@ -60,8 +61,9 @@ services:
     env_file: *env_file
     build:
       context: .
-      dockerfile: docker/php80/Dockerfile
+      dockerfile: docker/php/Dockerfile
       args:
+        PHP_VERSION: '8.0'
         TIMEZONE: '${TIMEZONE}'
     restart: unless-stopped
     # depends_on:
@@ -74,8 +76,9 @@ services:
     env_file: *env_file
     build:
       context: .
-      dockerfile: docker/php80/Dockerfile
+      dockerfile: docker/php/Dockerfile
       args:
+        PHP_VERSION: '8.1'
         TIMEZONE: '${TIMEZONE}'
     restart: unless-stopped
     # depends_on:
