@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Debuggertools\Formatter;
 
 use Debuggertools\Config\InstanceConfig;

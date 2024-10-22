@@ -1,7 +1,8 @@
 <?php
 
-namespace Test\Fonctionnal\TimeMonitor;
+declare(strict_types=1);
 
+namespace Test\Fonctionnal\TimeMonitor;
 
 use Debuggertools\TimeMonitor;
 use Debuggertools\Logger;

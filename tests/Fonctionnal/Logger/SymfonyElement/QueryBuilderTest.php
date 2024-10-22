@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Test\Fonctionnal\Logger\SymfonyElement;
 
 use Debuggertools\Logger;

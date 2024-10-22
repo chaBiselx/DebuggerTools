@@ -9,8 +9,6 @@ use Debuggertools\Decoder\ClassDecoder;
 use Debuggertools\Converter\TypeConverter;
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 
-
-
 class AbstractDoctrineAppender implements AppenderLogInterfaces
 {
 

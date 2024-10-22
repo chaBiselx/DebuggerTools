@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Debuggertools\Appender;
 
-use Debuggertools\Objects\SqlDecoder;
-use Debuggertools\Decoder\ClassDecoder;
 use Debuggertools\Interfaces\AppenderLogInterfaces;
 use Debuggertools\ExtendClass\AbstractDoctrineAppender;
 

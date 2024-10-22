@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Test\Unit\MemoryMonitor;
 
 use Debuggertools\Enumerations\OptionForInstanceEnum;
