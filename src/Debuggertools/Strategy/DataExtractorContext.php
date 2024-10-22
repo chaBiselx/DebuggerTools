@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Debuggertools\Strategy;
 
+use Throwable;
 use Debuggertools\Formatter\JSONformatter;
 use Debuggertools\Interfaces\ExtracterInterface;
 use Debuggertools\Exceptions\FunctionalException;
@@ -37,7 +38,7 @@ class DataExtractorContext
             if (isset($appendLog) && count($appendLog)) {
                 $texts = array_merge($texts, $appendLog);
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new FunctionalException("Error extracting data from $type : " . $th->getMessage(), 1);
         }
     }

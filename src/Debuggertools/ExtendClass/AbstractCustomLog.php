@@ -131,7 +131,6 @@ abstract class AbstractCustomLog
             case 'boolean':
                 $texts[0] = $this->typeConverter->convertArgToString($data);
                 break;
-
             default:
                 $texts[0] = $type;
                 break;
@@ -174,11 +173,9 @@ abstract class AbstractCustomLog
     {
         if (!$this->pathFile) throw new \Error("Unknown file");
         $this->createMissingDirectories();
-        if (!file_exists($this->pathFile)) touch($this->pathFile);
-        $dateFormat = $this->config['prefixLog']['date']['format'];
-        $separator = $this->config['prefixLog']['date']['separator'];
+        $this->createFileIfNotExist();
 
-        $prefixText = date($dateFormat) . $separator;
+        $prefixText = $this->createPrefixText();
         foreach ($ArrayOfText as $text) {
             if ($this->instanceConfig->get(OptionForInstanceEnum::PREFIX_SHOW)) {
                 $text = $prefixText . $text;
@@ -188,19 +185,28 @@ abstract class AbstractCustomLog
         $this->instanceConfig->reset();
     }
 
+    private function createFileIfNotExist(): void
+    {
+        if (!file_exists($this->pathFile)) touch($this->pathFile);
+    }
+
+    private function createPrefixText(): string{
+        $dateFormat = $this->config['prefixLog']['date']['format'];
+        $separator = $this->config['prefixLog']['date']['separator'];
+        return date($dateFormat) . $separator;
+    }
+
     protected function decodeArrayForLog($data): string
     {
         $ret = "";
+        $dataToTransform = $data;
         if (!empty($data)) {
             if (isset($data[0]) && gettype($data[0]) == "object") {
-                $fakeData = $this->decodeListObjet($data);
-                $ret = $this->JSONformatter->createExpendedJson($fakeData);
-            } else {
-                $ret = $this->JSONformatter->createExpendedJson($data);
+                $dataToTransform = $this->decodeListObjet($data);
             }
-        } else {
-            $ret = $this->JSONformatter->createExpendedJson($data);
         }
+        $ret = $this->JSONformatter->createExpendedJson($dataToTransform);
+
         return $ret;
     }
 
