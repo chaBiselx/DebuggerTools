@@ -7,8 +7,8 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Test\ExtendClass\BaseTestCase;
-use Test\ObjectForTest\RoleEntity;
-use Test\ObjectForTest\UserEntity;
+use Test\ObjectForTest\Entity\RoleEntity;
+use Test\ObjectForTest\Entity\UserEntity;
 use Symfony\Component\Cache\DoctrineProvider; // Permet d'adapter le cache pour Doctrine
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
