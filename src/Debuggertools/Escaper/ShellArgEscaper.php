@@ -13,7 +13,7 @@ class ShellArgEscaper implements EscaperInterfaces
     /**
      * {@inheritdoc}
      */
-    public function escape(string $logMessage): string
+    final public function escape(string $logMessage): string
     {
         $length = mb_strlen($logMessage);
         $position = 0;

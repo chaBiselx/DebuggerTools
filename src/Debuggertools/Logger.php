@@ -50,7 +50,7 @@ class Logger extends AbstractCustomLog
      *
      * @return void
      */
-    public function logger($data): void
+    final public function logger($data): void
     {
         try {
             $texts = $this->generateTextFormData($data);
@@ -69,7 +69,7 @@ class Logger extends AbstractCustomLog
      *
      * @return void
      */
-    public static function loggerStatic($data, array $Option = []): void
+    final public static function loggerStatic($data, array $Option = []): void
     {
         (new Logger($Option))->logger($data);
     }

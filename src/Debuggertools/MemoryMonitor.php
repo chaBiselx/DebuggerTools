@@ -44,7 +44,7 @@ class MemoryMonitor
      * @param string $label
      * @return void
      */
-    public function logMemoryUsage(string $label = ""): void
+    final public function logMemoryUsage(string $label = ""): void
     {
         $currentMemory = memory_get_usage();
         $usedMemoryPercentage = ($currentMemory / $this->totalMemoryLimit) * 100;
@@ -69,7 +69,7 @@ class MemoryMonitor
 
 
 
-    private function decodeMemoryLimit(string $memoryLimit): float
+    private function decodeMemoryLimit(string $memoryLimit): float //TODO : make it generic
     {
         $val = trim($memoryLimit);
         $num = (float) preg_replace('/\D*(\s)*$/', '', $val);

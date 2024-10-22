@@ -14,7 +14,7 @@ class ClassDecoder implements ClassDecoderInterface
     /**
      * {@inheritDoc}
      */
-    public function decodeObject($obj): ?array
+    final public function decodeObject($obj): ?array
     {
         $class = get_class($obj); // get classname
         $fakeData = json_decode(json_encode($obj), true); // clone the public data
@@ -36,7 +36,7 @@ class ClassDecoder implements ClassDecoderInterface
         return $fakeData;
     }
 
-    public function getAppender($obj): ?AppenderLogInterfaces {
+    final public function getAppender($obj): ?AppenderLogInterfaces {
         return null;
     }
 

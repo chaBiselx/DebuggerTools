@@ -18,7 +18,7 @@ class StringConverter implements ConverterStrategyInterface
         $this->activeQuote = $activeQuote;
     }
 
-    public function convert($arg): string
+    final public function convert($arg): string
     {
         if ($this->activeQuote) {
             return "\"" . (string) str_replace('"', '\\"', $arg) . "\"";

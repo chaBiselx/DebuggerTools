@@ -18,7 +18,7 @@ class DoctrineQueryBuilderAppender extends AbstractDoctrineAppender implements A
      * @param [type] $obj
      * @return array
      */
-    public function extractDataLog($obj): array
+    final public function extractDataLog($obj): array
     {
         $retLog = [];
         if ($obj instanceof \Doctrine\ORM\QueryBuilder) {

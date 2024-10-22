@@ -13,7 +13,7 @@ class ClosureDecoder implements ClassDecoderInterface
     /**
      * {@inheritDoc}
      */
-    public function decodeObject($obj): ?array
+    final public function decodeObject($obj): ?array
     {
         $fakeData = [];
         $r = new ReflectionFunction($obj);
@@ -33,7 +33,7 @@ class ClosureDecoder implements ClassDecoderInterface
         return $fakeData;
     }
 
-    public function getAppender($obj): ?AppenderLogInterfaces {
+    final public function getAppender($obj): ?AppenderLogInterfaces {
         return null;
     }
 

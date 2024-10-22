@@ -15,12 +15,12 @@ class TypeConverter
 {
     private $activeQuote = false;
 
-    public function setQuote(bool $activeQuote = true)
+    final public function setQuote(bool $activeQuote = true)
     {
         $this->activeQuote = $activeQuote;
     }
 
-    public function getQuote(): bool
+    final public function getQuote(): bool
     {
         return $this->activeQuote;
     }
@@ -32,7 +32,7 @@ class TypeConverter
      * @param $arg
      * @return string
      */
-    public function convertArgToString($arg): string
+    final public function convertArgToString($arg): string
     {
         $type = gettype($arg);
         $converter = $this->getConverterForType($type);

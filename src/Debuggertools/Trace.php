@@ -44,7 +44,7 @@ class Trace
      *
      * @return void
      */
-    public static function getTraceStatic($Option = []): void
+    final public static function getTraceStatic($Option = []): void
     {
         (new Trace($Option))->logTrace();
     }

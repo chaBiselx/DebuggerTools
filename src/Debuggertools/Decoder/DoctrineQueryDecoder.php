@@ -19,12 +19,12 @@ class DoctrineQueryDecoder implements ClassDecoderInterface
     /**
      * {@inheritDoc}
      */
-    public function decodeObject($obj): ?array
+    final public function decodeObject($obj): ?array
     {
         return [];
     }
 
-    public function getAppender($obj): ?AppenderLogInterfaces {
+    final public function getAppender($obj): ?AppenderLogInterfaces {
         return $this->appender;
     }
 }

@@ -14,7 +14,7 @@ class EnumDecoder implements ClassDecoderInterface
     /**
      * {@inheritDoc}
      */
-    public function decodeObject($obj): ?array
+    final public function decodeObject($obj): ?array
     {
         $class = get_class($obj); // get classname
         $fakeData = [];
@@ -32,7 +32,7 @@ class EnumDecoder implements ClassDecoderInterface
         return $fakeData;
     }
 
-    public function getAppender($obj): ?AppenderLogInterfaces
+    final public function getAppender($obj): ?AppenderLogInterfaces
     {
         return null;
     }

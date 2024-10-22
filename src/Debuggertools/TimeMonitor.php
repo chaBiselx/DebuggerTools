@@ -54,7 +54,7 @@ class TimeMonitor
      * @param string|null $label
      * @return void
      */
-    public function log(?string $label = null): void
+    final public function log(?string $label = null): void
     {
         if (!isset($this->timeLogger[$label])) {
             $time = $this->timeFromConstruct;
@@ -66,7 +66,7 @@ class TimeMonitor
         $this->Logger->logger(trim($label) . " => $resultTime Sec");
     }
 
-    public function set(string $label = 'time')
+    final public function set(string $label = 'time')
     {
         $this->setTime($label);
     }

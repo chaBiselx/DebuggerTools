@@ -10,19 +10,19 @@ class InstanceConfig
     public static $settings = [];
 
     // Méthode statique pour obtenir un paramètre
-    public static function get(string $key)
+    final public static function get(string $key)
     {
         return self::$settings[$key] ?? null;
     }
 
     // Méthode statique pour définir un paramètre
-    public static function set(string $key, $value): void
+    final public static function set(string $key, $value): void
     {
         self::$settings[$key] = $value;
     }
 
     // Méthode statique pour définir un paramètre
-    public static function reset(): void
+    final public static function reset(): void
     {
         self::$settings = [];
     }

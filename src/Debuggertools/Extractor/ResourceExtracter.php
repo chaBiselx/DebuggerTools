@@ -18,7 +18,7 @@ class ResourceExtracter extends AbstractAdvancedExtracter implements ExtracterIn
         $this->CurlDecoder = new CurlDecoder();
     }
 
-    public function extract($resource): ExtracterInterface
+    final public function extract($resource): ExtracterInterface
     {
         $resourceType = get_resource_type($resource);
         $this->type = 'resource'; //type

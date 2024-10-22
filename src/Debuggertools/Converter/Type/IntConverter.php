@@ -13,7 +13,7 @@ class IntConverter implements ConverterStrategyInterface
      */
     public function setQuoteIfNeccesary(bool $activeQuote = true): void {}
 
-    public function convert($arg): string
+    final public function convert($arg): string
     {
         return (string) $arg;
     }

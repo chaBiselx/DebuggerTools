@@ -12,7 +12,7 @@ class CurlDecoder implements ClassDecoderInterface
     /**
      * {@inheritDoc}
      */
-    public function decodeObject($obj): ?array
+    final public function decodeObject($obj): ?array
     {
         $this->handle = $obj;
         $this->info = curl_getinfo($this->handle);
@@ -30,7 +30,7 @@ class CurlDecoder implements ClassDecoderInterface
         return $this->fakeData;
     }
 
-    public function getAppender($obj): ?AppenderLogInterfaces {
+    final public function getAppender($obj): ?AppenderLogInterfaces {
         return null;
     }
 

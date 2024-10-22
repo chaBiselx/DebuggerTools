@@ -31,7 +31,7 @@ class JSONformatter
      * @param integer $nbSpace
      * @return string
      */
-    public  function createExpendedJson($data, $nbSpace = 0): string
+    final public function createExpendedJson($data, $nbSpace = 0): string
     {
         $stringResponse = '';
         $type = gettype($data);

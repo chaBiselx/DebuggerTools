@@ -34,7 +34,7 @@ class ClassExtracter extends AbstractAdvancedExtracter implements ExtracterInter
     }
 
 
-    public function extract($obj): ExtracterInterface
+    final public function extract($obj): ExtracterInterface
     {
         $this->class = get_class($obj); // get classname
         $this->type = 'class'; //type

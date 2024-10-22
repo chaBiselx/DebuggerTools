@@ -20,7 +20,7 @@ class RessourceValueConverter
      * @param int $memoryInBytes Memory usage in bytes.
      * @return string Memory usage in a readable format.
      */
-    public function convertToString(float $memoryInBytes): string
+    final public function convertToString(float $memoryInBytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
         $sign = ($memoryInBytes >= 0) ? 1 : -1;

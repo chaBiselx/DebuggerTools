@@ -11,7 +11,7 @@ use Debuggertools\Interfaces\ClassDecoderInterface;
 class ArrayIteratorDecoder implements ClassDecoderInterface
 {
 
-    public function __construct()
+    final public function __construct()
     {
         $this->typeConverter = new TypeConverter();
     }
@@ -19,7 +19,7 @@ class ArrayIteratorDecoder implements ClassDecoderInterface
     /**
      * {@inheritDoc}
      */
-    public function decodeObject($obj): ?array
+    final public function decodeObject($obj): ?array
     {
         $fakeData = [];
 
