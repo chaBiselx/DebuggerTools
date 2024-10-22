@@ -6,36 +6,36 @@
 
 ## Description
 
-**DebuggerTools** est une boîte à outils pour développeurs, conçue pour faciliter le débogage des applications PHP. Elle propose un ensemble de classes permettant de capturer et d'analyser divers aspects de l'exécution de votre code, notamment :
+**DebuggerTools** is a toolkit for developers, designed to facilitate debugging of PHP applications. It offers a set of classes to capture and analyze various aspects of your code execution, including:
 
-- **Logger** : Pour enregistrer les messages de log, erreurs et informations diverses.
-- **Time Monitor** : Pour mesurer et enregistrer le temps d'exécution de segments de code.
-- **Memory Monitor** : Pour mesurer la consommation mémoire de segments de code.
-- **Trace** : Pour tracer les appels de fonctions et suivre l'exécution du code avec une granularité fine.
+- **Logger**: To log messages, errors, and various information.
+- **Time Monitor**: To measure and log the execution time of code segments.
+- **Memory Monitor**: To measure memory consumption of code segments.
+- **Trace**: To trace function calls and follow code execution with fine granularity.
 
-## Table des matières
+## Table of Contents
 
 - [Installation](#installation)
-- [Lancer docker pour le developpement](#docker)
-- [Test](#Test)
-- [Utilisation](#utilisation)
+- [Run Docker for Development](#docker)
+- [Testing](#Test)
+- [Usage](#usage)
   - [ArrayOfOption](#ArrayOfOption)
   - [Logger](#logger)
-  - [Time monitor](#time-monitor)
-  - [Memory monitor](#memory-monitor)
+  - [Time Monitor](#time-monitor)
+  - [Memory Monitor](#memory-monitor)
   - [Trace](#trace)
-- [Contribuer](#contribuer)
-- [Licence](#licence)
+- [Contribute](#contribute)
+- [License](#license)
 
 ## Installation
 
-Installez DebuggerTools en utilisant Composer :
+Install DebuggerTools using Composer:
 
 ```bash
 composer require --dev chabiselx/debuggerTools
 ```
 
-Ou clonez directement le dépôt :
+Or clone the repository directly:
 
 ```bash
 git clone https://github.com/chaBiselx/DebuggerTools.git
@@ -43,95 +43,87 @@ cd DebuggerTools
 composer install
 ```
 
-## Lancer docker pour le developpement
+## Run Docker for Development
 
-créer le fichier .env.local à la racine du projet
+Create the `.env.local` file at the project root.
 
-Modifier les port dans le .env.local.env en fonction des autres images docker
+Edit the ports in `.env.local.env` according to other Docker images:
 - PHP_EXT_PORT_1
 - PHP_EXT_PORT_2
 - BDD_EXT_PORT
 
-
-lancer Docker pour la première fois : 
+Run Docker for the first time:
 ```bash
 make docker-build
 ```
 
-pour debuguer le build si besoin
+To debug the build if needed:
 ```bash
 docker-compose build --no-cache 2>&1 | tee build_logs.txt
-``` 
-
-rentrer dans le contanier PHP 
-```bash
-docker exec -it debuggertools-php73-1 bash
 ```
 
-## Test 
+Access the PHP container:
+```bash
+docker exec -it debuggertools-php7_3-1 bash
+```
 
-### En dehors d'un containier 
+## Testing
+
+### Outside a container:
 ```bash
 make docker-test
 ```
 
-### Dans un containier 
-pour executer l'ensempble des tests
+### Inside a container:
+To run all tests:
 ```bash
 make test
 ```
 
-pour lancer un test en particulier
+To run a specific test:
 ```bash
 make test FILTER=file::function
 ```
 
-## Utilisation
+## Usage
 
 ### ArrayOfOption
 
-Le paramètre ArrayOf option est une liste optionnel. 
-les different champs possible :
+The `ArrayOfOption` parameter is an optional list. The possible fields are:
 
-All :
+All:
 
-- hidePrefix [boolean] : Hide the date at the beginning of the string (default : false)
-- showPrefix [boolean] : Show the date at the beginning of the string (default : true)
-- purgeFileBefore [boolean] : purgeFileBefore purge the file before write (default : false)
-- expendObject [boolean] : expend for best visibility for array in log file (default : false)
-- fileName [string] :  write in the file with the same name (default: log)
+- `hidePrefix` [boolean]: Hide the date at the beginning of the string (default: false)
+- `showPrefix` [boolean]: Show the date at the beginning of the string (default: true)
+- `purgeFileBefore` [boolean]: Purge the file before writing (default: false)
+- `expendObject` [boolean]: Expand for better visibility of arrays in the log file (default: false)
+- `fileName` [string]: Write to the file with the given name (default: log)
 
-Class MemoryMonitor :
+For the MemoryMonitor class:
 
-- activeConvertion [boolean] : active convert with unit to byte (default: true)
-- disactiveConvertion [boolean] : active convert with unit to byte (default: false)
-
+- `activeConvertion` [boolean]: Enable unit-to-byte conversion (default: true)
+- `disactiveConvertion` [boolean]: Disable unit-to-byte conversion (default: false)
 
 ### Logger
 
-Pour capturer des logs dans votre application :
+To capture logs in your application:
 
 ```php
 use DebuggerTools\Logger;
 
 $logger = new Logger($ArrayOfOption);
 $logger->logger($dataToLog);
-
 ```
 
-via singleton 
+Via singleton:
 
 ```php
 \Debuggertools\Logger::loggerStatic($dataToLog, $ArrayOfOption);
 ```
 
-list of element : 
-- any basic php type
-- \Doctrine\ORM\QueryBuilder from symfony
+### Time Monitor
 
-### Time monitor
-
-Pour mesurer le temps d'exécution d'une section de code :
+To measure the execution time of a code section:
 
 ```php
 use DebuggerTools\TimeMonitor;
@@ -142,9 +134,9 @@ sleep(5);
 $time->log("label");
 ```
 
-### Memory monitor
+### Memory Monitor
 
-Pour surveiller la mémoire utilisée par votre application :
+To monitor the memory used by your application:
 
 ```php
 use DebuggerTools\MemoryMonitor;
@@ -157,7 +149,7 @@ $memoryMonitor->logMemoryUsage('label');
 
 ### Trace
 
-Pour tracer l'exécution du code :
+To trace code execution:
 
 ```php
 use DebuggerTools\Trace;
@@ -166,32 +158,30 @@ $trace = new Trace($ArrayOfOption);
 $trace->logTrace();
 ```
 
-
-via singleton 
+Via singleton:
 
 ```php
 \Debuggertools\Trace::getTraceStatic($ArrayOfOption);
 ```
 
-## Contribuer
+## Contribute
 
-Les contributions sont les bienvenues ! Si vous souhaitez contribuer :
+Contributions are welcome! If you want to contribute:
 
-1. Forkez le dépôt.
-2. Créez une branche pour vos modifications (`git checkout -b feature/new-feature`).
-3. Committez vos changements (`git commit -m 'Ajouter une nouvelle fonctionnalité'`).
-4. Pushez la branche (`git push origin feature/new-feature`).
-5. Ouvrez une Pull Request.
+1. Fork the repository.
+2. Create a branch for your changes (`git checkout -b feature/new-feature`).
+3. Commit your changes (`git commit -m 'Add a new feature'`).
+4. Push the branch (`git push origin feature/new-feature`).
+5. Open a Pull Request.
 
-## Licence
+## License
 
-Ce projet est sous licence MIT. Consultez le fichier [LICENSE](https://github.com/chaBiselx/DebuggerTools/blob/main/LICENSE) pour plus de détails.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/chaBiselx/DebuggerTools/blob/main/LICENSE) file for details.
 
 ## TODO
 
-- Make a better README
-- test Doctrine\ORM\PersistentCollection
-- get info from curl and generate a command line test
-- middleware for all input/output
-- eventListener for Symphony
-- SonarLint error ( pathLog : getRootPath)
+- Improve the README
+- Test Doctrine\ORM\PersistentCollection
+- Middleware for all input/output
+- EventListener for Symfony
+- Fix SonarLint error (pathLog: getRootPath)
