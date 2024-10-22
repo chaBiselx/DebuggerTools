@@ -23,6 +23,11 @@ abstract class BaseTestCase extends TestCase
         $instanceConfig->reset();
     }
 
+    final public function getProjectFolder(): string
+    {
+        return $this->projectFolder;
+    }
+
     protected function setPath(string $basePath): void
     {
         $this->defaulPathLog = $basePath;
